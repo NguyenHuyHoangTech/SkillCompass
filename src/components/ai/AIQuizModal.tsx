@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Skill, SubTopic, QuizQuestionResponse, QuizEvaluationResponse } from '../../types/roadmap';
 import { ApiService } from '../../services/apiService';
-import { Bot, X, Sparkles, Send, CheckCircle2, AlertCircle, HelpCircle, Loader2 } from 'lucide-react';
+import { Bot, X, Sparkles, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 interface AIQuizModalProps {
   isOpen: boolean;
@@ -84,8 +84,8 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
               <Bot size={22} className="ai-icon-pulse" />
             </div>
             <div>
-              <h3 className="modal-title">AI Kiểm Tra Kỹ Năng: {subTopic.title}</h3>
-              <p className="modal-subtitle">Kỹ năng: {skill.name} • {milestoneTitle}</p>
+              <h3 className="modal-title">🤖 AI Coach Hướng Dẫn & Kiểm Tra: {subTopic.title}</h3>
+              <p className="modal-subtitle">AI Coach hướng dẫn bài tập cho kỹ năng: {skill.name} • {milestoneTitle}</p>
             </div>
           </div>
           <button className="modal-close-btn" onClick={onClose}>
@@ -97,7 +97,7 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
           {loadingQuestion ? (
             <div className="modal-loading-state">
               <Loader2 size={32} className="spin-icon" />
-              <p>AI đang soạn câu hỏi kiểm tra cho bài học này...</p>
+              <p>AI Coach đang khởi tạo bài tập hướng dẫn cho bạn...</p>
             </div>
           ) : evaluationResult ? (
             <div className="evaluation-result-view">
@@ -118,14 +118,14 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
                   <p>{evaluationResult.strengths}</p>
                 </div>
                 <div className="detail-box improvements">
-                  <div className="detail-title"><AlertCircle size={16} /> Gợi Ý Cải Thiện</div>
+                  <div className="detail-title"><AlertCircle size={16} /> Gợi Ý Cải Thiện Từ AI</div>
                   <p>{evaluationResult.improvements}</p>
                 </div>
               </div>
 
-              <div className="result-actions">
+              <div className="modal-footer-actions">
                 <button className="btn-primary" onClick={onClose}>
-                  <Sparkles size={16} /> Hoàn Tất & Đóng Modal
+                  Hoàn Thành Bài Tập
                 </button>
                 <button
                   className="btn-secondary"
@@ -142,22 +142,22 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
             <form onSubmit={handleSubmitAnswer} className="quiz-form">
               <div className="question-card">
                 <div className="question-badge">
-                  <HelpCircle size={16} /> Câu hỏi phỏng vấn từ AI
+                  <Sparkles size={16} /> Đề Bài & Tình Huống AI Coach Đề Xuất
                 </div>
                 <p className="question-text">{questionData?.question}</p>
                 {questionData?.hint && (
                   <div className="hint-box">
-                    💡 <strong>Gợi ý:</strong> {questionData.hint}
+                    💡 <strong>Hướng dẫn từ AI Coach:</strong> {questionData.hint}
                   </div>
                 )}
               </div>
 
               <div className="answer-input-wrap">
-                <label className="input-label">Câu trả lời / Phân tích của bạn:</label>
+                <label className="input-label">Câu trả lời / Giải pháp bài tập của bạn:</label>
                 <textarea
                   className="answer-textarea"
                   rows={4}
-                  placeholder="Gõ giải thích của bạn vào đây (ví dụ: định nghĩa, nguyên lý hoạt động, ví dụ thực tế...)"
+                  placeholder="Nhập phần giải thích tư duy hoặc snippet mã code của bạn ở đây..."
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
                   disabled={evaluating}
@@ -176,11 +176,11 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
                 >
                   {evaluating ? (
                     <>
-                      <Loader2 size={16} className="spin-icon" /> AI Đang Phân Tích...
+                      <Loader2 size={16} className="spin-icon" /> AI Coach Đang Chấm Điểm...
                     </>
                   ) : (
                     <>
-                      <Send size={16} /> Gửi AI Đánh Giá & Chấm Điểm
+                      <Send size={16} /> 🤖 Nộp Bài Để AI Coach Chấm Điểm
                     </>
                   )}
                 </button>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Milestone } from '../../types/roadmap';
-import { Award, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Award, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 
 interface RoadmapHeaderProps {
   milestones: Milestone[];
@@ -45,18 +45,32 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
   const startIndex = currentPage * ITEMS_PER_PAGE;
   const visibleMilestones = milestones.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // Hàm lọc bỏ tiền tố "Giai Đoạn X:" trùng lặp để tên mốc hiển thị gọn gàng, tinh tế
-  const getShortTitle = (fullTitle: string) => {
-    return fullTitle.replace(/^Giai\s*Đoạn\s*\d+:\s*/i, '').trim();
+  // Hàm ngắn gọn hóa tên mốc theo từ khóa và chỉ hiển thị 1 lần duy nhất
+  const getAbbreviatedTitle = (fullTitle: string, index: number) => {
+    let clean = fullTitle.replace(/^(Giai\s*Đoạn|Mốc|Stage|Phase)\s*\d+\s*[:\-]?\s*/i, '').trim();
+
+    if (/nền\s*tảng/i.test(clean)) clean = 'Nền tảng';
+    else if (/kỹ\s*thuật/i.test(clean)) clean = 'Kỹ thuật';
+    else if (/tối\s*ưu/i.test(clean)) clean = 'Tối ưu';
+    else if (/nâng\s*cao|kiến\s*trúc/i.test(clean)) clean = 'Nâng cao';
+    else if (/chuyên\s*sâu/i.test(clean)) clean = 'Chuyên sâu';
+    else if (/triển\s*khai/i.test(clean)) clean = 'Triển khai';
+    else {
+      const noBrackets = clean.replace(/\(.*?\)/g, '').trim();
+      const words = noBrackets.split(/\s+/);
+      clean = words.length > 2 ? words.slice(0, 2).join(' ') : noBrackets || clean;
+    }
+
+    return `Mốc ${index + 1}: ${clean}`;
   };
 
   return (
     <header className="roadmap-header-container glass-panel">
-      {/* 1. Active Milestone Banner (Mốc Đang Hiển Thị Ở NẰM TRÊN) */}
+      {/* 1. Active Milestone Banner */}
       <div className="milestone-banner">
         <div className="banner-left">
           <div className="role-chip">
-            <Award size={16} /> Mốc Hiện Tại: {currentMilestone.roleName}
+            <Award size={15} /> Mốc Hiện Tại: {currentMilestone.roleName}
           </div>
           <h2 className="banner-heading">{currentMilestone.title}</h2>
           <p className="banner-desc">{currentMilestone.description}</p>
@@ -85,82 +99,101 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
         </div>
       </div>
 
-      {/* 2. Milestone Navigation Row: Grid khít sát tuyệt đối không hở khoảng trắng thừa */}
+      {/* 2. Milestone Navigation Row: Single clean milestone label per tab */}
       <div className="milestone-nav-row">
-        {/* Nút Thêm Mốc Cố Định Ở Đầu */}
+        {/* Nút Thêm Mốc Cố Định */}
         {onOpenCareerChat && (
           <button
             className="milestone-tab-btn add-future-milestone-btn fixed-add-btn"
             onClick={onOpenCareerChat}
             title="Tư vấn AI để đưa ra thêm mốc lộ trình tương lai"
-            data-tooltip="🤖 Tư vấn AI thêm mốc mới"
           >
             <span className="tab-step-num add-icon-num">+</span>
             <div className="tab-text-content">
               <span className="tab-badge-title">🤖 AI Career</span>
-              <span className="tab-title">+ Thêm Mốc Mới</span>
+              <span className="tab-title">+ Thêm Mốc</span>
             </div>
           </button>
         )}
 
-        {/* Mũi tên TRÁI: Đặt sát bên phải nút Thêm Mốc */}
+        {/* Mũi tên TRÁI */}
         <button
           className={`milestone-nav-arrow-btn ${currentPage === 0 ? 'disabled' : ''}`}
           onClick={handlePrevPage}
           disabled={currentPage === 0}
           title="Trang 4 mốc trước"
         >
-          <ChevronLeft size={15} />
+          <ChevronLeft size={16} />
         </button>
 
-        {/* Khung 4 mốc phủ kín 100% không để lại khoảng hở */}
+        {/* Khung 4 mốc thoáng đãng */}
         <div className="milestone-tabs-4col-wrapper">
           <div className="milestone-tabs-4col-grid">
             {visibleMilestones.map((ms, vIdx) => {
               const actualIndex = startIndex + vIdx;
               const isActive = ms.id === activeMilestoneId;
+              const isCompleted = ms.overallProgress === 100;
+              const shortTitle = getAbbreviatedTitle(ms.title, actualIndex);
+
               return (
-                <button
-                  key={ms.id}
-                  className={`milestone-tab-btn full-tab ${isActive ? 'active' : 'minimal-tab'}`}
-                  onClick={() => onSelectMilestone(ms.id)}
-                  title={ms.title}
-                  data-tooltip={ms.title}
-                >
-                  <span className="tab-step-num">{actualIndex + 1}</span>
-                  <div className="tab-text-content">
-                    <span className="tab-badge-title">{ms.badge}</span>
-                    <span className="tab-title">{getShortTitle(ms.title)}</span>
+                <div key={ms.id} className="milestone-tab-item-wrap">
+                  <button
+                    className={`milestone-tab-btn full-tab ${isActive ? 'active' : 'minimal-tab'}`}
+                    onClick={() => onSelectMilestone(ms.id)}
+                  >
+                    <div className="tab-single-main-row">
+                      <span className="tab-short-title">{shortTitle}</span>
+                      <div className="tab-meta-right">
+                        {isCompleted ? (
+                          <CheckCircle2 size={13} className="ms-status-icon completed" />
+                        ) : isActive ? (
+                          <span className="ms-status-dot active" />
+                        ) : (
+                          <span className="ms-status-dot standard" />
+                        )}
+                        <span className="tab-percent-badge">{ms.overallProgress}%</span>
+                      </div>
+                    </div>
+
+                    <div className="tab-progress-indicator">
+                      <div
+                        className="tab-progress-fill"
+                        style={{ width: `${ms.overallProgress}%` }}
+                      />
+                    </div>
+                  </button>
+
+                  {/* Tooltip nổi đầy đủ thông tin khi Hover */}
+                  <div className="milestone-hover-tooltip">
+                    <div className="tooltip-title">{ms.title}</div>
+                    <div className="tooltip-role">{ms.badge} • {ms.roleName}</div>
+                    <div className="tooltip-desc">{ms.description}</div>
+                    <div className="tooltip-progress">Tiến độ mốc: <strong>{ms.overallProgress}%</strong></div>
                   </div>
-                  <div className="tab-progress-indicator">
-                    <div
-                      className="tab-progress-fill"
-                      style={{ width: `${ms.overallProgress}%` }}
-                    />
-                  </div>
-                </button>
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* Mũi tên PHẢI: Đặt sát bên phải mốc thứ 4 */}
+        {/* Mũi tên PHẢI */}
         <button
           className={`milestone-nav-arrow-btn ${currentPage >= maxPage ? 'disabled' : ''}`}
           onClick={handleNextPage}
           disabled={currentPage >= maxPage}
           title="Trang 4 mốc tiếp theo"
         >
-          <ChevronRight size={15} />
+          <ChevronRight size={16} />
         </button>
       </div>
 
-      {/* 3. Chỉ số trang 1/4 nhỏ nằm sát bên dưới ở mép phải */}
+      {/* 3. Chỉ số trang */}
       <div className="milestone-sub-page-row">
         <span className="page-indicator-small-badge" title={`Trang ${currentPage + 1} / ${maxPage + 1}`}>
-          {currentPage + 1}/{maxPage + 1}
+          Trang {currentPage + 1}/{maxPage + 1}
         </span>
       </div>
     </header>
   );
 };
+

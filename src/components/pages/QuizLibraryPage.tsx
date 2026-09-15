@@ -1,63 +1,332 @@
-import React from 'react';
-import type { Milestone, Skill, SubTopic } from '../../types/roadmap';
-import { BookOpenCheck, Bot, Sparkles, HelpCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import type { Milestone, Skill, SubTopic, QuizEvaluationResponse } from '../../types/roadmap';
+import { ApiService } from '../../services/apiService';
+import { ExerciseAIChatbox } from '../ai/ExerciseAIChatbox';
+import {
+  BookOpenCheck,
+  Bot,
+  Sparkles,
+  HelpCircle,
+  Lightbulb,
+  ArrowLeft,
+  Code,
+  CheckSquare,
+  Award,
+  Loader2,
+} from 'lucide-react';
 
 interface QuizLibraryPageProps {
   milestones: Milestone[];
-  onOpenQuiz: (skill: Skill, subTopic: SubTopic) => void;
+  onOpenQuiz?: (skill: Skill, subTopic: SubTopic) => void;
 }
 
-export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones, onOpenQuiz }) => {
+export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) => {
+  const [activeExercise, setActiveExercise] = useState<{
+    milestone: Milestone;
+    skill: Skill;
+    subTopic: SubTopic;
+  } | null>(null);
+
+  const [userSolution, setUserSolution] = useState('');
+  const [evaluating, setEvaluating] = useState(false);
+  const [evaluationResult, setEvaluationResult] = useState<QuizEvaluationResponse | null>(null);
+
+  const handleSelectExercise = (milestone: Milestone, skill: Skill, subTopic: SubTopic) => {
+    setActiveExercise({ milestone, skill, subTopic });
+    setUserSolution('');
+    setEvaluationResult(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSubmitSolution = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!activeExercise || !userSolution.trim()) return;
+
+    setEvaluating(true);
+    try {
+      const result = await ApiService.submitQuizAnswer({
+        milestoneId: activeExercise.milestone.id,
+        skillId: activeExercise.skill.id,
+        subTopicId: activeExercise.subTopic.id,
+        subTopicTitle: activeExercise.subTopic.title,
+        question: `Hãy đưa ra mã code / lời giải thực tế chuẩn hóa cho bài tập "${activeExercise.subTopic.title}" thuộc kỹ năng ${activeExercise.skill.name}?`,
+        userAnswer: userSolution,
+      });
+
+      setEvaluationResult(result);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setEvaluating(false);
+    }
+  };
+
   return (
     <div className="page-view-container">
+      {/* 1. Page Header Banner */}
       <div className="page-header-banner glass-panel">
         <div className="page-title-group">
-          <BookOpenCheck size={28} className="page-title-icon" />
+          <BookOpenCheck size={30} className="page-title-icon" style={{ color: '#0284c7' }} />
           <div>
-            <h2>Trang Thư Viện Bài Test AI Quiz</h2>
-            <p>Tổng hợp tất cả câu hỏi phỏng vấn & bài test kiểm tra năng lực kỹ năng theo chuẩn 3 Giai Đoạn</p>
+            <h2>🤖 Trung Tâm Bài Tập Thực Tế & AI Coach Hướng Dẫn</h2>
+            <p>
+              Không gian thực hành tình huống dự án thực tế. Có chatbox AI riêng đồng hành hướng dẫn từng bước, sửa lỗi code và chấm điểm bài làm của bạn.
+            </p>
+          </div>
+        </div>
+
+        <div className="ai-guidance-feature-pills" style={{ display: 'flex', gap: '12px', marginTop: '14px', flexWrap: 'wrap' }}>
+          <div style={{ padding: '6px 12px', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #bae6fd', fontSize: '0.78rem', color: '#0369a1', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Lightbulb size={14} /> 1. Đề Bài Dự Án Tình Huống Thực Tế
+          </div>
+          <div style={{ padding: '6px 12px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #a7f3d0', fontSize: '0.78rem', color: '#047857', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Bot size={14} /> 2. Chatbox AI Riêng Hướng Dẫn Trực Tiếp
+          </div>
+          <div style={{ padding: '6px 12px', background: '#faf5ff', borderRadius: '8px', border: '1px solid #e9d5ff', fontSize: '0.78rem', color: '#7e22ce', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Sparkles size={14} /> 3. Chấm Điểm & Đánh Giá Tư Duy
           </div>
         </div>
       </div>
 
-      <div className="quiz-library-grid" style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {milestones.map((ms) => (
-          <div key={ms.id} className="category-card glass-panel" style={{ padding: '24px' }}>
-            <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', color: '#0284c7' }}>
-              <Sparkles size={20} /> {ms.title}
-            </h3>
+      {/* 2. MODE SWITCH: Active Studio Mode vs. Exercise Catalog Catalog Mode */}
+      {activeExercise ? (
+        /* INTERACTIVE PRACTICAL STUDIO (Workspace + Dedicated AI Chatbox) */
+        <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* Top Control Bar */}
+          <div className="glass-panel" style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderRadius: '14px' }}>
+            <button
+              onClick={() => setActiveExercise(null)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 14px',
+                borderRadius: '10px',
+                border: '1px solid #cbd5e1',
+                background: '#ffffff',
+                color: '#334155',
+                fontWeight: 700,
+                fontSize: '0.84rem',
+                cursor: 'pointer',
+              }}
+            >
+              <ArrowLeft size={16} /> Quay Lại Danh Sách Bài Tập
+            </button>
 
-            <div className="skills-grid">
-              {ms.categories.flatMap((c) => c.skills).map((sk) => (
-                <div key={sk.id} className="skill-item-card">
-                  <div className="skill-card-top">
-                    <span className="skill-name" style={{ fontWeight: 700 }}>{sk.name}</span>
-                    <span className="skill-level-num">{sk.levelPercentage}%</span>
-                  </div>
-
-                  <div className="subtopic-list" style={{ marginTop: '12px' }}>
-                    {sk.subTopics.map((sub) => (
-                      <div key={sub.id} className="subtopic-item">
-                        <div className="subtopic-left">
-                          <HelpCircle size={18} color="#0284c7" />
-                          <span className="subtopic-title">{sub.title}</span>
-                        </div>
-                        <button
-                          className="ai-quiz-trigger-btn"
-                          onClick={() => onOpenQuiz(sk, sub)}
-                        >
-                          <Bot size={15} />
-                          <span>Làm Bài Test AI</span>
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="page-indicator-small-badge">{activeExercise.milestone.badge}</span>
+              <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0f172a' }}>
+                {activeExercise.skill.name} • {activeExercise.subTopic.title}
+              </span>
             </div>
           </div>
-        ))}
-      </div>
+
+          {/* Split Screen Workspace: Left Exercise Editor (60%), Right Dedicated AI Chatbox (40%) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', alignItems: 'start' }}>
+            {/* LEFT: Practical Problem Scenario & Solution Form */}
+            <div className="category-card glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+              {/* Problem Title & Scenario Card */}
+              <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#0284c7', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase' }}>
+                  <Code size={16} /> Đề Bài Dự Án Tình Huống Thực Tế
+                </div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', margin: '6px 0' }}>
+                  {activeExercise.subTopic.title}
+                </h3>
+                <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
+                  {activeExercise.subTopic.description || `Xây dựng giải pháp thực tế cho hạng mục ${activeExercise.subTopic.title} tuân thủ tiêu chuẩn ngành công nghệ.`}
+                </p>
+
+                {/* Practical Requirements checklist */}
+                <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px dashed #cbd5e1' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#334155', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <CheckSquare size={14} color="#059669" /> Tiêu Chí Yêu Cầu Cần Đạt:
+                  </span>
+                  <ul style={{ margin: '6px 0 0 0', paddingLeft: '20px', fontSize: '0.82rem', color: '#475569', lineHeight: 1.6 }}>
+                    <li>Áp dụng đúng cú pháp và nguyên tắc phân cấp cấu trúc.</li>
+                    <li>Đảm bảo tối ưu hóa trên thiết bị di động (Responsive).</li>
+                    <li>Tuân thủ chuẩn SEO & Accessibility (WCAG A11y).</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Evaluation Result View if graded */}
+              {evaluationResult ? (
+                <div className="evaluation-result-view" style={{ padding: '16px', background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <div className={`score-banner ${evaluationResult.isPassed ? 'passed' : 'needs-work'}`} style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px', borderRadius: '12px', background: evaluationResult.isPassed ? '#f0fdf4' : '#fffbeb', border: `1px solid ${evaluationResult.isPassed ? '#a7f3d0' : '#fde68a'}` }}>
+                    <div style={{ textAlign: 'center', minWidth: '70px' }}>
+                      <span style={{ fontSize: '1.8rem', fontWeight: 900, color: evaluationResult.isPassed ? '#059669' : '#d97706' }}>{evaluationResult.score}%</span>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b' }}>AI Score</div>
+                    </div>
+                    <div>
+                      <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: evaluationResult.isPassed ? '#047857' : '#b45309' }}>
+                        {evaluationResult.isPassed ? '🎉 Đạt Chuẩn Thực Tế!' : '⚠️ Cần Tối Ưu Thêm'}
+                      </h4>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '0.84rem', color: '#334155', lineHeight: 1.4 }}>
+                        {evaluationResult.feedback}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.84rem' }}>
+                    <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '10px', borderLeft: '3px solid #059669' }}>
+                      <strong style={{ color: '#047857' }}>💪 Điểm mạnh:</strong> {evaluationResult.strengths}
+                    </div>
+                    <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '10px', borderLeft: '3px solid #0284c7' }}>
+                      <strong style={{ color: '#0369a1' }}>💡 Gợi ý nâng cấp:</strong> {evaluationResult.improvements}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setEvaluationResult(null);
+                      setUserSolution('');
+                    }}
+                    style={{
+                      marginTop: '14px',
+                      padding: '10px',
+                      width: '100%',
+                      borderRadius: '10px',
+                      border: '1px solid #cbd5e1',
+                      background: '#ffffff',
+                      color: '#0f172a',
+                      fontWeight: 700,
+                      fontSize: '0.86rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    🔄 Thử Nhập Lời Giải Khác
+                  </button>
+                </div>
+              ) : (
+                /* Solution Textarea Form */
+                <form onSubmit={handleSubmitSolution} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <label style={{ fontSize: '0.86rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    💻 Nhập Mã Code / Lời Giải Bài Tập Thực Tế Của Bạn:
+                  </label>
+                  <textarea
+                    rows={8}
+                    placeholder="Viết đoạn mã code HTML/CSS/JS hoặc giải trình tư duy kiến trúc của bạn ở đây... (Hoặc hỏi AI Coach ở khung chat bên phải để lấy gợi ý)"
+                    value={userSolution}
+                    onChange={(e) => setUserSolution(e.target.value)}
+                    disabled={evaluating}
+                    style={{
+                      width: '100%',
+                      padding: '14px',
+                      borderRadius: '12px',
+                      border: '1px solid #cbd5e1',
+                      background: '#f8fafc',
+                      fontSize: '0.88rem',
+                      fontFamily: 'monospace',
+                      color: '#0f172a',
+                      outline: 'none',
+                      lineHeight: 1.5,
+                      resize: 'vertical',
+                    }}
+                  />
+
+                  <button
+                    type="submit"
+                    disabled={!userSolution.trim() || evaluating}
+                    style={{
+                      padding: '12px 20px',
+                      borderRadius: '12px',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)',
+                      color: '#ffffff',
+                      fontWeight: 800,
+                      fontSize: '0.92rem',
+                      cursor: userSolution.trim() ? 'pointer' : 'not-allowed',
+                      opacity: userSolution.trim() ? 1 : 0.65,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      boxShadow: '0 4px 12px rgba(2, 132, 199, 0.25)',
+                    }}
+                  >
+                    {evaluating ? (
+                      <>
+                        <Loader2 size={18} className="spin-icon" /> AI Coach Đang Chấm Điểm Bài Làm...
+                      </>
+                    ) : (
+                      <>
+                        <Award size={18} /> 🏆 Nộp Bài Để AI Coach Chấm Điểm
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* RIGHT: Dedicated Interactive AI Coach Chatbox (Fixed Frame, Internal Scrollable Messages) */}
+            <div style={{ position: 'sticky', top: '80px', height: 'calc(100vh - 110px)', minHeight: '520px', maxHeight: '720px' }}>
+              <ExerciseAIChatbox
+                subTopicTitle={activeExercise.subTopic.title}
+                skillName={activeExercise.skill.name}
+                milestoneTitle={activeExercise.milestone.title}
+                scenarioText={activeExercise.subTopic.description}
+                userAnswerCode={userSolution}
+              />
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* PRACTICAL EXERCISES CATALOG MODE */
+        <div className="quiz-library-grid" style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {milestones.map((ms) => (
+            <div key={ms.id} className="category-card glass-panel" style={{ padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid #e2e8f0' }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Sparkles size={20} color="#0284c7" /> {ms.title}
+                </h3>
+                <span className="page-indicator-small-badge">{ms.badge}</span>
+              </div>
+
+              <div className="skills-grid" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {ms.categories.flatMap((c) => c.skills).map((sk) => (
+                  <div key={sk.id} className="skill-item-card">
+                    <div className="skill-card-top">
+                      <span className="skill-name" style={{ fontWeight: 800, color: '#0f172a', fontSize: '1.02rem' }}>{sk.name}</span>
+                      <span className="skill-level-num">{sk.levelPercentage}%</span>
+                    </div>
+
+                    <div className="subtopic-list" style={{ marginTop: '12px' }}>
+                      {sk.subTopics.map((sub) => (
+                        <div key={sub.id} className="subtopic-item">
+                          <div className="subtopic-left">
+                            <HelpCircle size={18} color="#0284c7" />
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                              <span className="subtopic-title">{sub.title}</span>
+                              {sub.description && <span className="subtopic-desc">{sub.description}</span>}
+                            </div>
+                          </div>
+
+                          <div className="subtopic-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            {sub.assessmentScore !== undefined && sub.assessmentScore > 0 && (
+                              <span className={`score-badge ${sub.assessmentScore >= 70 ? 'pass' : 'review'}`}>
+                                {sub.assessmentScore}% AI Score
+                              </span>
+                            )}
+                            <button
+                              className="ai-quiz-trigger-btn"
+                              onClick={() => handleSelectExercise(ms, sk, sub)}
+                              title="Bắt đầu thực hành bài tập thực tế & mở chatbox AI hướng dẫn"
+                            >
+                              <Bot size={16} />
+                              <span>🚀 Bắt Đầu Thực Hành & Chat AI</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

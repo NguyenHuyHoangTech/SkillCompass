@@ -6,6 +6,7 @@ interface TopNavbarProps {
   activePage: string;
   activeSubTab?: string;
   onSelectSubTab?: (tabId: string) => void;
+  onSelectPage?: (pageId: string) => void;
   onToggleSidebar?: () => void;
   onOpenCareerChat?: () => void;
 }
@@ -59,7 +60,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           </button>
         </div>
 
-        {/* Center: Horizontal Sub-Tabs inside Header for Section Navigation within Page */}
+        {/* Center: Horizontal Sub-Tabs inside Header for Section Navigation within Page (Giữ Nguyên Như Cũ) */}
         {activePage === 'page-roadmap' && onSelectSubTab && (
           <nav className="top-nav-center-subtabs">
             {roadmapSubTabs.map((tab) => {

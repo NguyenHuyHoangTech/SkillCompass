@@ -4,6 +4,8 @@ import {
   Map,
   Sparkles,
   X,
+  Layers,
+  BookOpenCheck,
   UserCheck,
   Settings,
   LogIn,
@@ -58,7 +60,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           </button>
         </div>
 
-        {/* Navigation List: Chỉ giữ lại mục Lộ Trình Career */}
+        {/* Navigation List: Các mục Lộ Trình, Tất Cả Kỹ Năng, Bài Tập */}
         <nav className="sidebar-menu-list">
           <button
             className={`sidebar-menu-btn ${activePage === 'page-roadmap' ? 'active' : ''}`}
@@ -70,6 +72,28 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             <Map size={20} className="menu-btn-icon" />
             <span className="menu-btn-label">Lộ Trình Career</span>
             <span className="menu-btn-badge">Chính</span>
+          </button>
+
+          <button
+            className={`sidebar-menu-btn ${activePage === 'page-all-skills' ? 'active' : ''}`}
+            onClick={() => {
+              onSelectPage('page-all-skills');
+              onClose();
+            }}
+          >
+            <Layers size={20} className="menu-btn-icon" />
+            <span className="menu-btn-label">Tất Cả Kỹ Năng</span>
+          </button>
+
+          <button
+            className={`sidebar-menu-btn ${activePage === 'page-quiz-lib' ? 'active' : ''}`}
+            onClick={() => {
+              onSelectPage('page-quiz-lib');
+              onClose();
+            }}
+          >
+            <BookOpenCheck size={20} className="menu-btn-icon" />
+            <span className="menu-btn-label">Bài Tập & Test AI</span>
           </button>
         </nav>
 

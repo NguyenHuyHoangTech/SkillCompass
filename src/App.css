@@ -897,32 +897,34 @@ body {
 }
 
 /* Header Styles */
+/* Header Styles */
 .roadmap-header-container {
-  padding: 14px 16px 6px 16px;
-  margin-bottom: 14px;
+  padding: 16px 20px 10px 20px;
+  margin-bottom: 32px;
   background: rgba(255, 255, 255, 0.95);
 }
 
-/* Milestone Navigation Row: Tight Layout with 0 Whitespace Gaps */
+/* Milestone Navigation Row: Airy Layout with Generous Spacing */
 .milestone-nav-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 12px;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .fixed-add-btn {
-  width: 155px !important;
-  min-width: 155px !important;
-  max-width: 155px !important;
-  padding: 8px 10px !important;
+  width: 145px !important;
+  min-width: 145px !important;
+  max-width: 145px !important;
+  padding: 8px 12px !important;
   flex-shrink: 0 !important;
-  border: 1px dashed rgba(2, 132, 199, 0.5) !important;
-  background: rgba(2, 132, 199, 0.06) !important;
+  border: 1px dashed rgba(2, 132, 199, 0.4) !important;
+  background: rgba(2, 132, 199, 0.05) !important;
   color: #0284c7 !important;
   font-weight: 600;
   box-sizing: border-box;
+  border-radius: var(--radius-md) !important;
 }
 
 .add-icon-num {
@@ -931,9 +933,9 @@ body {
 }
 
 .milestone-nav-arrow-btn {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
   border-radius: 50%;
   background: #ffffff;
   border: 1px solid #cbd5e1;
@@ -951,6 +953,7 @@ body {
   background: #f0f9ff;
   border-color: var(--primary);
   color: var(--primary);
+  transform: scale(1.05);
 }
 
 .milestone-nav-arrow-btn.disabled {
@@ -967,7 +970,7 @@ body {
 .milestone-tabs-4col-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  gap: 12px;
   width: 100%;
 }
 
@@ -977,11 +980,18 @@ body {
   }
 }
 
+/* Individual Milestone Tab Item Wrap for Hover Tooltip */
+.milestone-tab-item-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
 .milestone-tab-btn.full-tab {
   width: 100% !important;
   min-width: 0 !important;
   max-width: 100% !important;
-  padding: 8px 10px !important;
+  padding: 10px 12px !important;
   flex-shrink: 1 !important;
   box-sizing: border-box;
 }
@@ -990,113 +1000,192 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 2px;
+  margin-top: 6px;
   width: 100%;
 }
 
 .page-indicator-small-badge {
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--text-muted);
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 1px 6px;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 2px 8px;
   border-radius: var(--radius-full);
   white-space: nowrap;
 }
 
 .milestone-tab-btn {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 10px 12px;
   background: #ffffff;
-  border: 1px solid var(--border-glass);
+  border: 1px solid #e2e8f0;
   border-radius: var(--radius-md);
   color: var(--text-muted);
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
   text-align: left;
-  width: 200px !important;
-  min-width: 200px !important;
-  max-width: 200px !important;
-  flex-shrink: 0 !important;
-  box-sizing: border-box;
-}
-
-.fixed-add-btn {
-  width: 200px !important;
-  min-width: 200px !important;
-  max-width: 200px !important;
-  flex-shrink: 0 !important;
-  border: 1px dashed rgba(2, 132, 199, 0.5) !important;
-  background: rgba(2, 132, 199, 0.06) !important;
-  color: #0284c7 !important;
-  font-weight: 600;
   box-sizing: border-box;
 }
 
 .milestone-tab-btn:hover {
   background: #ffffff;
-  color: var(--text-main);
-  border-color: rgba(2, 132, 199, 0.4);
-}
-
-/* Minimalist Inactive Milestone Tab */
-.milestone-tab-btn {
-  position: relative;
-}
-
-.milestone-tab-btn[data-tooltip]::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  background: #0f172a;
-  color: #ffffff;
-  padding: 6px 11px;
-  border-radius: 7px;
-  font-size: 0.73rem;
-  font-weight: 700;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.3);
-  z-index: 9999;
-}
-
-.milestone-tab-btn[data-tooltip]::before {
-  content: '';
-  position: absolute;
-  bottom: calc(100% + 2px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  border-width: 6px 6px 0 6px;
-  border-style: solid;
-  border-color: #0f172a transparent transparent transparent;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  z-index: 9999;
-}
-
-.milestone-tab-btn[data-tooltip]:hover::after,
-.milestone-tab-btn[data-tooltip]:hover::before {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  border-color: #38bdf8;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.1);
+  transform: translateY(-1px);
 }
 
 .milestone-tab-btn.minimal-tab {
   background: #f8fafc;
   border-color: #e2e8f0;
-  opacity: 0.88;
+}
+
+.milestone-tab-btn.minimal-tab:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+/* Prominent Active Milestone Tab */
+.milestone-tab-btn.active {
+  background: #ffffff;
+  border: 1.5px solid #0284c7;
+  color: var(--text-main);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.16);
+}
+
+.tab-single-main-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.tab-meta-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.tab-short-title {
+  font-weight: 750;
+  font-size: 0.86rem;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.milestone-tab-btn.active .tab-short-title {
+  color: #0284c7;
+  font-weight: 850;
+}
+
+.tab-percent-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #0284c7;
+  background: #f0f9ff;
+  padding: 1px 6px;
+  border-radius: 99px;
+  border: 1px solid rgba(2, 132, 199, 0.2);
+}
+
+/* Refined Status Indicators */
+.tab-status-indicator {
+  display: flex;
+  align-items: center;
+}
+
+.ms-status-icon.completed {
+  color: #059669;
+}
+
+.ms-status-dot.active {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25);
+}
+
+.ms-status-dot.standard {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+
+/* Floating Hover Tooltip for Full Milestone Title & Details */
+.milestone-hover-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: #0f172a;
+  color: #ffffff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.76rem;
+  width: 250px;
+  max-width: 90vw;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.25);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;
+}
+
+.milestone-hover-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: #0f172a transparent transparent transparent;
+}
+
+.milestone-tab-item-wrap:hover .milestone-hover-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tooltip-title {
+  font-weight: 800;
+  font-size: 0.84rem;
+  color: #ffffff;
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+
+.tooltip-role {
+  font-size: 0.72rem;
+  color: #38bdf8;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.tooltip-desc {
+  font-size: 0.74rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.tooltip-progress {
+  font-size: 0.72rem;
+  color: #e2e8f0;
 }
 
 .milestone-tab-btn.minimal-tab:hover {
@@ -1460,70 +1549,73 @@ body {
 .skill-category-list {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 24px;
 }
 
 .category-card {
-  padding: 20px;
+  padding: 24px;
   background: #ffffff;
+  border-radius: var(--radius-lg);
 }
 
 .category-header {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .cat-title-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .cat-dot {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: var(--primary);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
 }
 
 .cat-title-badge h3 {
-  font-size: 1.1rem;
+  font-size: 1.18rem;
   font-weight: 800;
-  color: var(--text-main);
+  color: #0f172a;
 }
 
 .cat-desc {
-  color: var(--text-muted);
-  font-size: 0.84rem;
-  margin-top: 2px;
+  color: #475569;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  margin-top: 4px;
 }
 
 .skills-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 20px;
 }
 
 .skill-item-card {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: var(--radius-md);
-  padding: 16px;
+  padding: 20px;
 }
 
 .skill-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .skill-title-wrap {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--text-main);
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.02rem;
+  color: #0f172a;
 }
 
 .skill-icon {
@@ -1532,17 +1624,17 @@ body {
 
 .skill-level-num {
   font-weight: 800;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   color: var(--primary);
 }
 
 .skill-progress-bar {
   width: 100%;
-  height: 6px;
+  height: 7px;
   background: #e2e8f0;
   border-radius: var(--radius-full);
   overflow: hidden;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .skill-progress-fill {
@@ -1556,31 +1648,34 @@ body {
 .subtopic-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .subtopic-header-label {
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  font-weight: 700;
+  font-size: 0.72rem;
+  color: #475569;
+  font-weight: 800;
   text-transform: uppercase;
-  margin-bottom: 2px;
+  letter-spacing: 0.03em;
+  margin-bottom: 4px;
 }
 
 .subtopic-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 14px;
+  padding: 14px 18px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   transition: var(--transition-fast);
+  gap: 14px;
 }
 
 .subtopic-item:hover {
   background: #f0f9ff;
-  border-color: rgba(2, 132, 199, 0.3);
+  border-color: rgba(2, 132, 199, 0.35);
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.06);
 }
 
 .subtopic-item.completed {
@@ -1591,16 +1686,19 @@ body {
 .subtopic-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
 }
 
 .check-toggle-btn {
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: #64748b;
   cursor: pointer;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .check-icon-active {
@@ -1610,17 +1708,21 @@ body {
 .subtopic-info {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 0;
 }
 
 .subtopic-title {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .subtopic-desc {
-  font-size: 0.78rem;
-  color: var(--text-muted);
+  font-size: 0.82rem;
+  color: #334155;
+  line-height: 1.55;
+  margin-top: 2px;
 }
 
 .subtopic-actions {
@@ -1697,7 +1799,7 @@ body {
 }
 
 .spider-chart-card {
-  padding: 16px 20px;
+  padding: 18px 22px;
   background: #ffffff;
   border-radius: var(--radius-lg);
   height: 100%;
@@ -1716,7 +1818,13 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+}
+
+.chart-title-group h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
 }
 
 .country-market-selector-wrap {
@@ -1725,7 +1833,7 @@ body {
   gap: 4px;
   background: #f1f5f9;
   border: 1px solid #cbd5e1;
-  padding: 2px 6px;
+  padding: 3px 8px;
   border-radius: var(--radius-full);
 }
 
@@ -1736,26 +1844,26 @@ body {
 .country-market-select {
   background: transparent;
   border: none;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--text-main);
+  color: #1e293b;
   cursor: pointer;
   outline: none;
 }
 
 .chart-subtitle {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-  line-height: 1.2;
+  font-size: 0.76rem;
+  color: #475569;
+  margin-bottom: 6px;
+  line-height: 1.4;
 }
 
 .radar-legend-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 2px;
-  padding: 2px 8px;
+  gap: 12px;
+  margin-bottom: 4px;
+  padding: 4px 10px;
   background: #f8fafc;
   border-radius: var(--radius-sm);
   border: 1px solid #e2e8f0;
@@ -1764,15 +1872,15 @@ body {
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.68rem;
+  gap: 5px;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--text-main);
+  color: #1e293b;
 }
 
 .legend-dot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
 }
 
@@ -1786,14 +1894,14 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 0;
-  padding: 4px 8px;
+  padding: 8px 12px;
   width: 100%;
 }
 
 .spider-svg {
   width: 100%;
-  max-width: 310px;
-  max-height: 280px;
+  max-width: 340px;
+  max-height: 310px;
   height: auto;
   overflow: visible;
   display: block;
@@ -1821,7 +1929,7 @@ body {
 }
 
 .radar-label-text {
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 700;
   fill: #334155;
   letter-spacing: -0.01em;
@@ -1889,7 +1997,7 @@ body {
 
 /* AI Milestone Evaluator Section */
 .milestone-evaluator-card {
-  padding: 12px 14px;
+  padding: 18px 20px;
   margin-bottom: 0;
   background: #ffffff;
   border-radius: var(--radius-lg);
@@ -1904,23 +2012,23 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 14px;
   flex-wrap: nowrap;
   width: 100%;
-  gap: 8px;
+  gap: 12px;
 }
 
 .evaluator-header-title {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
   white-space: nowrap;
 }
 
 .ai-badge-icon {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: linear-gradient(135deg, #0284c7, #2563eb);
   display: flex;
@@ -1931,21 +2039,21 @@ body {
 }
 
 .evaluator-header-title h3 {
-  font-size: 0.88rem;
+  font-size: 1.05rem;
   font-weight: 800;
-  color: var(--text-main);
+  color: #0f172a;
   white-space: nowrap;
 }
 
 .evaluator-sub {
-  font-size: 0.74rem;
-  color: var(--text-muted);
+  font-size: 0.78rem;
+  color: #475569;
 }
 
 .evaluator-header-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 12px;
   flex-wrap: nowrap;
   flex-shrink: 0;
   white-space: nowrap;
@@ -1954,68 +2062,67 @@ body {
 .eval-action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 11px;
+  gap: 6px;
+  padding: 6px 13px;
   border-radius: 20px;
-  font-size: 0.76rem;
-  font-weight: 800;
+  font-size: 0.78rem;
+  font-weight: 700;
   cursor: pointer;
-  border: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
   flex-shrink: 0;
-}
-
-.eval-action-btn:hover {
-  transform: translateY(-2px) scale(1.02);
 }
 
 .eval-action-btn:active {
   transform: translateY(0) scale(0.98);
 }
 
-/* Button 1: Đề Xuất Mốc Tương Lai (Xanh Da Trời Nhạt) */
+/* Button 1: Đề Xuất Mốc Tương Lai (Sleek Outline) */
 .btn-ai-propose {
-  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-  color: #0369a1;
-  border: 1.5px solid #38bdf8;
-  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .btn-ai-propose:hover {
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-  color: #ffffff;
+  background: #f8fafc;
+  color: #0284c7;
   border-color: #0284c7;
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(2, 132, 199, 0.12);
 }
 
-/* Button 2: AI Tối Ưu Lộ Trình (Xanh Cobalt / Royal Light) */
+/* Button 2: AI Tối Ưu Lộ Trình (Soft Tint Blue) */
 .btn-ai-optimize {
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  color: #1d4ed8;
-  border: 1.5px solid #60a5fa;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.08);
 }
 
 .btn-ai-optimize:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: #ffffff;
-  border-color: #2563eb;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+  background: #e0f2fe;
+  color: #0284c7;
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(2, 132, 199, 0.15);
 }
 
-/* Button 3: Đánh Giá Lại Giai Đoạn (Xanh Dương Đậm Nổi Bật) */
+/* Button 3: Đánh Giá Lại Giai Đoạn (Primary Solid Accent) */
 .btn-ai-re-evaluate {
-  background: linear-gradient(135deg, #0284c7 0%, #1e40af 100%);
+  background: #0284c7;
   color: #ffffff;
-  border: 1.5px solid #38bdf8;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+  border: 1px solid #0284c7;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
 }
 
 .btn-ai-re-evaluate:hover {
-  background: linear-gradient(135deg, #0369a1 0%, #1e3a8a 100%);
-  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.5);
-  border-color: #60a5fa;
+  background: #0369a1;
+  border-color: #0369a1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
 }
 
 .btn-sm {
@@ -2024,14 +2131,14 @@ body {
 }
 
 .optimized-alert-box {
-  padding: 8px 12px;
+  padding: 10px 14px;
   background: #f0f9ff;
   border: 1px solid rgba(2, 132, 199, 0.3);
   border-radius: var(--radius-md);
   color: #0369a1;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2047,12 +2154,12 @@ body {
 .readiness-banner {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
+  gap: 14px;
+  padding: 12px 16px;
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
   border-radius: var(--radius-md);
-  margin-bottom: 8px;
-  border: 1px solid rgba(2, 132, 199, 0.15);
+  margin-bottom: 14px;
+  border: 1px solid rgba(2, 132, 199, 0.18);
   overflow: hidden;
 }
 
@@ -2083,7 +2190,7 @@ body {
 
 .r-label {
   font-size: 0.52rem;
-  color: var(--text-muted);
+  color: #475569;
   text-transform: uppercase;
   font-weight: 800;
   letter-spacing: 0.5px;
@@ -2098,18 +2205,18 @@ body {
 }
 
 .readiness-info h4 {
-  font-size: 0.95rem;
+  font-size: 1.02rem;
   font-weight: 800;
-  margin-bottom: 2px;
-  color: var(--text-main);
+  margin-bottom: 4px;
+  color: #0f172a;
   overflow-wrap: break-word;
   word-break: break-word;
 }
 
 .readiness-info p {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  line-height: 1.35;
+  color: #334155;
+  font-size: 0.85rem;
+  line-height: 1.6;
   overflow-wrap: break-word;
   word-break: break-word;
 }
@@ -2118,7 +2225,7 @@ body {
   flex: 1;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 16px;
 }
 
 @media (max-width: 900px) {
@@ -2128,7 +2235,7 @@ body {
 }
 
 .eval-col {
-  padding: 10px 12px;
+  padding: 16px 18px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: var(--radius-md);
@@ -2137,12 +2244,12 @@ body {
 }
 
 .eval-col-title {
-  font-weight: 700;
-  font-size: 0.8rem;
-  margin-bottom: 6px;
+  font-weight: 800;
+  font-size: 0.86rem;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .eval-col.strengths .eval-col-title { color: #047857; }
@@ -2154,22 +2261,23 @@ body {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 10px;
 }
 
 .eval-col li {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.35;
+  font-size: 0.83rem;
+  color: #334155;
+  line-height: 1.6;
   position: relative;
-  padding-left: 12px;
+  padding-left: 14px;
 }
 
 .eval-col li::before {
   content: "•";
   position: absolute;
   left: 0;
-  color: var(--text-dim);
+  color: #64748b;
+  font-weight: bold;
 }
 
 /* AI Quiz Modal */
@@ -3375,5 +3483,223 @@ body {
   color: #0f172a;
   border-color: #94a3b8;
 }
+
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVE DESIGN (Màn hình điện thoại & Máy tính bảng)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* 1. Navbar & Page Container Padding trên di động */
+  .top-nav-container {
+    padding: 0 12px;
+  }
+
+  .nav-brand-title {
+    font-size: 0.95rem;
+  }
+
+  .nav-subtabs-group {
+    display: none;
+  }
+
+  .main-viewport {
+    padding: 10px 8px;
+  }
+
+  /* 2. Milestone Banner Mobile Layout */
+  .roadmap-header-container {
+    padding: 14px 12px 10px 12px;
+    margin-bottom: 20px;
+  }
+
+  .milestone-banner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 16px 12px;
+  }
+
+  .banner-left {
+    align-items: center;
+    width: 100%;
+  }
+
+  .banner-heading {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  .banner-desc {
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  .banner-right-progress {
+    margin-top: 4px;
+  }
+
+  /* 3. Milestone Timeline Grid trên di động */
+  .milestone-nav-row {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .fixed-add-btn {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .milestone-tabs-4col-wrapper {
+    width: 100%;
+  }
+
+  .milestone-tabs-4col-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .milestone-nav-arrow-btn {
+    display: none;
+  }
+
+  .milestone-tab-btn {
+    padding: 8px 10px;
+  }
+
+  .tab-short-title {
+    font-size: 0.8rem;
+  }
+
+  /* 4. Evaluator & Spider Chart Mobile Row */
+  .top-eval-radar-row {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .milestone-evaluator-card {
+    padding: 14px 12px;
+  }
+
+  .evaluator-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .evaluator-header-actions {
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .eval-action-btn {
+    flex: 1 1 calc(50% - 6px);
+    justify-content: center;
+    padding: 8px 10px;
+    font-size: 0.74rem;
+  }
+
+  .readiness-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 12px 10px;
+  }
+
+  .readiness-info h4 {
+    font-size: 0.94rem;
+  }
+
+  .eval-grid-columns {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .eval-col {
+    padding: 12px 14px;
+  }
+
+  /* Spider Chart Card Mobile Padding */
+  .spider-chart-card {
+    padding: 14px 12px;
+  }
+
+  .spider-svg {
+    max-width: 100%;
+    max-height: 270px;
+  }
+
+  /* 5. Checklist & Skill Category List Mobile Layout */
+  .category-card {
+    padding: 16px 12px;
+  }
+
+  .cat-title-badge h3 {
+    font-size: 1.05rem;
+  }
+
+  .skill-item-card {
+    padding: 14px 12px;
+  }
+
+  .subtopic-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .subtopic-left {
+    width: 100%;
+  }
+
+  .subtopic-actions {
+    width: 100%;
+    justify-content: space-between;
+    padding-top: 8px;
+    border-top: 1px dashed #e2e8f0;
+  }
+
+  .ai-quiz-trigger-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* 6. Modals trên di động */
+  .modal-container {
+    padding: 16px;
+    width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-footer-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .milestone-tabs-4col-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .eval-action-btn {
+    flex: 1 1 100%;
+  }
+
+  .tab-short-title {
+    font-size: 0.82rem;
+  }
+}
+
 
 

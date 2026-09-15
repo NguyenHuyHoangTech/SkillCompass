@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Milestone, OverallAiEvaluation } from '../../types/roadmap';
 import { ApiService } from '../../services/apiService';
 import { Bot, Sparkles, CheckCircle, AlertTriangle, Lightbulb, Loader2, RefreshCw } from 'lucide-react';
@@ -20,6 +20,12 @@ export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
   );
   const [optimizing, setOptimizing] = useState(false);
   const [optimizedMessage, setOptimizedMessage] = useState('');
+
+  // Tự động đồng bộ lại đánh giá khi chuyển mốc hoặc tạo mốc mới
+  useEffect(() => {
+    setEvaluation(milestone.overallAiEvaluation);
+    setOptimizedMessage('');
+  }, [milestone.id, milestone.overallAiEvaluation]);
 
   const handleEvaluatePhase = async () => {
     setEvaluating(true);

@@ -11,6 +11,7 @@ import { AIQuizModal } from './components/ai/AIQuizModal';
 import { AICareerChatbot } from './components/ai/AICareerChatbot';
 import { AnalyticsPage } from './components/pages/AnalyticsPage';
 import { QuizLibraryPage } from './components/pages/QuizLibraryPage';
+import { AllSkillsPage } from './components/pages/AllSkillsPage';
 import { SettingsPage } from './components/pages/SettingsPage';
 import './App.css';
 
@@ -128,18 +129,19 @@ export function App() {
 
   return (
     <div className="app-main-outer-shell">
-      {/* 1. Sticky Top Navbar với Thanh Sub-Tab Nhảy Mục Trong Trang Nằm Trên Cùng */}
+      {/* 1. Sticky Top Navbar với các Tab chuyển trang chính (Lộ Trình, Tất Cả Kỹ Năng, Bài Tập & Test) */}
       <TopNavbar
         userName={roadmap.userName}
         activePage={activePage}
         activeSubTab={activeSubTab}
         onSelectSubTab={handleSelectSubTab}
+        onSelectPage={(page) => setActivePage(page)}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         onOpenCareerChat={() => setIsCareerChatOpen(true)}
       />
 
       <div className="app-layout-wrapper">
-        {/* 2. Thanh Tab Dọc Đẩy Ra Dạng Drawer (Làm Mờ Phần Dưới) */}
+        {/* 2. Thanh Tab Dọc Đẩy Ra Dạng Drawer */}
         <SidebarNav
           userName={roadmap.userName}
           activePage={activePage}
@@ -193,6 +195,14 @@ export function App() {
 
 
             </div>
+          )}
+
+          {activePage === 'page-all-skills' && (
+            <AllSkillsPage
+              milestones={roadmap.milestones}
+              onOpenQuiz={handleOpenQuiz}
+              onToggleCheck={handleToggleCheck}
+            />
           )}
 
           {activePage === 'page-analytics' && (

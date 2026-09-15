@@ -75,15 +75,15 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
     displaySkills.push({
       id: `sk-std-${idx}`,
       name: standardLabels[idx] || `Kỹ năng ${idx + 1}`,
-      value: 50,
+      value: 0,
     });
   }
 
   const finalSkills = displaySkills.slice(0, 5);
 
   const numAxes = 5;
-  const center = 160;
-  const radius = 92; // Substantially enlarged radar chart grid area
+  const center = 185;
+  const radius = 92; // Enlarged radar chart grid area with generous padding
   const levels = [0.2, 0.4, 0.6, 0.8, 1.0];
 
   const getCoordinates = (index: number, valPercent: number) => {
@@ -146,7 +146,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
       <div className="chart-header compact-header">
         <div className="chart-header-top-row">
           <div className="chart-title-group">
-            <h3 style={{ fontSize: '0.88rem', fontWeight: 800 }}>Biểu Đồ Mạng Nhện Năng Lực</h3>
+            <h3>Biểu Đồ Mạng Nhện Năng Lực</h3>
           </div>
 
           <div className="country-market-selector-wrap">
@@ -182,9 +182,9 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
         </div>
       </div>
 
-      {/* SVG Radar Chart (Enlarged chart graphic with sleek & compact surrounding text) */}
+      {/* SVG Radar Chart (Enlarged canvas 370x370 for spacious label padding) */}
       <div className="chart-container-flex compact-flex">
-        <svg viewBox="0 0 320 320" className="spider-svg compact-svg">
+        <svg viewBox="0 0 370 370" className="spider-svg compact-svg">
           <defs>
             <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="rgba(2, 132, 199, 0.45)" />
@@ -282,10 +282,10 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
             );
           })}
 
-          {/* Sleek Compact Skill Labels */}
+          {/* Sleek Skill Labels with ample padding */}
           {finalSkills.map((sk, i) => {
             const angle = (Math.PI * 2 * i) / numAxes - Math.PI / 2;
-            const labelRadius = radius + 14;
+            const labelRadius = radius + 22;
             const lx = Math.round(center + labelRadius * Math.cos(angle));
             const ly = Math.round(center + labelRadius * Math.sin(angle));
             const textAnchor = Math.abs(lx - center) < 15 ? 'middle' : lx > center ? 'start' : 'end';
@@ -301,7 +301,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
                   className="radar-label-text"
                 >
                   {lines.map((line, lIdx) => (
-                    <tspan key={lIdx} x={lx} dy={lIdx === 0 ? 0 : 10}>
+                    <tspan key={lIdx} x={lx} dy={lIdx === 0 ? 0 : 11}>
                       {line}
                     </tspan>
                   ))}

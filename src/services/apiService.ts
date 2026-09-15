@@ -221,24 +221,29 @@ export class ApiService {
 
       // 2. AI Đánh giá năng lực tổng hợp dựa trên kết quả các bài kiểm tra test
       const avgQuizScore = tested.length > 0
-        ? Math.round(tested.reduce((acc, st) => acc + (st.assessmentScore || 80), 0) / tested.length)
-        : 85;
+        ? Math.round(tested.reduce((acc, st) => acc + (st.assessmentScore || 0), 0) / tested.length)
+        : 0;
 
       const evalResult: OverallAiEvaluation = {
         score: avgQuizScore,
         readinessLabel: `${avgQuizScore}% AI Đánh Giá Năng Lực ${milestone.roleName}`,
-        summary: `AI đã tổng hợp kết quả các bài kiểm tra test: Điểm năng lực thực tế đạt ${avgQuizScore}% (đã tích xong ${completed.length}/${allSub.length} mục bài học trong mốc).`,
-        strengths: [
+        summary: tested.length > 0
+          ? `AI đã tổng hợp kết quả các bài kiểm tra test: Điểm năng lực thực tế đạt ${avgQuizScore}% (đã tích xong ${completed.length}/${allSub.length} mục bài học trong mốc).`
+          : `Mốc mới được khởi tạo! Bạn chưa thực hiện bài kiểm tra test nào. Hãy bắt đầu học và làm AI Quiz để nâng cao điểm đánh giá năng lực!`,
+        strengths: tested.length > 0 ? [
           "Thấu hiểu tư duy UI/UX trực quan và nguyên tắc phân cấp thị giác",
           "Có khả năng áp dụng các công cụ hiện đại và chuẩn hóa trải nghiệm người dùng"
+        ] : [
+          "Sẵn sàng tiếp thu kiến thức và kỹ năng mới thuộc giai đoạn này",
+          "Đã thiết lập mục tiêu lộ trình chi tiết cùng AI Coach"
         ],
         weaknesses: [
-          `Cần hoàn thiện thêm các hạng mục thực hành chưa đạt 100% trong mốc này`
+          `Cần hoàn thiện thêm các hạng mục thực hành chưa hoàn thành (${completed.length}/${allSub.length} mục)`
         ],
         actionItems: [
-          "Luyện tập bài test AI Quiz cho các mục còn lại",
-          "Áp dụng chuẩn Mobile-First và kiểm tra độ tương phản màu WCAG",
-          "Tối ưu hóa hiệu năng ứng dụng bằng Lazy Loading & WebP"
+          "Luyện tập bài test AI Quiz cho các mục bài học trong mốc",
+          "Áp dụng kiến thức vào bài tập thực hành thực tế",
+          "Hoàn thành toàn bộ checklist để sẵn sàng ứng tuyển"
         ],
         evaluatedAt: new Date().toISOString()
       };

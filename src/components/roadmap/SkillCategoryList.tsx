@@ -98,9 +98,10 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
                         <button
                           className="ai-quiz-trigger-btn"
                           onClick={() => onOpenQuiz(skill, subTopic)}
+                          title="Mở AI Coach hướng dẫn & kiểm tra bài tập"
                         >
                           <Bot size={15} />
-                          <span>AI Check & Test</span>
+                          <span>🤖 Làm Bài Test AI</span>
                         </button>
                       </div>
                     </div>
