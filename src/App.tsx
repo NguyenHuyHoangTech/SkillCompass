@@ -1,122 +1,239 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import type { UserRoadmap, Skill, SubTopic, Milestone } from './types/roadmap';
+import { ApiService } from './services/apiService';
+import { TopNavbar } from './components/layout/TopNavbar';
+import { SidebarNav } from './components/layout/SidebarNav';
+import { RoadmapHeader } from './components/roadmap/RoadmapHeader';
+import { SpiderChart } from './components/roadmap/SpiderChart';
+import { SkillCategoryList } from './components/roadmap/SkillCategoryList';
+import { AIMilestoneEvaluator } from './components/ai/AIMilestoneEvaluator';
+import { AIQuizModal } from './components/ai/AIQuizModal';
+import { AICareerChatbot } from './components/ai/AICareerChatbot';
+import { AnalyticsPage } from './components/pages/AnalyticsPage';
+import { QuizLibraryPage } from './components/pages/QuizLibraryPage';
+import { SettingsPage } from './components/pages/SettingsPage';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+export function App() {
+  const [roadmap, setRoadmap] = useState<UserRoadmap | null>(null);
+  const [activeMilestoneId, setActiveMilestoneId] = useState<string>('ms-stage-1');
+
+  // Page Routing State (Sidebar Vertical Tabs switch DIFFERENT PAGES)
+  const [activePage, setActivePage] = useState<string>('page-roadmap');
+
+  // Sub-Tab Navigation inside Roadmap Page (Horizontal Tabs in Header)
+  const [activeSubTab, setActiveSubTab] = useState<string>('view-all');
+
+  // Sidebar Drawer Open/Close State
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+
+  // Modal & Chatbot States
+  const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const [selectedSubTopic, setSelectedSubTopic] = useState<SubTopic | null>(null);
+  const [isCareerChatOpen, setIsCareerChatOpen] = useState(false);
+
+  useEffect(() => {
+    loadRoadmap();
+  }, []);
+
+  const loadRoadmap = async () => {
+    try {
+      const data = await ApiService.getRoadmap();
+      setRoadmap(data);
+      if (data.currentMilestoneId) {
+        setActiveMilestoneId(data.currentMilestoneId);
+      }
+    } catch (err) {
+      console.error('Failed to load roadmap:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSelectMilestone = (id: string) => {
+    setActiveMilestoneId(id);
+  };
+
+  const handleOpenQuiz = (skill: Skill, subTopic: SubTopic) => {
+    setSelectedSkill(skill);
+    setSelectedSubTopic(subTopic);
+    setIsQuizModalOpen(true);
+  };
+
+  const handleToggleCheck = async (skill: Skill, subTopic: SubTopic, completed: boolean) => {
+    if (!roadmap) return;
+
+    try {
+      const updatedData = await ApiService.updateSubTopic({
+        milestoneId: activeMilestoneId,
+        skillId: skill.id,
+        subTopicId: subTopic.id,
+        isCompleted: completed,
+      });
+      setRoadmap(updatedData);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAddMilestone = async (newMilestone: Milestone) => {
+    const updatedData = await ApiService.addMilestoneToRoadmap(newMilestone);
+    setRoadmap(updatedData);
+    setActiveMilestoneId(newMilestone.id);
+  };
+
+  const handleSuccessEvaluation = async () => {
+    await loadRoadmap();
+  };
+
+  const handleSelectSubTab = (tabId: string) => {
+    setActiveSubTab(tabId);
+    if (tabId === 'view-all') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const targetMap: Record<string, string> = {
+      'view-checklist': 'sec-checklist',
+      'view-radar': 'sec-radar',
+      'view-optimizer': 'sec-optimizer',
+    };
+
+    const targetId = targetMap[tabId];
+    if (targetId) {
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
+
+
+
+
+  if (loading || !roadmap) {
+    return (
+      <div className="app-loading-screen">
+        <div className="spin-icon" style={{ fontSize: '2.5rem', marginBottom: '16px' }}>💫</div>
+        <h2>Skill Compass AI - Đang tải dữ liệu hệ thống...</h2>
+      </div>
+    );
+  }
+
+  const activeMilestone =
+    roadmap.milestones.find((m) => m.id === activeMilestoneId) || roadmap.milestones[0];
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app-main-outer-shell">
+      {/* 1. Sticky Top Navbar với Thanh Sub-Tab Nhảy Mục Trong Trang Nằm Trên Cùng */}
+      <TopNavbar
+        userName={roadmap.userName}
+        activePage={activePage}
+        activeSubTab={activeSubTab}
+        onSelectSubTab={handleSelectSubTab}
+        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        onOpenCareerChat={() => setIsCareerChatOpen(true)}
+      />
 
-      <div className="ticks"></div>
+      <div className="app-layout-wrapper">
+        {/* 2. Thanh Tab Dọc Đẩy Ra Dạng Drawer (Làm Mờ Phần Dưới) */}
+        <SidebarNav
+          userName={roadmap.userName}
+          activePage={activePage}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          onSelectPage={(page) => setActivePage(page)}
+          onOpenCareerChat={() => setIsCareerChatOpen(true)}
+        />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {/* 3. Main Viewport Container */}
+        <div className="main-viewport">
+          {activePage === 'page-roadmap' && (
+            <div className="roadmap-page-view">
+              {/* Horizontal Milestone Tabs */}
+              <RoadmapHeader
+                milestones={roadmap.milestones}
+                activeMilestoneId={activeMilestoneId}
+                onSelectMilestone={handleSelectMilestone}
+                onOpenCareerChat={() => setIsCareerChatOpen(true)}
+              />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+              {/* Tất cả các thành phần luôn được hiển thị trọn vẹn trên 1 TRANG duy nhất */}
+              <div className="roadmap-single-page-wrapper">
+                {/* Row 1: AI Đánh Giá Tổng Thể & Biểu Đồ Mạng Nhện nằm CHUNG 1 DÒNG */}
+                <div className="top-eval-radar-row">
+                  <div className="evaluator-col" id="sec-optimizer">
+                    <AIMilestoneEvaluator
+                      milestone={activeMilestone}
+                      onRefreshRoadmap={loadRoadmap}
+                      onOpenCareerChat={() => setIsCareerChatOpen(true)}
+                    />
+                  </div>
+                  <div className="radar-col" id="sec-radar">
+                    <SpiderChart
+                      categories={activeMilestone.categories}
+                      milestoneTitle={activeMilestone.title}
+                    />
+                  </div>
+                </div>
+
+                {/* Row 2: Danh Sách Kỹ Năng / Checklist rộng 100% bên dưới */}
+                <div className="checklist-full-row" id="sec-checklist" style={{ marginTop: '14px' }}>
+                  <SkillCategoryList
+                    categories={activeMilestone.categories}
+                    onOpenQuiz={handleOpenQuiz}
+                    onToggleCheck={handleToggleCheck}
+                  />
+                </div>
+              </div>
+
+
+
+            </div>
+          )}
+
+          {activePage === 'page-analytics' && (
+            <AnalyticsPage milestone={activeMilestone} />
+          )}
+
+          {activePage === 'page-quiz-lib' && (
+            <QuizLibraryPage
+              milestones={roadmap.milestones}
+              onOpenQuiz={handleOpenQuiz}
+            />
+          )}
+
+          {activePage === 'page-settings' && (
+            <SettingsPage userName={roadmap.userName} />
+          )}
+
+          {/* AI Quiz Modal */}
+          <AIQuizModal
+            isOpen={isQuizModalOpen}
+            milestoneId={activeMilestoneId}
+            milestoneTitle={activeMilestone.title}
+            skill={selectedSkill}
+            subTopic={selectedSubTopic}
+            onClose={() => setIsQuizModalOpen(false)}
+            onSuccessEvaluation={handleSuccessEvaluation}
+          />
+
+          {/* Floating AI Career Advisor Chatbot với chức năng Thêm Mốc Lộ Trình Tương Lai do AI Đề Xuất */}
+          <AICareerChatbot
+            milestoneId={activeMilestoneId}
+            milestoneTitle={activeMilestone.title}
+            forceOpen={isCareerChatOpen}
+            onCloseForceOpen={() => setIsCareerChatOpen(false)}
+            onAddMilestone={handleAddMilestone}
+            isSidebarOpen={isSidebarOpen}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;
