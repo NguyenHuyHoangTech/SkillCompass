@@ -179,53 +179,41 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onFinish }) => {
             <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-200 rounded-full blur-[120px] opacity-60 pointer-events-none"></div>
             <div className="fixed bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-emerald-200 rounded-full blur-[100px] opacity-50 pointer-events-none"></div>
 
-            <header className="sticky top-0 left-0 w-full p-6 flex justify-between items-center z-50 bg-white/50 backdrop-blur-sm border-b border-slate-200/50">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center shadow-lg">
-                        <i className="fa-regular fa-compass text-white text-xl"></i>
-                    </div>
-                    <span className="font-extrabold text-xl tracking-tight text-slate-900">Skill Compass AI</span>
-                </div>
-                <div className="text-sm font-bold text-slate-500 bg-white/80 px-4 py-2 rounded-full border border-slate-200 shadow-sm">
-                    Step {step} of 4
-                </div>
-            </header>
-
-            <main className="relative z-10 w-full max-w-4xl mx-auto p-4 sm:p-6 pb-24">
+            <main className="relative z-10 w-full max-w-4xl mx-auto p-4 sm:p-6 pb-6">
                 
                 {/* STEP 1: INITIAL DATA COLLECTION */}
                 {step === 1 && (
-                    <div className="animate-fade-in-up mt-8">
-                        <div className="text-center mb-10">
-                            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-4 drop-shadow-sm">
+                    <div className="animate-fade-in-up mt-2">
+                        <div className="text-center mb-6">
+                            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-2 drop-shadow-sm">
                                 Let's build your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-emerald-500">Profile</span>
                             </h1>
-                            <p className="text-slate-500 text-lg max-w-xl mx-auto">
+                            <p className="text-slate-500 text-base max-w-xl mx-auto">
                                 The more you share, the more personalized the AI's career roadmap will be.
                             </p>
                         </div>
                         
-                        <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 space-y-6">
+                        <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-5 sm:p-6 space-y-4">
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">1. Current Skills <span className="text-red-500">*</span></label>
-                                <input type="text" placeholder="e.g. React, Python, Excel, Content Writing..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" value={step1Data.skills} onChange={e => setStep1Data({...step1Data, skills: e.target.value})} />
+                                <label className="block text-sm font-bold text-slate-700 mb-1">1. Current Skills <span className="text-red-500">*</span></label>
+                                <input type="text" placeholder="e.g. React, Python, Excel, Content Writing..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" value={step1Data.skills} onChange={e => setStep1Data({...step1Data, skills: e.target.value})} />
                                 <p className="text-xs text-slate-400 mt-1">If you have more than 5, AI will pick the top 5 to test.</p>
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">2. Hobbies / Interests</label>
-                                <input type="text" placeholder="e.g. Video games, Drawing, Traveling..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" value={step1Data.hobbies} onChange={e => setStep1Data({...step1Data, hobbies: e.target.value})} />
+                                <label className="block text-sm font-bold text-slate-700 mb-1">2. Hobbies / Interests</label>
+                                <input type="text" placeholder="e.g. Video games, Drawing, Traveling..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" value={step1Data.hobbies} onChange={e => setStep1Data({...step1Data, hobbies: e.target.value})} />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">3. Desired Income</label>
-                                <input type="text" placeholder="e.g. $50,000/year, enough to travel..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" value={step1Data.income} onChange={e => setStep1Data({...step1Data, income: e.target.value})} />
+                                <label className="block text-sm font-bold text-slate-700 mb-1">3. Desired Income</label>
+                                <input type="text" placeholder="e.g. $50,000/year, enough to travel..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" value={step1Data.income} onChange={e => setStep1Data({...step1Data, income: e.target.value})} />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">4. Extra Information</label>
-                                <textarea placeholder="Anything else you want to share? Personality, goals, struggles..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all min-h-[100px]" value={step1Data.extra} onChange={e => setStep1Data({...step1Data, extra: e.target.value})}></textarea>
+                                <label className="block text-sm font-bold text-slate-700 mb-1">4. Extra Information</label>
+                                <textarea placeholder="Anything else you want to share? Personality, goals, struggles..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all min-h-[60px]" value={step1Data.extra} onChange={e => setStep1Data({...step1Data, extra: e.target.value})}></textarea>
                             </div>
                             
-                            <div className="flex justify-end pt-4">
-                                <button onClick={goToStep2} disabled={!step1Data.skills.trim() || isGeneratingTest} className="bg-slate-900 hover:bg-indigo-600 text-white font-bold py-4 px-8 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg">
+                            <div className="flex justify-end pt-2">
+                                <button onClick={goToStep2} disabled={!step1Data.skills.trim() || isGeneratingTest} className="bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg">
                                     {isGeneratingTest ? <><i className="fa-solid fa-spinner fa-spin"></i> Processing...</> : <>Start Skill Test <i className="fa-solid fa-arrow-right"></i></>}
                                 </button>
                             </div>
