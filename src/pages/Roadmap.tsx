@@ -23,7 +23,11 @@ export default function Roadmap() {
   const [activeMilestoneId, setActiveMilestoneId] = useState<string>('ms-stage-1');
 
   // Page Routing State (Sidebar Vertical Tabs switch DIFFERENT PAGES)
-  const [activePage, setActivePage] = useState<string>('page-onboarding');
+  const [activePage, setActivePage] = useState<string>(
+    window.location.pathname === '/roadmap' || localStorage.getItem('skill_compass_roadmap')
+      ? 'page-roadmap'
+      : 'page-onboarding'
+  );
 
   // Sub-Tab Navigation inside Roadmap Page (Horizontal Tabs in Header)
   const [activeSubTab, setActiveSubTab] = useState<string>('view-all');

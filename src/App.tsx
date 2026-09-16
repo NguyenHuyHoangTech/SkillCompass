@@ -10,6 +10,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Roadmap />} />
+          <Route path="/roadmap" element={<Roadmap />} />
+          <Route path="*" element={<Roadmap />} />
         </Routes>
         <AITester />
       </BrowserRouter>
