@@ -1190,12 +1190,41 @@ TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc:
             mockMilestones = mockMilestones.slice(0, 2);
         } else {
             const shortText = userMessage.length > 15 ? userMessage.substring(0, 15) + '...' : userMessage;
-            mockResponse = `Tôi đã cập nhật lộ trình chuyên biệt cho "${shortText}". Bạn hãy xem danh sách bên phải nhé!`;
-            mockMilestones = [
-                { title: `Khóa học chuyên sâu: ${shortText}`, description: "Nội dung được tinh chỉnh tự động theo yêu cầu riêng biệt của bạn.", categoriesCount: 3 },
-                { title: "Nền tảng Cốt lõi (Review)", description: "Củng cố kiến thức nền tảng trước khi bước vào thực hành chuyên sâu.", categoriesCount: 2 },
-                { title: "Dự án Thực tế (Capstone)", description: "Áp dụng toàn bộ kiến thức vào một dự án thực tế có độ khó cao.", categoriesCount: 4 }
+            
+            const randomRoadmaps = [
+                [
+                    { title: `Khóa học chuyên sâu: ${shortText}`, description: "Nội dung được tinh chỉnh tự động theo yêu cầu riêng biệt của bạn.", categoriesCount: 3 },
+                    { title: "Nền tảng Cốt lõi (Review)", description: "Củng cố kiến thức nền tảng trước khi bước vào thực hành chuyên sâu.", categoriesCount: 2 },
+                    { title: "Dự án Thực tế (Capstone)", description: "Áp dụng toàn bộ kiến thức vào một dự án thực tế có độ khó cao.", categoriesCount: 4 }
+                ],
+                [
+                    { title: "Phân tích Yêu cầu Hệ thống", description: "Hiểu rõ bài toán và thu thập yêu cầu hệ thống.", categoriesCount: 2 },
+                    { title: `Kiến trúc cho ${shortText}`, description: "Thiết kế kiến trúc tổng thể dựa trên yêu cầu mới.", categoriesCount: 4 },
+                    { title: "Tối ưu hóa Hiệu suất", description: "Đảm bảo hệ thống chạy mượt mà và mở rộng tốt.", categoriesCount: 3 }
+                ],
+                [
+                    { title: "Security & Authentication", description: "Bảo mật ứng dụng và quản lý danh tính người dùng.", categoriesCount: 3 },
+                    { title: `Tích hợp ${shortText}`, description: "Phát triển các module theo chuẩn bảo mật cao nhất.", categoriesCount: 3 },
+                    { title: "Testing & QA", description: "Tự động hóa kiểm thử để đảm bảo chất lượng code.", categoriesCount: 2 }
+                ],
+                [
+                    { title: `Nhập môn ${shortText}`, description: "Làm quen với các khái niệm cơ bản nhất.", categoriesCount: 2 },
+                    { title: "Thực hành Kỹ năng Cốt lõi", description: "Luyện tập với các bài tập thực tế vừa và nhỏ.", categoriesCount: 3 },
+                    { title: "Phát triển Portfolio", description: "Xây dựng các sản phẩm cá nhân để trưng bày.", categoriesCount: 2 }
+                ]
             ];
+            
+            // Randomly select one of the roadmaps
+            const randomIndex = Math.floor(Math.random() * randomRoadmaps.length);
+            mockMilestones = randomRoadmaps[randomIndex];
+            
+            const responses = [
+                `Tuyệt vời! Tôi đã vẽ ra một hướng đi mới cho "${shortText}". Bạn xem thử ở cột bên phải nhé.`,
+                `Đã hiểu ý bạn. Lộ trình cho "${shortText}" đã sẵn sàng.`,
+                `Thú vị đấy! Dưới đây là các chặng đường tôi đề xuất dựa trên từ khóa "${shortText}".`,
+                `Tôi đã cập nhật lộ trình chuyên biệt cho "${shortText}". Bạn hãy xem danh sách bên phải nhé!`
+            ];
+            mockResponse = responses[Math.floor(Math.random() * responses.length)];
         }
 
         return {
