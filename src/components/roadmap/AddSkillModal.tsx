@@ -135,23 +135,46 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
             </div>
             
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">
-                3 Mục nhỏ (Subtopics) để bắt đầu học
-              </label>
-              <div className="space-y-2">
-                {[0, 1, 2].map(index => (
-                  <input
-                    key={index}
-                    type="text"
-                    value={subtopics[index]}
-                    onChange={(e) => {
-                      const newSubtopics = [...subtopics];
-                      newSubtopics[index] = e.target.value;
-                      setSubtopics(newSubtopics);
-                    }}
-                    placeholder={`Nhập mục nhỏ thứ ${index + 1}...`}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
-                  />
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-slate-700">
+                  Các Mục nhỏ (Subtopics) để bắt đầu học
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setSubtopics([...subtopics, ''])}
+                  className="text-xs font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+                >
+                  <i className="fa-solid fa-plus"></i> Thêm mục nhỏ
+                </button>
+              </div>
+              <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
+                {subtopics.map((st, index) => (
+                  <div key={index} className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      value={st}
+                      onChange={(e) => {
+                        const newSubtopics = [...subtopics];
+                        newSubtopics[index] = e.target.value;
+                        setSubtopics(newSubtopics);
+                      }}
+                      placeholder={`Nhập mục nhỏ thứ ${index + 1}...`}
+                      className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
+                    />
+                    {subtopics.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newSubtopics = subtopics.filter((_, i) => i !== index);
+                          setSubtopics(newSubtopics);
+                        }}
+                        className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors"
+                        title="Xóa mục này"
+                      >
+                        <i className="fa-solid fa-trash-can"></i>
+                      </button>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
