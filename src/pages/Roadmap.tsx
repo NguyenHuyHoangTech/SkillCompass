@@ -318,11 +318,13 @@ export default function Roadmap() {
             name: data.title,
             icon: 'fa-star', // default icon
             levelPercentage: 0,
-            subTopics: [
-              { id: `sub-m-${Date.now()}-1`, title: `Mục nhỏ 1 của ${data.title}`, isCompleted: false },
-              { id: `sub-m-${Date.now()}-2`, title: `Mục nhỏ 2 của ${data.title}`, isCompleted: false },
-              { id: `sub-m-${Date.now()}-3`, title: `Mục nhỏ 3 của ${data.title}`, isCompleted: false },
-            ]
+            subTopics: data.subtopics
+              .filter(st => st.trim() !== '')
+              .map((st, i) => ({
+                id: `sub-m-${Date.now()}-${i}`, 
+                title: st, 
+                isCompleted: false 
+              }))
           }]
         };
       }
@@ -338,11 +340,13 @@ export default function Roadmap() {
           name: data.title,
           icon: 'fa-star',
           levelPercentage: 0,
-          subTopics: [
-            { id: `sub-m-${Date.now()}-1`, title: `Mục nhỏ 1 của ${data.title}`, isCompleted: false },
-            { id: `sub-m-${Date.now()}-2`, title: `Mục nhỏ 2 của ${data.title}`, isCompleted: false },
-            { id: `sub-m-${Date.now()}-3`, title: `Mục nhỏ 3 của ${data.title}`, isCompleted: false },
-          ]
+          subTopics: data.subtopics
+            .filter(st => st.trim() !== '')
+            .map((st, i) => ({
+              id: `sub-m-${Date.now()}-${i}`, 
+              title: st, 
+              isCompleted: false 
+            }))
         }]
       });
     }

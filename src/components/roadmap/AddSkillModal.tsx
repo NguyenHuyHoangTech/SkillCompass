@@ -5,6 +5,7 @@ export interface ManualSkillData {
   categoryName: string;
   title: string;
   description: string;
+  subtopics: string[];
 }
 
 interface AddSkillModalProps {
@@ -19,15 +20,17 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
   const [isCustomCategory, setIsCustomCategory] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [subtopics, setSubtopics] = useState(['', '', '']);
 
   if (!isOpen) return null;
 
   const handleSave = () => {
     if (!title.trim() || !categoryName.trim()) return;
-    onSave({ categoryName, title, description });
+    onSave({ categoryName, title, description, subtopics });
     // Reset
     setTitle('');
     setDescription('');
+    setSubtopics(['', '', '']);
     setIsCustomCategory(false);
     onClose();
   };
@@ -131,9 +134,31 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
               ></textarea>
             </div>
             
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">
+                3 Mục nhỏ (Subtopics) để bắt đầu học
+              </label>
+              <div className="space-y-2">
+                {[0, 1, 2].map(index => (
+                  <input
+                    key={index}
+                    type="text"
+                    value={subtopics[index]}
+                    onChange={(e) => {
+                      const newSubtopics = [...subtopics];
+                      newSubtopics[index] = e.target.value;
+                      setSubtopics(newSubtopics);
+                    }}
+                    placeholder={`Nhập mục nhỏ thứ ${index + 1}...`}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
+                  />
+                ))}
+              </div>
+            </div>
+            
             <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-xl flex gap-3 text-indigo-700 text-sm">
                 <i className="fa-solid fa-circle-info mt-0.5"></i>
-                <p>Kỹ năng mới sẽ được tạo với 0% tiến độ và 3 mục nhỏ (subtopics) mặc định để bạn bắt đầu.</p>
+                <p>Kỹ năng mới sẽ được tạo với 0% tiến độ và các mục nhỏ bạn vừa nhập để bạn bắt đầu.</p>
             </div>
           </div>
 
