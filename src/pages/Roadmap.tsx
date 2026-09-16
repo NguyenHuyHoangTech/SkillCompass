@@ -441,7 +441,6 @@ export default function Roadmap() {
                     milestones={roadmap.milestones}
                     activeMilestoneId={activeMilestoneId}
                     onSelectMilestone={handleSelectMilestone}
-                    onOpenCareerChat={() => setIsCareerChatOpen(true)}
                     onEditMilestone={handleOpenEditMilestone}
                     onDeleteMilestone={handleDeleteMilestone}
                     onAddMilestone={handleOpenAddMilestone}

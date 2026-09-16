@@ -5,7 +5,6 @@ interface RoadmapHeaderProps {
   milestones: Milestone[];
   activeMilestoneId: string;
   onSelectMilestone: (id: string) => void;
-  onOpenCareerChat?: () => void;
   onEditMilestone?: (milestone: Milestone) => void;
   onDeleteMilestone?: (id: string) => void;
   onAddMilestone?: () => void;
@@ -16,7 +15,6 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
   milestones,
   activeMilestoneId,
   onSelectMilestone,
-  onOpenCareerChat,
   onEditMilestone,
   onDeleteMilestone,
   onAddMilestone,
@@ -136,30 +134,10 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
                     );
                 })}
 
-                {/* AI Add Milestone Button */}
-                {onOpenCareerChat && (
-                    <div className="relative h-full flex">
-                        {milestones.length > 0 && (
-                             <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-4 h-[2px] bg-slate-200"></div>
-                        )}
-                        <div 
-                            onClick={onOpenCareerChat}
-                            className="shrink-0 w-64 flex-1 rounded-xl border-2 border-dashed border-indigo-200 bg-indigo-50/50 p-4 cursor-pointer transition-all hover:-translate-y-1 hover:border-indigo-400 flex flex-col justify-center items-center group min-h-[140px]"
-                            title="Consult AI to propose future roadmap milestones"
-                        >
-                            <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-500 flex items-center justify-center text-lg mb-2 transition-transform group-hover:scale-110">
-                                <i className="fa-solid fa-wand-magic-sparkles"></i>
-                            </div>
-                            <h3 className="font-bold text-sm text-indigo-700 mb-1">Gợi ý AI</h3>
-                            <p className="text-[11px] text-indigo-500/80 text-center px-4">Đánh giá và tối ưu lại lộ trình tương lai</p>
-                        </div>
-                    </div>
-                )}
-                
                 {/* Manual Add Button */}
                 {onAddMilestone && (
                     <div className="relative h-full flex">
-                        {(milestones.length > 0 || onOpenCareerChat) && (
+                        {(milestones.length > 0) && (
                              <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-4 h-[2px] bg-slate-200"></div>
                         )}
                         <div 
