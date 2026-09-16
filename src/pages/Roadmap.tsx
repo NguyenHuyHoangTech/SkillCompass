@@ -388,7 +388,6 @@ export default function Roadmap() {
         onSelectSubTab={handleSelectSubTab}
         onSelectPage={(page) => setActivePage(page)}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-        onOpenCareerChat={() => setIsCareerChatOpen(true)}
       />
 
       <div className="app-layout-wrapper flex-1 flex overflow-hidden relative">

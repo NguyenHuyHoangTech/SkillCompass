@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Sparkles, Layers, CheckSquare, PieChart, Globe } from 'lucide-react';
+import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Layers, CheckSquare, PieChart, Sparkles } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
-import { AiConfigMenu } from '../ai/AiConfigMenu';
 
 interface TopNavbarProps {
   userName: string;
@@ -10,7 +9,6 @@ interface TopNavbarProps {
   onSelectSubTab?: (tabId: string) => void;
   onSelectPage?: (pageId: string) => void;
   onToggleSidebar?: () => void;
-  onOpenCareerChat?: () => void;
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
@@ -19,13 +17,12 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   activeSubTab = 'view-all',
   onSelectSubTab,
   onToggleSidebar,
-  onOpenCareerChat,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
-  const { language, setLanguage, t } = useAppContext();
+  const { t } = useAppContext();
 
   const roadmapSubTabs = [
     { id: 'view-all', label: 'Full Overview', icon: Layers },
@@ -90,31 +87,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <div id="onboarding-step-portal-target" className="top-nav-center-subtabs" style={{ display: 'flex', alignItems: 'center' }}></div>
         )}
 
-        {/* Right: Featured AI Button & User Dropdown Menu */}
+        {/* Right: User Dropdown Menu */}
         <div className="top-nav-auth-actions" ref={dropdownRef}>
-          {/* Quick Language Toggle */}
-          <button 
-            className="top-icon-btn"
-            onClick={() => setLanguage(language === 'vi' ? 'en' : 'vi')}
-            title={t('language')}
-          >
-            <Globe size={18} />
-            <span style={{ marginLeft: 4, fontSize: 12, fontWeight: 'bold' }}>{language.toUpperCase()}</span>
-          </button>
-
-
-          {onOpenCareerChat && (
-            <button
-              className="top-header-ai-featured-btn"
-              onClick={onOpenCareerChat}
-              title="Open Future Career AI Advisor"
-            >
-              <Sparkles size={15} className="ai-btn-spark" />
-              <span>{t('aiAdvisor')}</span>
-            </button>
-          )}
-
-          <AiConfigMenu />
 
           {isLoggedIn ? (
             <div className="user-dropdown-wrapper">
