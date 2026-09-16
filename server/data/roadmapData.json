@@ -1,0 +1,261 @@
+{
+  "id": "user-roadmap-uiux-frontend",
+  "userId": "usr-1001",
+  "userName": "Nguyễn Văn A",
+  "currentMilestoneId": "ms-stage-1",
+  "updatedAt": "2026-09-15T22:00:00.000Z",
+  "milestones": [
+    {
+      "id": "ms-stage-1",
+      "title": "Giai Đoạn 1: Nền Tảng Tư Duy (UI/UX Mindset)",
+      "roleName": "UI/UX & Frontend Mindset",
+      "description": "Nắm vững tư duy thiết kế trải nghiệm người dùng (UX) và các nguyên tắc giao diện thị giác (UI) cơ bản trước khi viết dòng code đầu tiên.",
+      "badge": "🎨 UI/UX Mindset",
+      "overallProgress": 75,
+      "categories": [
+        {
+          "id": "cat-ux-fundamentals",
+          "name": "1.1. Thấu Hiểu UX (Trải Nghiệm Người Dùng)",
+          "description": "Tư duy đặt người dùng làm trung tâm",
+          "skills": [
+            {
+              "id": "sk-ux-principles",
+              "name": "Nguyên Tắc UX & Trực Quan",
+              "icon": "Code",
+              "levelPercentage": 85,
+              "subTopics": [
+                {
+                  "id": "sub-dont-make-me-think",
+                  "title": "Nguyên tắc Don't Make Me Think",
+                  "description": "Giao diện rõ ràng, trực quan, nhìn vào là biết thao tác tiếp theo mà không cần đắn đo",
+                  "isCompleted": true,
+                  "assessmentScore": 90,
+                  "aiFeedback": "Giải thích tốt nguyên lý giảm tải tư duy (cognitive load) cho người dùng."
+                },
+                {
+                  "id": "sub-ux-consistency",
+                  "title": "Tính Nhất Quán (Consistency)",
+                  "description": "Thống nhất nút bấm (buttons), font chữ, màu sắc, khoảng cách trên toàn hệ thống",
+                  "isCompleted": true,
+                  "assessmentScore": 80,
+                  "aiFeedback": "Nắm vững việc thiết kế Design System và token đồng bộ."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cat-ui-principles",
+          "name": "1.2. Nguyên Tắc UI Thị Giác Căn Bản",
+          "description": "Phân cấp thị giác, khoảng trắng và sự tương phản",
+          "skills": [
+            {
+              "id": "sk-visual-hierarchy",
+              "name": "Visual Hierarchy & Layout Balance",
+              "icon": "Atom",
+              "levelPercentage": 70,
+              "subTopics": [
+                {
+                  "id": "sub-visual-hierarchy-topic",
+                  "title": "Sự Phân Cấp Thị Giác (Visual Hierarchy)",
+                  "description": "Sử dụng kích thước, màu sắc, vị trí điều hướng mắt người dùng vào thông tin quan trọng nhất (như nút Call To Action)",
+                  "isCompleted": true,
+                  "assessmentScore": 85,
+                  "aiFeedback": "Phân tích rõ sự khác biệt giữa Primary Button và Secondary Button."
+                },
+                {
+                  "id": "sub-whitespace-balance",
+                  "title": "Sự Cân Bằng & Khoảng Trắng (Whitespace)",
+                  "description": "Tận dụng khoảng trống không gian để giao diện dễ thở, sang trọng và tập trung vào nội dung chính",
+                  "isCompleted": true,
+                  "assessmentScore": 75
+                },
+                {
+                  "id": "sub-scale-contrast",
+                  "title": "Tỷ Lệ & Độ Tương Phản (Scale & Contrast)",
+                  "description": "Tạo sự tương phản rõ rệt giữa các phần tử để tránh sự đơn điệu và tăng tính trực quan",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ms-stage-2",
+      "title": "Giai Đoạn 2: Kỹ Thuật & Công Cụ (Technical Excellence)",
+      "roleName": "Frontend Technical Specialist",
+      "description": "Hiện thực hóa tư duy bằng kỹ thuật làm chủ CSS/SASS, Tailwind CSS, React Components, Animation & Tối ưu Media.",
+      "badge": "⚡ Technical Master",
+      "overallProgress": 60,
+      "categories": [
+        {
+          "id": "cat-css-sass-mastery",
+          "name": "2.1. Làm Chủ CSS, SASS & Layout",
+          "description": "Bố cục nâng cao và kiểm soát Box Model",
+          "skills": [
+            {
+              "id": "sk-flexbox-grid",
+              "name": "Flexbox, CSS Grid & SASS",
+              "icon": "FileCode",
+              "levelPercentage": 80,
+              "subTopics": [
+                {
+                  "id": "sub-flexbox-grid-mastery",
+                  "title": "Chuyên Sâu Flexbox & CSS Grid",
+                  "description": "Xây dựng layout responsive 1D & 2D chính xác và linh hoạt",
+                  "isCompleted": true,
+                  "assessmentScore": 90,
+                  "aiFeedback": "Thành thạo grid-template-areas và flex alignment."
+                },
+                {
+                  "id": "sub-sass-mixins",
+                  "title": "SASS/SCSS Variables & Mixins",
+                  "description": "Viết CSS có cấu trúc sạch, sử dụng biến, mixins và nesting hiệu quả",
+                  "isCompleted": true,
+                  "assessmentScore": 80
+                },
+                {
+                  "id": "sub-box-model-spacing",
+                  "title": "Box Model & Spacing Precision",
+                  "description": "Kiểm soát tuyệt đối margin, padding, border-box và sizing phần tử",
+                  "isCompleted": true,
+                  "assessmentScore": 70
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cat-frameworks-libs",
+          "name": "2.2. Frameworks & Components Hiện Đại",
+          "description": "Tailwind CSS & React Reusable Architecture",
+          "skills": [
+            {
+              "id": "sk-react-tailwind",
+              "name": "Tailwind CSS & React Components",
+              "icon": "Zap",
+              "levelPercentage": 65,
+              "subTopics": [
+                {
+                  "id": "sub-tailwind-utility",
+                  "title": "Tailwind CSS Utility-First",
+                  "description": "Xây dựng giao diện nhanh chóng ngay trong JSX, code đồng nhất và dễ tùy biến",
+                  "isCompleted": true,
+                  "assessmentScore": 85,
+                  "aiFeedback": "Ứng dụng tốt class utilities và custom theme configuration."
+                },
+                {
+                  "id": "sub-react-component-reuse",
+                  "title": "React Component Reusability & State",
+                  "description": "Tách component UI có thể tái sử dụng và quản lý state mượt mà",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cat-animation-typography",
+          "name": "2.3 & 2.4. Animation, Micro-interactions & Media",
+          "description": "Hiệu ứng mượt mà và tối ưu hóa tài nguyên",
+          "skills": [
+            {
+              "id": "sk-animations-media",
+              "name": "Micro-interactions & Fonts/WebP",
+              "icon": "Server",
+              "levelPercentage": 50,
+              "subTopics": [
+                {
+                  "id": "sub-animations-hover",
+                  "title": "Animation & Micro-interactions (Framer Motion / CSS)",
+                  "description": "Tạo hiệu ứng hover, transition chuyển trang nhẹ nhàng và loading state tinh tế",
+                  "isCompleted": true,
+                  "assessmentScore": 75
+                },
+                {
+                  "id": "sub-media-font-opt",
+                  "title": "Tối Ưu Hình Ảnh (WebP/CDN) & Google Fonts",
+                  description: "Dùng ảnh WebP sắc nét dung lượng nhẹ và tích hợp tối đa 2-3 Font chữ thương hiệu",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ms-stage-3",
+      "title": "Giai Đoạn 3: Quy Trình & Tối Ưu Hóa (Best Practices)",
+      "roleName": "Senior Frontend Engineer",
+      "description": "Đảm bảo ứng dụng chạy mượt trên mọi thiết bị (Mobile-first), tải cực nhanh, tương thích mọi trình duyệt và đạt chuẩn Accessibility.",
+      "badge": "🚀 Best Practices Pro",
+      "overallProgress": 40,
+      "categories": [
+        {
+          "id": "cat-mobile-perf",
+          "name": "3.1 & 3.2. Responsive Mobile-First & Tối Ưu Hiệu Năng",
+          "description": "Trải nghiệm mượt mà và tốc độ tải trang tối đa",
+          "skills": [
+            {
+              "id": "sk-mobile-performance",
+              name": "Mobile-First & Performance Tuning",
+              icon: "Database",
+              levelPercentage: 45,
+              subTopics": [
+                {
+                  "id": "sub-mobile-first-approach",
+                  "title": "Thiết Kế Responsive (Mobile-First)",
+                  description: "Xây dựng cho điện thoại trước rồi mở rộng cho Tablet/Desktop",
+                  isCompleted: true,
+                  assessmentScore: 80
+                },
+                {
+                  "id": "sub-perf-lazy-load",
+                  "title": "Lazy Loading & Code Splitting",
+                  description: "Chỉ tải hình ảnh/component khi cuộn tới và nén asset bằng CDN",
+                  isCompleted: false,
+                  assessmentScore: 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cat-browser-a11y",
+          "name": "3.3 & 3.4. Cross-Browser & Accessibility (A11y)",
+          "description": "Độ tương thích trình duyệt và trợ năng cho mọi người dùng",
+          "skills": [
+            {
+              "id": "sk-browser-a11y",
+              name: "Cross-Browser & Web Accessibility",
+              icon: "Cpu",
+              levelPercentage: 35,
+              subTopics": [
+                {
+                  "id": "sub-cross-browser",
+                  "title": "Kiểm Tra Chéo (Cross-Browser Compatibility)",
+                  description: "Hiển thị hoàn hảo trên Chrome, Safari, Firefox, Edge, iOS & Android",
+                  isCompleted: false,
+                  assessmentScore: 0
+                },
+                {
+                  "id": "sub-web-a11y",
+                  "title": "Accessibility (A11y) & Semantic HTML",
+                  description: "Semantic HTML, hỗ trợ bàn phím navigation và độ tương phản màu chuẩn WCAG",
+                  isCompleted: false,
+                  assessmentScore: 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
