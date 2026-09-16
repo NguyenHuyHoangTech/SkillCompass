@@ -90,8 +90,8 @@ TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block ma
 }`;
 
     try {
-        const response = await ai.models.generateContent({
-            model: modelName,
+        const response = await _ai.models.generateContent({
+            model: _modelName,
             contents: prompt,
         });
         let rawText = response.text || "";
@@ -170,8 +170,8 @@ Trả về ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block ma
 }`;
 
     try {
-        const response = await ai.models.generateContent({
-            model: modelName,
+        const response = await _ai.models.generateContent({
+            model: _modelName,
             contents: prompt,
         });
         let rawText = response.text || "";
@@ -213,8 +213,8 @@ Trả về ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block ma
 }`;
 
     try {
-        const response = await ai.models.generateContent({
-            model: modelName,
+        const response = await _ai.models.generateContent({
+            model: _modelName,
             contents: prompt,
         });
         let rawText = response.text || "";
@@ -286,8 +286,8 @@ Trả về ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block ma
 }`;
 
     try {
-        const response = await ai.models.generateContent({
-            model: modelName,
+        const response = await _ai.models.generateContent({
+            model: _modelName,
             contents: prompt,
         });
         let rawText = response.text || "";

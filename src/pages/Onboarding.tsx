@@ -165,14 +165,6 @@ export const Onboarding: React.FC = () => {
         navigate('/roadmap');
     };
 
-    const handleBack = () => {
-        if (step > 1) {
-            if (step === 5) {
-                setSwipeIndex(0);
-            }
-            setStep(prev => prev - 1);
-        }
-    };
 
     return (
         <div className="relative min-h-screen bg-slate-50 overflow-y-auto font-sans">
