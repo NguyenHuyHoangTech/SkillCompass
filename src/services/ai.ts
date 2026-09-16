@@ -1188,6 +1188,14 @@ TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc:
         } else if (lowerMsg.includes("xóa") || lowerMsg.includes("bớt")) {
             mockResponse = "Tôi đã rút gọn lộ trình lại cho tinh gọn hơn.";
             mockMilestones = mockMilestones.slice(0, 2);
+        } else {
+            const shortText = userMessage.length > 15 ? userMessage.substring(0, 15) + '...' : userMessage;
+            mockResponse = `Tôi đã cập nhật lộ trình chuyên biệt cho "${shortText}". Bạn hãy xem danh sách bên phải nhé!`;
+            mockMilestones = [
+                { title: `Khóa học chuyên sâu: ${shortText}`, description: "Nội dung được tinh chỉnh tự động theo yêu cầu riêng biệt của bạn.", categoriesCount: 3 },
+                { title: "Nền tảng Cốt lõi (Review)", description: "Củng cố kiến thức nền tảng trước khi bước vào thực hành chuyên sâu.", categoriesCount: 2 },
+                { title: "Dự án Thực tế (Capstone)", description: "Áp dụng toàn bộ kiến thức vào một dự án thực tế có độ khó cao.", categoriesCount: 4 }
+            ];
         }
 
         return {
