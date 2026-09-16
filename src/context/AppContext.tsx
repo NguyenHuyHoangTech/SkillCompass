@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { Milestone } from '../services/ai';
 import { translations } from '../utils/i18n';
-import type { Language, Theme } from '../utils/i18n';
+import type { Language } from '../utils/i18n';
 
 interface AppState {
     skills: string[];
@@ -17,11 +17,9 @@ interface AppContextType {
     setSandboxFeedback: (feedback: string) => void;
     setMilestones: (milestones: Milestone[]) => void;
     
-    // i18n & Theme
+    // i18n
     language: Language;
     setLanguage: (lang: Language) => void;
-    theme: Theme;
-    setTheme: (theme: Theme) => void;
     t: (key: keyof typeof translations['vi']) => string;
 }
 
@@ -46,22 +44,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         return (savedLang === 'en' || savedLang === 'vi') ? savedLang : 'vi';
     });
 
-    // Theme state
-    const [theme, setThemeState] = useState<Theme>(() => {
-        const savedTheme = localStorage.getItem('skill_compass_theme');
-        return (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'light';
-    });
 
-    useEffect(() => {
-        localStorage.setItem('skillpath_state', JSON.stringify(state));
-    }, [state]);
-
-    // Apply data-theme attribute on document root whenever theme changes
-    useEffect(() => {
-        document.documentElement.setAttribute('data-theme', theme);
-        document.body.setAttribute('data-theme', theme);
-        localStorage.setItem('skill_compass_theme', theme);
-    }, [theme]);
 
     const setSkills = (skills: string[]) => setState(prev => ({ ...prev, skills }));
     const setCareer = (career: string) => setState(prev => ({ ...prev, career }));
@@ -73,9 +56,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem('skill_compass_lang', lang);
     };
 
-    const setTheme = (newTheme: Theme) => {
-        setThemeState(newTheme);
-    };
+    useEffect(() => {
+        localStorage.setItem('skillpath_state', JSON.stringify(state));
+    }, [state]);
 
     const t = (key: keyof typeof translations['vi']): string => {
         const langDict = translations[language] || translations.vi;
@@ -85,7 +68,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     return (
         <AppContext.Provider value={{ 
             state, setSkills, setCareer, setSandboxFeedback, setMilestones,
-            language, setLanguage, theme, setTheme, t
+            language, setLanguage, t
         }}>
             {children}
         </AppContext.Provider>

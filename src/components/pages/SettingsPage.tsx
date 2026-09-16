@@ -13,7 +13,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ userName }) => {
           <Settings size={28} className="page-title-icon" />
           <div>
             <h2>Account Settings & System Configuration</h2>
-            <p>Customize personal information, UI themes, and Backend AI API connections</p>
+            <p>Customize personal information and Backend API connections</p>
           </div>
         </div>
       </div>
@@ -34,16 +34,11 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ userName }) => {
 
         <div className="category-card glass-panel" style={{ padding: '24px' }}>
           <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', color: '#0284c7' }}>
-            <Sliders size={20} /> Backend API & Theme Config
+            <Sliders size={20} /> Backend API Config
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <label className="input-label">VITE_API_BASE_URL (Backend URL):</label>
             <input type="text" className="chat-input-field" defaultValue="http://localhost:5000/api" style={{ borderRadius: '8px' }} />
-            <label className="input-label">UI Theme:</label>
-            <select className="answer-textarea" style={{ height: '42px', padding: '8px 12px' }}>
-              <option value="light">Clean Light Glassmorphism</option>
-              <option value="dark">Neon Dark Glassmorphism</option>
-            </select>
             <button className="btn-primary" style={{ marginTop: '10px', width: 'max-content' }}>Save Configuration</button>
           </div>
         </div>

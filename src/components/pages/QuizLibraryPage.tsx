@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import type { Milestone, Skill, SubTopic, QuizEvaluationResponse } from '../../types/roadmap';
 import { ApiService } from '../../services/apiService';
 import { ExerciseAIChatbox } from '../ai/ExerciseAIChatbox';
-import { useAppContext } from '../../context/AppContext';
 import {
   BookOpenCheck,
   Bot,

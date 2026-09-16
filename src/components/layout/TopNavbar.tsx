@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Sparkles, Layers, CheckSquare, PieChart, Moon, Sun, Globe } from 'lucide-react';
+import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Sparkles, Layers, CheckSquare, PieChart, Globe } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { AiConfigMenu } from '../ai/AiConfigMenu';
 
@@ -25,7 +25,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
-  const { theme, setTheme, language, setLanguage, t } = useAppContext();
+  const { language, setLanguage, t } = useAppContext();
 
   const roadmapSubTabs = [
     { id: 'view-all', label: 'Full Overview', icon: Layers },
@@ -102,15 +102,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             <span style={{ marginLeft: 4, fontSize: 12, fontWeight: 'bold' }}>{language.toUpperCase()}</span>
           </button>
 
-          {/* Quick Theme Toggle */}
-          <button 
-            className="top-icon-btn"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            title={t('theme')}
-            style={{ marginRight: 8 }}
-          >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
 
           {onOpenCareerChat && (
             <button

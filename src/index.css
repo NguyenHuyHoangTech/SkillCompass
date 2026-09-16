@@ -33,31 +33,7 @@
   color-scheme: light;
 }
 
-[data-theme='dark'] {
-  /* Theme variables - Dark Mode (Pure Black) */
-  --bg-primary: #000000;
-  --bg-secondary: #121212;
-  --bg-tertiary: #1a1a1a;
-  
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-tertiary: #94a3b8;
-  
-  --border-color: #333333;
-  --border-light: #222222;
-  
-  --accent-primary: #60a5fa;
-  --accent-hover: #3b82f6;
-  
-  --shadow-sm: 0 1px 2px 0 rgb(255 255 255 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(255 255 255 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(255 255 255 / 0.1);
-  
-  --glass-bg: rgba(0, 0, 0, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.1);
 
-  color-scheme: dark;
-}
 
 body {
   margin: 0;
