@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillPath AI - Getting Started</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overflow: hidden; }
+        
+        /* Smooth page transition */
+        .step-enter { animation: slideInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .step-exit { animation: slideOutUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideOutUp {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-30px); }
+        }
+
+        /* Customize hidden scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="h-screen flex flex-col relative">
+
+    <!-- Top Navigation Progress -->
+    <header class="bg-white border-b border-slate-200 px-6 py-4 shrink-0 flex justify-between items-center z-10 relative shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-md">
+                <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <h1 class="font-bold text-lg text-slate-800 tracking-tight">SkillPath <span class="text-indigo-600">AI</span></h1>
+        </div>
+        
+        <div class="hidden lg:flex items-center gap-2 text-xs font-medium text-slate-400">
+            <span id="nav-step-1" class="text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full font-bold"><i class="fa-solid fa-1 mr-1"></i>Skill Backpack</span>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span id="nav-step-2" class="px-3 py-1 rounded-full"><i class="fa-solid fa-2 mr-1"></i>Assessment</span>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span id="nav-step-3" class="px-3 py-1 rounded-full"><i class="fa-solid fa-3 mr-1"></i>Goals</span>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span id="nav-step-4" class="px-3 py-1 rounded-full"><i class="fa-solid fa-4 mr-1"></i>AI Sandbox</span>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span id="nav-step-5" class="px-3 py-1 rounded-full"><i class="fa-solid fa-5 mr-1"></i>Roadmap</span>
+        </div>
+    </header>
+
+    <!-- ================= STEP 1: SELECT SKILLS ================= -->
+    <div id="step1" class="absolute inset-0 top-[73px] w-full max-w-3xl mx-auto p-4 sm:p-6 flex flex-col justify-center step-enter bg-[#f8fafc]">
+        <div class="text-center mb-8">
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-3">What is in your skill backpack?</h2>
+            <p class="text-slate-500 text-sm sm:text-base">Select or enter the skills you ALREADY HAVE. AI will use them as the basis for assessment.</p>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 sm:p-8 overflow-y-auto hide-scrollbar max-h-[65vh]">
+            <div class="mb-8">
+                <h3 class="text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Hard Skills (Technical)</h3>
+                <div class="flex flex-wrap gap-2 sm:gap-3" id="hardSkillsContainer">
+                    <button class="skill-tag px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 font-medium transition-all hover:border-indigo-400 hover:text-indigo-600 text-sm" onclick="toggleSkill(this)">HTML/CSS</button>
+                    <button class="skill-tag px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 font-medium transition-all hover:border-indigo-400 hover:text-indigo-600 text-sm" onclick="toggleSkill(this)">JavaScript</button>
+                    <button class="skill-tag px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 font-medium transition-all hover:border-indigo-400 hover:text-indigo-600 text-sm" onclick="toggleSkill(this)">Python</button>
+                    <button class="skill-tag px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 font-medium transition-all hover:border-indigo-400 hover:text-indigo-600 text-sm" onclick="toggleSkill(this)">Figma / UI Design</button>
+                    <button class="skill-tag px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 font-medium transition-all hover:border-indigo-400 hover:text-indigo-600 text-sm" onclick="toggleSkill(this)">Data Analysis (Excel)</button>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Soft & AI Skills (Soft Skills)</h3>
+                <div class="flex flex-wrap gap-2 sm:gap-3" id="softSkillsContainer">
+                    <button class="skill-tag px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 font-medium transition-all hover:border-indigo-400 hover:text-indigo-600 text-sm" onclick="toggleSkill(this)">ChatGPT Prompts</button>
+                    <button class="skill-tag px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 font-medium transition-all hover:border-indigo-400 hover:text-indigo-600 text-sm" onclick="toggleSkill(this)">Presentation</button>
+                    <button class="skill-tag px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 font-medium transition-all hover:border-indigo-400 hover:text-indigo-600 text-sm" onclick="toggleSkill(this)">Teamwork</button>
+                </div>
+            </div>
+
+            <div class="mb-6 p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center gap-3 shadow-inner">
+                <i class="fa-solid fa-plus text-slate-400 hidden sm:block"></i>
+                <input type="text" id="customSkillInput" placeholder="Or enter another skill (e.g., Java, C#)..." class="w-full flex-1 bg-white border border-slate-200 px-4 py-2.5 rounded-xl outline-none text-slate-700 font-medium focus:border-indigo-400 transition-colors text-sm" onkeypress="if(event.key === 'Enter') addCustomSkill()">
+                <button onclick="addCustomSkill()" class="w-full sm:w-auto bg-indigo-100 hover:bg-indigo-600 hover:text-white text-indigo-700 px-6 py-2.5 rounded-xl font-bold transition-colors text-sm whitespace-nowrap">Add</button>
+            </div>
+
+            <div class="mt-8 flex flex-col sm:flex-row justify-between items-center border-t border-slate-100 pt-6 gap-4">
+                <span id="skillErrorMsg" class="text-red-500 text-sm font-medium opacity-0 transition-opacity">Please select or add at least one skill!</span>
+                <button onclick="prepareAssessment()" class="w-full sm:w-auto bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-600 transition-colors flex items-center justify-center gap-2 shadow-lg">
+                    Confirm & Assess Skills <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= STEP 2: AI SKILL ASSESSMENT ================= -->
+    <div id="stepAssessment" class="hidden absolute inset-0 top-[73px] w-full max-w-2xl mx-auto p-4 sm:p-6 flex flex-col justify-center bg-[#f8fafc]">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Quick Skill Assessment</h2>
+            <p class="text-slate-500 text-sm">AI needs to verify your actual level to build the most accurate roadmap.</p>
+        </div>
+
+        <!-- Changed overflow-hidden to overflow-y-auto max-h-[75vh] so the content always scrolls -->
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 relative overflow-y-auto hide-scrollbar max-h-[75vh]">
+            <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                <h3 class="font-bold text-xl text-indigo-700" id="assessSkillName">Loading...</h3>
+                <span class="bg-indigo-50 text-indigo-600 border border-indigo-100 text-xs font-bold px-3 py-1.5 rounded-full" id="assessProgress">Skill 1/3</span>
+            </div>
+
+            <div class="mb-5">
+                <p id="assessQuestion" class="text-slate-700 font-medium leading-relaxed bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 text-sm">
+                    <i class="fa-solid fa-circle-notch fa-spin text-indigo-500 mr-2"></i> Loading question...
+                </p>
+            </div>
+
+            <div class="mb-5">
+                <textarea id="assessAnswer" rows="4" class="w-full border border-slate-300 rounded-xl p-4 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all placeholder-slate-400" placeholder="Enter your answer or relevant real-world experience..."></textarea>
+            </div>
+
+            <!-- AI Feedback -->
+            <div id="assessResult" class="hidden mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex gap-3 items-start">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-check"></i></div>
+                <div>
+                    <h4 class="font-bold text-emerald-800 text-sm">Skill Assessment: Good</h4>
+                    <p class="text-sm text-emerald-700 mt-1" id="assessFeedback">Analyzing...</p>
+                </div>
+            </div>
+
+            <!-- Keep the button fixed below so it remains visible -->
+            <div class="flex flex-col sm:flex-row justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
+                <button id="assessSubmitBtn" onclick="evaluateAssessment()" class="w-full sm:w-auto bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 shadow-md">
+                    Submit for AI Assessment <i class="fa-solid fa-paper-plane"></i>
+                </button>
+                <button id="assessNextBtn" onclick="nextAssessment()" class="hidden w-full sm:w-auto bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2">
+                    Next <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= STEP 3: SELECT A GOAL ================= -->
+    <div id="step2" class="hidden absolute inset-0 top-[73px] w-full max-w-3xl mx-auto p-6 flex flex-col justify-center bg-[#f8fafc]">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-3">What is your career goal?</h2>
+            <p class="text-slate-500">Enter your desired role. AI will compare it with your current skills to identify the skill gap.</p>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 sm:p-8 text-center max-w-xl mx-auto w-full">
+            <div class="mb-8 relative">
+                <i class="fa-solid fa-bullseye absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-xl"></i>
+                <input type="text" id="careerInput" placeholder="Example: Data Analyst, Frontend Developer..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-base sm:text-lg font-bold text-slate-700 outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-inner">
+            </div>
+
+            <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 sm:p-6 text-left mb-6">
+                <h4 class="font-bold text-indigo-800 flex items-center gap-2 mb-2"><i class="fa-solid fa-vr-cardboard"></i> Not sure yet?</h4>
+                <p class="text-sm text-indigo-600 leading-relaxed mb-4">Try a one-minute virtual work scenario so AI can help you see whether this career fits you.</p>
+                <button onclick="startSandbox()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-indigo-200 flex justify-center items-center gap-2">
+                    Explore with AI Sandbox <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </button>
+            </div>
+            
+            <button onclick="nextStepCustom('step2', 'step4', 5)" class="text-slate-400 text-sm font-semibold hover:text-slate-700 underline">I am sure; skip the Sandbox</button>
+        </div>
+    </div>
+
+    <!-- ================= STEP 4: AI CAREER SANDBOX ================= -->
+    <div id="step3" class="hidden absolute inset-0 top-[73px] w-full max-w-4xl mx-auto p-4 sm:p-6 flex flex-col justify-center bg-[#f8fafc]">
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center shrink-0">
+                <div>
+                    <h2 class="text-lg sm:text-xl font-extrabold tracking-tight flex items-center gap-2">
+                        <i class="fa-solid fa-vr-cardboard text-indigo-400"></i> AI Career Sandbox
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Simulating: <span id="simCareerName" class="font-bold text-white">Data Analyst</span></p>
+                </div>
+                <button onclick="nextStepCustom('step3', 'step4', 5)" class="text-xs font-bold text-slate-300 hover:text-white transition-colors bg-white/10 px-3 py-1.5 rounded-lg hidden sm:block">Skip <i class="fa-solid fa-forward-step ml-1"></i></button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-5 sm:p-8 bg-slate-50 relative hide-scrollbar">
+                <div class="flex gap-3 sm:gap-4 mb-6">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0 shadow-sm border border-indigo-200">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none p-4 sm:p-5 shadow-sm max-w-2xl">
+                        <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider block mb-2">Virtual Real-World Scenario</span>
+                        <p class="text-slate-700 font-medium leading-relaxed text-sm">
+                            Welcome to your first day at work! <br><br>
+                            Your manager gives you an Excel file with 50,000 messy sales rows. A revenue report is due by 4 PM today.<br><br>
+                            <span class="font-bold text-slate-900">What would you do first?</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="sm:ml-14 grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl" id="sandboxChoices">
+                    <button onclick="handleSandboxChoice('code')" class="text-left bg-white border border-slate-200 p-4 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all group">
+                        <i class="fa-solid fa-code text-slate-400 group-hover:text-indigo-500 mb-2 text-lg block transition-colors"></i>
+                        <span class="font-bold text-sm text-slate-800 block mb-1">Open Python / SQL</span>
+                        <span class="text-xs text-slate-500 line-clamp-2">Write a script to clean the data quickly and accurately.</span>
+                    </button>
+                    <button onclick="handleSandboxChoice('ai')" class="text-left bg-white border border-slate-200 p-4 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all group">
+                        <i class="fa-solid fa-sparkles text-slate-400 group-hover:text-indigo-500 mb-2 text-lg block transition-colors"></i>
+                        <span class="font-bold text-sm text-slate-800 block mb-1">Use an AI Tool</span>
+                        <span class="text-xs text-slate-500 line-clamp-2">Upload the file to ChatGPT Data Analysis or write a prompt to process it.</span>
+                    </button>
+                    <button onclick="handleSandboxChoice('manual')" class="text-left bg-white border border-slate-200 p-4 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all group">
+                        <i class="fa-solid fa-file-excel text-slate-400 group-hover:text-indigo-500 mb-2 text-lg block transition-colors"></i>
+                        <span class="font-bold text-sm text-slate-800 block mb-1">Process It in Excel</span>
+                        <span class="text-xs text-slate-500 line-clamp-2">Use filters, pivot tables, and basic formulas to inspect each issue.</span>
+                    </button>
+                    <button onclick="handleSandboxChoice('ask')" class="text-left bg-white border border-slate-200 p-4 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all group">
+                        <i class="fa-solid fa-users text-slate-400 group-hover:text-indigo-500 mb-2 text-lg block transition-colors"></i>
+                        <span class="font-bold text-sm text-slate-800 block mb-1">Ask the File's Author</span>
+                        <span class="text-xs text-slate-500 line-clamp-2">Find the root cause of why the data became so messy.</span>
+                    </button>
+                </div>
+
+                <div id="aiFeedback" class="hidden mt-6 flex gap-3 sm:gap-4">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0 shadow-sm border border-emerald-200">
+                        <i class="fa-solid fa-check-double"></i>
+                    </div>
+                    <div class="bg-white border border-emerald-200 rounded-2xl rounded-tl-none p-4 sm:p-5 shadow-sm max-w-2xl w-full">
+                        <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider block mb-2">Fit Assessment (Future Skills)</span>
+                        <p class="text-slate-700 font-medium leading-relaxed text-sm mb-4">
+                            Your choice shows good applied reasoning. However, AI will automate basic data-cleaning skills in the future market. 
+                            <br><br>
+                            👉 <span class="font-bold">Assessment:</span> Your roadmap NEEDS Data Storytelling, a capability AI still struggles with, to keep your profile competitive.
+                        </p>
+                        <div class="pt-3 border-t border-slate-100 flex justify-end">
+                            <button onclick="nextStepCustom('step3', 'step4', 5)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2 w-full sm:w-auto shadow-md">
+                                Continue to Roadmap Draft <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= STEP 5: MILESTONE ROADMAP BLUEPRINT ================= -->
+    <div id="step4" class="hidden absolute inset-0 top-[73px] w-full max-w-5xl mx-auto p-4 sm:p-6 flex flex-col justify-center bg-[#f8fafc]">
+        <div class="text-center mb-6 sm:mb-8">
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-3">Your Career Blueprint</h2>
+            <p class="text-slate-500 text-sm sm:text-base">Based on your current skills and Sandbox results, AI drafted three career milestones.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 mb-8">
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm relative overflow-hidden">
+                <div class="w-full h-1.5 absolute top-0 left-0 bg-blue-500"></div>
+                <div class="text-[10px] font-bold text-blue-600 bg-blue-50 inline-block px-2 py-1 rounded mb-3 uppercase tracking-wider">Milestone 1</div>
+                <h3 class="font-bold text-slate-800 text-lg mb-2">Data Intern</h3>
+                <p class="text-xs text-slate-500 mb-4 line-clamp-2">Master the basic tools and process data independently.</p>
+                <ul class="text-sm text-slate-600 space-y-2">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Core Technical Skills</li>
+                </ul>
+            </div>
+            
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm relative overflow-hidden transform md:-translate-y-4">
+                <div class="w-full h-1.5 absolute top-0 left-0 bg-indigo-500"></div>
+                <div class="text-[10px] font-bold text-indigo-600 bg-indigo-50 inline-block px-2 py-1 rounded mb-3 uppercase tracking-wider">Milestone 2</div>
+                <h3 class="font-bold text-slate-800 text-lg mb-2">Junior Data Analyst</h3>
+                <p class="text-xs text-slate-500 mb-4 line-clamp-2">Visualize data and uncover business insights.</p>
+                <ul class="text-sm text-slate-600 space-y-2">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Advanced Tools</li>
+                </ul>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-900 to-indigo-900 rounded-2xl p-5 shadow-lg relative overflow-hidden text-white">
+                <div class="w-full h-1.5 absolute top-0 left-0 bg-purple-500"></div>
+                <div class="absolute right-0 bottom-0 text-7xl text-white/5 pointer-events-none transform translate-x-4 translate-y-4"><i class="fa-solid fa-robot"></i></div>
+                <div class="text-[10px] font-bold text-purple-200 bg-purple-500/30 inline-block px-2 py-1 rounded mb-3 uppercase tracking-wider">Milestone 3 (Future)</div>
+                <h3 class="font-bold text-white text-lg mb-2">AI-Augmented Analyst</h3>
+                <p class="text-xs text-slate-300 mb-4 line-clamp-2">Distinctive skills that keep your profile competitive in the AI era.</p>
+                <ul class="text-sm text-slate-200 space-y-2 relative z-10">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-star text-amber-400"></i> AI-Era Skills</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="flex justify-center">
+            <button onclick="goToRoadmap()" class="w-full sm:w-auto bg-slate-900 text-white px-10 py-4 rounded-xl font-bold hover:bg-indigo-600 transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-3 text-base sm:text-lg">
+                Open Roadmap Workspace <i class="fa-solid fa-rocket"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let skillsToTest = [];
+        let currentTestIndex = 0;
+
+        function addCustomSkill() {
+            const input = document.getElementById('customSkillInput');
+            const val = input.value.trim();
+            if(val) {
+                const container = document.getElementById('hardSkillsContainer'); 
+                const btn = document.createElement('button');
+                btn.className = 'skill-tag selected px-4 py-2 rounded-xl border border-indigo-400 bg-indigo-600 text-white font-medium transition-all text-sm shadow-md';
+                btn.onclick = function() { toggleSkill(this) };
+                btn.innerText = val;
+                container.appendChild(btn);
+                input.value = '';
+            }
+        }
+
+        function toggleSkill(button) {
+            button.classList.toggle('selected');
+            if(button.classList.contains('selected')) {
+                button.classList.add('bg-indigo-600', 'text-white', 'border-indigo-400', 'shadow-md');
+                button.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+            } else {
+                button.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-400', 'shadow-md');
+                button.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+            }
+        }
+
+        // --- SKILL ASSESSMENT SYSTEM ---
+        function prepareAssessment() {
+            const selected = document.querySelectorAll('.skill-tag.selected');
+            skillsToTest = Array.from(selected).map(el => el.innerText);
+            
+            const errMsg = document.getElementById('skillErrorMsg');
+            if(skillsToTest.length === 0) {
+                errMsg.style.opacity = '1';
+                setTimeout(() => errMsg.style.opacity = '0', 3000);
+                return;
+            }
+            
+            currentTestIndex = 0;
+            renderAssessment();
+            nextStepCustom('step1', 'stepAssessment', 2);
+        }
+
+        function renderAssessment() {
+            if(currentTestIndex >= skillsToTest.length) {
+                nextStepCustom('stepAssessment', 'step2', 3);
+                return;
+            }
+            
+            const skill = skillsToTest[currentTestIndex];
+            document.getElementById('assessSkillName').innerText = skill;
+            document.getElementById('assessProgress').innerText = `Skill ${currentTestIndex + 1}/${skillsToTest.length}`;
+            
+            const q = getMockQuestion(skill);
+            document.getElementById('assessQuestion').innerHTML = `<i class="fa-solid fa-robot text-indigo-500 mr-2"></i> ${q}`;
+            
+            // Reset state
+            document.getElementById('assessAnswer').value = '';
+            document.getElementById('assessResult').classList.add('hidden');
+            
+            const submitBtn = document.getElementById('assessSubmitBtn');
+            submitBtn.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `Submit for AI Assessment <i class="fa-solid fa-paper-plane"></i>`;
+            
+            const nextBtn = document.getElementById('assessNextBtn');
+            nextBtn.classList.add('hidden');
+        }
+
+        function getMockQuestion(skill) {
+            const db = {
+                "HTML/CSS": "Your website layout breaks on mobile. Which CSS technique would you use to fix it quickly?",
+                "JavaScript": "How would you fetch data from a third-party API and handle a failure when it does not respond?",
+                "Python": "Your manager asks you to read a multi-gigabyte CSV without exhausting RAM. Which approach would you use?",
+                "ChatGPT Prompts": "Write a robust prompt that asks AI to summarize an article without inventing information."
+            };
+            return db[skill] || `To verify your skill, briefly describe the hardest problem you solved using "${skill}".`;
+        }
+
+        function evaluateAssessment() {
+            const answer = document.getElementById('assessAnswer').value.trim();
+            if(!answer) {
+                document.getElementById('assessAnswer').focus();
+                return;
+            }
+
+            const btn = document.getElementById('assessSubmitBtn');
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Analyzing...`;
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.classList.add('hidden');
+                
+                document.getElementById('assessResult').classList.remove('hidden');
+                
+                const nextBtn = document.getElementById('assessNextBtn');
+                nextBtn.classList.remove('hidden'); // Show the Next button
+                
+                // Set prominent content and color classes
+                if (currentTestIndex === skillsToTest.length - 1) {
+                    // For the final skill, enlarge and animate the Next button
+                    nextBtn.innerHTML = `Finish & Continue to Step 3 <i class="fa-solid fa-arrow-right"></i>`;
+                    nextBtn.className = "bg-emerald-600 text-white px-6 py-3.5 rounded-xl font-bold hover:bg-emerald-700 transition-all flex justify-center items-center gap-2 animate-bounce shadow-lg shadow-emerald-200 w-full sm:w-auto mt-2";
+                } else {
+                    nextBtn.innerHTML = `Next Skill (${currentTestIndex + 2}/${skillsToTest.length}) <i class="fa-solid fa-arrow-right"></i>`;
+                    nextBtn.className = "bg-slate-900 text-white px-6 py-3.5 rounded-xl font-bold hover:bg-slate-800 transition-colors flex justify-center items-center gap-2 animate-pulse w-full sm:w-auto mt-2";
+                }
+
+                if(answer.length > 15) {
+                    document.getElementById('assessFeedback').innerText = "Your answer demonstrates practical understanding. The system confirms this skill.";
+                } else {
+                    document.getElementById('assessFeedback').innerText = "The answer is short, so the system will record a Beginner level.";
+                }
+            }, 1000);
+        }
+
+        function nextAssessment() {
+            currentTestIndex++;
+            renderAssessment();
+        }
+
+        function nextStepCustom(currentId, nextId, navStepNumber) {
+            const currentEl = document.getElementById(currentId);
+            const nextEl = document.getElementById(nextId);
+            
+            currentEl.classList.remove('step-enter');
+            currentEl.classList.add('step-exit');
+            
+            setTimeout(() => {
+                currentEl.classList.add('hidden');
+                currentEl.classList.remove('step-exit');
+                
+                nextEl.classList.remove('hidden');
+                nextEl.classList.add('step-enter');
+                
+                updateNav(navStepNumber);
+            }, 350);
+        }
+
+        function updateNav(step) {
+            for(let i=1; i<=5; i++) {
+                const nav = document.getElementById(`nav-step-${i}`);
+                if(nav) {
+                    if(i === step) {
+                        nav.className = "text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full font-bold transition-all whitespace-nowrap";
+                    } else if (i < step) {
+                        nav.className = "text-emerald-500 px-3 py-1 font-medium hidden md:inline-flex whitespace-nowrap";
+                        nav.innerHTML = `<i class="fa-solid fa-check mr-1"></i>${nav.innerText.replace(/^[0-9]\s/g, '')}`;
+                    } else {
+                        nav.className = "text-slate-400 px-3 py-1 font-medium hidden lg:inline-flex whitespace-nowrap";
+                    }
+                }
+            }
+        }
+
+        function startSandbox() {
+            const career = document.getElementById('careerInput').value || 'Data Analyst';
+            document.getElementById('simCareerName').innerText = career;
+            nextStepCustom('step2', 'step3', 4);
+        }
+
+        function handleSandboxChoice(choiceId) {
+            const buttons = document.getElementById('sandboxChoices').getElementsByTagName('button');
+            for(let btn of buttons) {
+                btn.style.opacity = '0.5';
+                btn.disabled = true;
+            }
+            
+            const aiFeedback = document.getElementById('aiFeedback');
+            aiFeedback.classList.remove('hidden');
+            aiFeedback.classList.add('step-enter');
+            // Scroll down so the user can see feedback on mobile
+            setTimeout(() => {
+                aiFeedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        function goToRoadmap() {
+            try {
+                // Show a smooth transition state in the preview environment
+                document.body.innerHTML = `
+                    <div class="h-screen w-full flex flex-col items-center justify-center bg-slate-900 text-white p-6 text-center step-enter">
+                        <i class="fa-solid fa-rocket text-6xl text-indigo-500 mb-6 animate-bounce"></i>
+                        <h1 class="text-3xl font-bold mb-4">Initializing AI Roadmap...</h1>
+                        <p class="text-slate-400 text-lg max-w-md mx-auto leading-relaxed">
+                            Onboarding completed successfully!<br><br>
+                            In this preview environment, click the <span class="text-indigo-400 font-bold bg-indigo-900/50 px-2 py-1 rounded">index.html</span> file in the adjacent file list to view your roadmap.
+                        </p>
+                    </div>
+                `;
+                
+                // Navigate only when the environment allows URL changes (for example, outside an about:srcdoc iframe)
+                if (window.location.protocol !== 'about:' && window.location.protocol !== 'data:') {
+                    setTimeout(() => {
+                        window.location.assign('index.html');
+                    }, 2500);
+                }
+            } catch (error) {
+                console.log("The environment blocked page navigation:", error);
+            }
+        }
+    </script>
+</body>
+</html>

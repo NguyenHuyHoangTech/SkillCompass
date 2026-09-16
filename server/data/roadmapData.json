@@ -1,0 +1,261 @@
+{
+  "id": "user-roadmap-uiux-frontend",
+  "userId": "usr-1001",
+  "userName": "John Doe",
+  "targetRole": "Backend Developer (.NET)",
+  "currentMilestoneId": "m1_1",
+  "updatedAt": "2026-09-16T22:47:10.906Z",
+  "milestones": [
+    {
+      "id": "m1_1",
+      "title": "Foundational Web API Development",
+      "roleName": "Backend Developer (.NET)",
+      "description": "Build a basic RESTful API with C# and ASP.NET Core to handle data requests.",
+      "badge": "Stage 1",
+      "overallProgress": 0,
+      "categories": [
+        {
+          "id": "cat-0",
+          "name": "Core Skills",
+          "description": "Required skills for this stage",
+          "skills": [
+            {
+              "id": "sk-0-0",
+              "name": "ASP.NET Core Web API",
+              "icon": "Book",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-0-0-0",
+                  "title": "Set up a new ASP.NET Core Web API project using Visual Studio Community or .NET CLI.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-0-0-1",
+                  "title": "Define a controller with basic HTTP GET and POST actions for a simple resource (e.g., 'Products').",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            },
+            {
+              "id": "sk-0-1",
+              "name": "RESTful Principles",
+              "icon": "Book",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-0-1-0",
+                  "title": "Understand the purpose of common HTTP methods (GET, POST, PUT, DELETE) in a RESTful context.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-0-1-1",
+                  "title": "Implement appropriate HTTP status codes (e.g., 200 OK, 201 Created, 404 Not Found) in API responses.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m1_2",
+      "title": "Data Persistence and ORM",
+      "roleName": "Backend Developer (.NET)",
+      "description": "Integrate a database with the API using Entity Framework Core for data storage and retrieval.",
+      "badge": "Stage 2",
+      "overallProgress": 0,
+      "categories": [
+        {
+          "id": "cat-1",
+          "name": "Core Skills",
+          "description": "Required skills for this stage",
+          "skills": [
+            {
+              "id": "sk-1-0",
+              "name": "Entity Framework Core",
+              "icon": "Book",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-1-0-0",
+                  "title": "Configure EF Core with a local SQLite database provider.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-1-0-1",
+                  "title": "Define data models (entities) and a DbContext class.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-1-0-2",
+                  "title": "Perform database migrations to create and update the database schema.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            },
+            {
+              "id": "sk-1-1",
+              "name": "Database Fundamentals (SQL)",
+              "icon": "Book",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-1-1-0",
+                  "title": "Learn basic SQL commands: SELECT, INSERT, UPDATE, DELETE.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-1-1-1",
+                  "title": "Understand primary keys, foreign keys, and basic table relationships.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m1_3",
+      "title": "Authentication, Authorization, and Testing",
+      "roleName": "Backend Developer (.NET)",
+      "description": "Secure the API with authentication and authorization, and ensure its reliability through unit testing.",
+      "badge": "Stage 3",
+      "overallProgress": 0,
+      "categories": [
+        {
+          "id": "cat-2",
+          "name": "Core Skills",
+          "description": "Required skills for this stage",
+          "skills": [
+            {
+              "id": "sk-2-0",
+              "name": "JWT Authentication",
+              "icon": "Book",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-2-0-0",
+                  "title": "Configure JWT bearer authentication in an ASP.NET Core application.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-2-0-1",
+                  "title": "Implement user registration and login endpoints that issue JWT tokens.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            },
+            {
+              "id": "sk-2-1",
+              "name": "Unit Testing (xUnit/NUnit)",
+              "icon": "Book",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-2-1-0",
+                  "title": "Set up a unit testing project using xUnit or NUnit.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-2-1-1",
+                  "title": "Write unit tests for a service class or controller method, using mocking (e.g., Moq) for dependencies.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m1_4",
+      "title": "Deployment and Portfolio Project",
+      "roleName": "Backend Developer (.NET)",
+      "description": "Deploy a complete backend application to a cloud service and showcase skills in a portfolio.",
+      "badge": "Stage 4",
+      "overallProgress": 0,
+      "categories": [
+        {
+          "id": "cat-3",
+          "name": "Core Skills",
+          "description": "Required skills for this stage",
+          "skills": [
+            {
+              "id": "sk-3-0",
+              "name": "Cloud Deployment (Azure App Service Free Tier)",
+              "icon": "Book",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-3-0-0",
+                  "title": "Create a free Azure account and an Azure App Service instance.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-3-0-1",
+                  "title": "Deploy your ASP.NET Core API to Azure App Service using Visual Studio or GitHub Actions (free tier).",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            },
+            {
+              "id": "sk-3-1",
+              "name": "Git & GitHub",
+              "icon": "Book",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-3-1-0",
+                  "title": "Initialize a Git repository for your project and push it to GitHub.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-3-1-1",
+                  "title": "Practice branching, committing, and merging changes within your project.",
+                  "description": "Study content",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

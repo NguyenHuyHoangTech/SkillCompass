@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillPath AI - Milestone Roadmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .modal-enter { animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen flex flex-col sm:flex-row overflow-hidden">
+
+    <div class="w-full sm:w-[380px] bg-white border-r border-slate-200 flex flex-col h-full shrink-0 z-20 shadow-xl">
+        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-blue-200">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-xl leading-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-800">SkillPath AI</h1>
+                    <p class="text-[11px] text-slate-500 font-medium tracking-wide uppercase">Hackathon Prototype</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 overflow-y-auto flex-1 hide-scrollbar">
+            <!-- Dynamic Country Input -->
+            <div class="mb-6">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">Target Market</label>
+                <div class="bg-slate-100 rounded-lg p-1.5 border border-slate-200 shadow-inner">
+                    <div class="bg-white rounded-md flex items-center px-3 py-2 border border-slate-200 shadow-sm focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+                        <i class="fa-solid fa-location-dot text-blue-500 mr-2"></i>
+                        <input type="text" id="targetCountry" placeholder="Enter a country..." value="Vietnam" class="bg-transparent text-sm font-bold text-slate-700 outline-none w-full placeholder-slate-400">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skill Gap Chart -->
+            <div class="mb-6">
+                <div class="flex justify-between items-end mb-3">
+                    <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Skill Gap Analysis</h2>
+                    <span class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-md">Frontend Dev</span>
+                </div>
+                <div class="relative w-full aspect-square bg-slate-50/50 rounded-2xl border border-slate-100 p-2">
+                    <canvas id="skillGapChart"></canvas>
+                </div>
+                <p class="text-xs text-slate-500 text-center mt-3 leading-relaxed">
+                    The dashed line shows the competency benchmark in <span id="lblCountry" class="font-semibold text-slate-700">Vietnam</span>. AI will automatically create a roadmap to close this skill gap.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 flex flex-col h-full bg-slate-50/50 relative overflow-hidden">
+        
+        <!-- Header & Horizontal Timeline -->
+        <div class="shrink-0 bg-white border-b border-slate-200 px-8 py-6 z-10 shadow-sm">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Career Milestone Pathway</h2>
+                    <p class="text-sm text-slate-500 mt-1">A competency-based roadmap. Complete each milestone to progress.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="openOptimizerModal()" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold px-4 py-2 rounded-lg border border-amber-600 flex items-center gap-2 shadow-sm shadow-orange-200 transition-all hover:-translate-y-0.5">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Roadmap Optimization
+                    </button>
+                    <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-2 rounded-lg border border-indigo-200 flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-graduation-cap"></i> Competency-Based
+                    </span>
+                </div>
+            </div>
+
+            <!-- Timeline Scroller -->
+            <div class="flex gap-4 overflow-x-auto hide-scrollbar pb-2 pt-1 px-1" id="timelineContainer">
+                <!-- Milestones rendered here via JS -->
+            </div>
+        </div>
+
+        <!-- Detail Panel -->
+        <div class="flex-1 overflow-y-auto hide-scrollbar p-8" id="milestoneDetailPanel">
+            <!-- Skills rendered here via JS -->
+            <div class="flex flex-col items-center justify-center h-full text-slate-400">
+                <i class="fa-solid fa-route text-5xl mb-4 text-slate-300"></i>
+                <p>Select a career milestone above to view details.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Practice Modal -->
+    <div id="aiPracticeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[90vh]">
+            <div class="bg-gradient-to-r from-indigo-600 to-blue-700 p-6 text-white shrink-0">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="bg-white/20 text-blue-50 text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">AI Scenario Assesment</span>
+                    <button onclick="closeSkillPractice()" class="text-white/70 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+                <h3 id="apTitle" class="text-xl font-bold">Skill Practice</h3>
+            </div>
+            
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5">
+                    <h4 class="font-bold text-slate-700 mb-2"><i class="fa-solid fa-robot text-indigo-500 mr-2"></i>Scenario from the AI Mentor:</h4>
+                    <p id="apScenario" class="text-sm text-slate-600 leading-relaxed font-medium"></p>
+                </div>
+
+                <div class="mb-2">
+                    <h4 class="font-bold text-slate-700 text-sm mb-2">Your Solution:</h4>
+                    <textarea id="apAnswer" rows="5" class="w-full border border-slate-300 rounded-xl p-4 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all" placeholder="Enter your code or proposed solution here..."></textarea>
+                </div>
+                <p class="text-[11px] text-slate-400 mb-5"><i class="fa-solid fa-shield-halved mr-1"></i>The system uses an LLM to evaluate reasoning, beyond syntax correctness.</p>
+
+                <!-- Result (hidden by default) -->
+                <div id="apResult" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-check"></i></div>
+                        <div>
+                            <h4 class="font-bold text-emerald-800 text-sm">Excellent Assessment!</h4>
+                            <p class="text-sm text-emerald-700 mt-1">Your state-management approach is efficient. AI confirms that you understand the reasoning behind this skill.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-100 p-5 bg-slate-50 flex justify-end gap-3 shrink-0">
+                <button onclick="closeSkillPractice()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Close</button>
+                <button id="apSubmitBtn" onclick="submitSkillPractice()" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-lg shadow-indigo-200">
+                    <span>Submit to AI</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Roadmap Optimizer Modal -->
+    <div id="aiOptimizerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[90vh]">
+            <div class="bg-gradient-to-r from-amber-500 to-orange-600 p-6 text-white shrink-0 relative overflow-hidden">
+                <div class="absolute right-0 top-0 opacity-20 text-8xl transform translate-x-1/4 -translate-y-1/4"><i class="fa-solid fa-bolt"></i></div>
+                <h3 class="text-xl font-bold mb-1 relative z-10">AI Future Roadmap Adjustment</h3>
+                <p class="text-orange-100 text-sm relative z-10">Use historical data to update unstarted milestones</p>
+            </div>
+            
+            <div class="p-8 overflow-y-auto flex-1 flex flex-col gap-6" id="optLoading">
+                <div class="flex flex-col items-center justify-center py-6">
+                    <i class="fa-solid fa-circle-notch fa-spin text-4xl text-orange-500 mb-4"></i>
+                    <p class="text-sm font-medium text-slate-600 text-center">Analyzing current scores and comparing them with job trends in <br/><span id="optTargetCountryLabel" class="font-bold text-slate-800"></span>...</p>
+                </div>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1 hidden flex-col gap-5" id="optResult">
+                <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                    <h4 class="font-bold text-blue-800 text-sm mb-1"><i class="fa-solid fa-database mr-2"></i>Data Analysis:</h4>
+                    <p class="text-xs text-blue-700">The user performed very well in Stage 1. However, the market in <span id="optTargetCountryRes" class="font-bold"></span> has strong demand for Generative UI talent.</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h4 class="font-bold text-slate-800 text-sm mb-3"><i class="fa-solid fa-code-merge text-orange-500 mr-2"></i>Suggested Milestone 3 Update:</h4>
+                    <ul class="space-y-3">
+                        <li class="flex gap-3 items-start border-b border-slate-100 pb-3">
+                            <i class="fa-solid fa-clock-rotate-left text-emerald-500 mt-0.5"></i>
+                            <div>
+                                <span class="font-semibold text-sm text-slate-700 block">Shorten the LLM API Integration course</span>
+                                <span class="text-xs text-slate-500">Reduce the time because the programming foundation is already strong.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-3 items-start">
+                            <i class="fa-solid fa-folder-plus text-blue-500 mt-0.5"></i>
+                            <div>
+                                <span class="font-semibold text-sm text-slate-700 block">Add a Generative UI (Dynamic UI) course</span>
+                                <span class="text-xs text-slate-500">A current AI-era skill that meets market demand.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-100 p-5 bg-slate-50 flex justify-end gap-3 shrink-0">
+                <button onclick="closeOptimizerModal()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Skip</button>
+                <button id="optApplyBtn" onclick="applyOptimizerChanges()" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 transition-colors flex items-center gap-2 shadow-md hidden">
+                    <span>Update Roadmap</span>
+                    <i class="fa-solid fa-check"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Milestone Summary Modal -->
+    <div id="milestoneTestModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col">
+            <div class="p-8 text-center bg-purple-50">
+                <i class="fa-solid fa-ranking-star text-5xl text-purple-600 mb-4"></i>
+                <h3 class="text-2xl font-bold text-slate-800">Milestone Completion Certificate</h3>
+                <p class="text-slate-500 mt-2 text-sm">AI analyzed your skill practice throughout this milestone.</p>
+            </div>
+            <div class="p-8">
+                <div class="bg-white border border-slate-200 rounded-xl p-5 mb-4 shadow-sm">
+                    <h4 class="font-bold text-slate-800 mb-2">Overall Assessment:</h4>
+                    <p class="text-sm text-slate-600">You completed this milestone with excellent results. Your UI reasoning and use of AI for debugging are 20% above the market average.</p>
+                </div>
+                <div class="bg-blue-50 border border-blue-100 rounded-xl p-5">
+                    <h4 class="font-bold text-blue-800 mb-2"><i class="fa-solid fa-arrow-trend-up mr-2"></i>Next Recommendation:</h4>
+                    <p class="text-sm text-blue-700">You are ready to apply for an internship. Unlock Stage 2 to begin advanced ReactJS learning.</p>
+                </div>
+            </div>
+            <div class="border-t border-slate-100 p-5 bg-slate-50 flex justify-end gap-3">
+                <button onclick="closeMilestoneTest()" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 shadow-md">Great, Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA CONTRACT (STANDARD JSON) ---
+        const milestoneData = [
+            {
+                id: 'm1',
+                title: 'Milestone 1: Internship Ready',
+                status: 'completed', // completed, in-progress, planned
+                progress: 100,
+                start_date: '01/09/2026',
+                end_date: '15/11/2026',
+                goal: 'Master web fundamentals and debugging reasoning.',
+                user_notes: 'Completed with excellent results!',
+                skills: [
+                    {
+                        id: 's1', title: 'HTML/CSS & UI Layout', category: 'Core Tech',
+                        status: 'completed', goal: 'Build any static interface.',
+                        user_notes: 'Grid is challenging; review it', 
+                        ai_practice_scenario: 'Create a responsive registration form that changes from three columns to one on mobile. Explain the CSS approach.',
+                        sub_tasks: [
+                            { id: 'st1_1', text: 'Master Flexbox/Grid', is_completed: true, completion_note: 'Build a Landing Page' },
+                            { id: 'st1_2', text: 'Responsive Design (Tailwind)', is_completed: true, completion_note: 'Optimized for Mobile' }
+                        ]
+                    },
+                    {
+                        id: 's2', title: 'AI Debugging Assistant', category: 'AI-Era Competency',
+                        status: 'completed', goal: 'Use AI tools such as Gemini or ChatGPT for debugging.',
+                        user_notes: '', 
+                        ai_practice_scenario: 'The page has unwanted horizontal scrolling, but you cannot identify the element causing it. What prompt would you use to ask AI for help?',
+                        sub_tasks: [
+                            { id: 'st2_1', text: 'Describe bugs clearly in text', is_completed: true, completion_note: 'Pass' }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'm2',
+                title: 'Milestone 2: Junior Frontend',
+                status: 'in-progress',
+                progress: 35,
+                start_date: '16/11/2026',
+                end_date: '15/03/2027',
+                goal: 'Master React and state management.',
+                user_notes: 'Currently studying React Hooks.',
+                skills: [
+                    {
+                        id: 's3', title: 'ReactJS & State', category: 'Core Tech',
+                        status: 'in-progress', goal: 'Split interfaces into components and pass props correctly.',
+                        user_notes: '', 
+                        ai_practice_scenario: 'Scenario: The interface lags because a child component re-renders whenever the user types in the search field. How would you fix it?',
+                        sub_tasks: [
+                            { id: 'st3_1', text: 'Lifecycle & Hooks (useState, useEffect)', is_completed: true, completion_note: 'Understood' },
+                            { id: 'st3_2', text: 'Optimize Memo & Callback', is_completed: false, completion_note: '' }
+                        ]
+                    },
+                    {
+                        id: 's4', title: 'AI-Assisted Coding (Copilot)', category: 'AI-Era Competency',
+                        status: 'planned', goal: 'Use code-generation tools to work faster.',
+                        user_notes: '', 
+                        ai_practice_scenario: 'Use Cursor or Copilot to generate unit tests for a complex function.',
+                        sub_tasks: [
+                            { id: 'st4_1', text: 'Set Up an AI Code Editor', is_completed: false, completion_note: '' }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'm3',
+                title: 'Milestone 3: AI-Era Engineer',
+                status: 'planned',
+                progress: 0,
+                start_date: '16/03/2027',
+                end_date: '15/08/2027',
+                goal: 'Build applications with LLM integration and automation.',
+                user_notes: 'Needs updating based on market demand.',
+                skills: [
+                    {
+                        id: 's5', title: 'LLM API Integration', category: 'Core Tech',
+                        status: 'planned', goal: 'Integrate the Gemini API into a web app.',
+                        user_notes: '', 
+                        ai_practice_scenario: 'How would you process an LLM data stream to display text incrementally with a typing effect?',
+                        sub_tasks: [
+                            { id: 'st5_1', text: 'Rest API & Streaming', is_completed: false, completion_note: '' }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        let selectedMilestoneId = 'm2'; // Default
+        let chartInstance = null;
+
+        // --- CHART INITIALIZATION ---
+        function initRadarChart() {
+            const ctx = document.getElementById('skillGapChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+            
+            chartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['UI/UX', 'JS Frameworks', 'API & Backend', 'Problem Solving', 'Prompting', 'AI Coding Tools'],
+                    datasets: [
+                        {
+                            label: 'Current Skill Level',
+                            data: [85, 40, 30, 75, 80, 20],
+                            backgroundColor: 'rgba(59, 130, 246, 0.25)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(59, 130, 246, 1)'
+                        },
+                        {
+                            label: 'Market Benchmark',
+                            data: [90, 85, 60, 85, 90, 80],
+                            backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                            borderColor: 'rgba(236, 72, 153, 1)',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(236, 72, 153, 1)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            min: 0, max: 100, 
+                            ticks: { display: false },
+                            pointLabels: { font: { family: "'Inter', sans-serif", size: 10, weight: 'bold' }, color: '#64748b' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { family: "'Inter', sans-serif", size: 11 }, boxWidth: 12 } }
+                    }
+                }
+            });
+        }
+
+        // --- RENDER LOGIC ---
+        function renderHorizontalMilestones() {
+            const container = document.getElementById('timelineContainer');
+            container.innerHTML = '';
+            
+            milestoneData.forEach((m, index) => {
+                const isSelected = m.id === selectedMilestoneId;
+                let statusColors = '';
+                let icon = '';
+                
+                if(m.status === 'completed') {
+                    statusColors = isSelected ? 'bg-emerald-600 text-white' : 'bg-emerald-50 border-emerald-200 text-emerald-800';
+                    icon = '<i class="fa-solid fa-circle-check"></i>';
+                } else if(m.status === 'in-progress') {
+                    statusColors = isSelected ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'bg-blue-50 border-blue-200 text-blue-800';
+                    icon = '<i class="fa-solid fa-person-running animate-pulse"></i>';
+                } else {
+                    statusColors = isSelected ? 'bg-slate-700 text-white' : 'bg-white border-slate-200 text-slate-500';
+                    icon = '<i class="fa-regular fa-calendar-check"></i>';
+                }
+
+                const card = document.createElement('div');
+                card.className = `shrink-0 w-64 rounded-xl border p-4 cursor-pointer transition-all hover:-translate-y-1 ${statusColors}`;
+                card.onclick = () => selectMilestone(m.id);
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm">${icon}</div>
+                        <span class="text-xs font-bold px-2 py-1 rounded-md bg-white/20">${m.progress}%</span>
+                    </div>
+                    <h3 class="font-bold text-sm mb-1">${m.title}</h3>
+                    <p class="text-[11px] opacity-80">${m.start_date} - ${m.end_date}</p>
+                    ${index < milestoneData.length - 1 ? '<div class="absolute -right-3 top-1/2 -translate-y-1/2 w-4 h-[2px] bg-slate-300"></div>' : ''}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectMilestone(id) {
+            selectedMilestoneId = id;
+            renderHorizontalMilestones();
+            renderMilestoneDetails();
+        }
+
+        function renderMilestoneDetails() {
+            const panel = document.getElementById('milestoneDetailPanel');
+            const m = milestoneData.find(x => x.id === selectedMilestoneId);
+            if(!m) return;
+
+            let skillsHtml = m.skills.map(skill => {
+                let badgeClass = skill.category === 'AI-Era Competency' 
+                    ? 'bg-purple-100 text-purple-700 border-purple-200' 
+                    : 'bg-slate-100 text-slate-600 border-slate-200';
+                
+                let subTasksHtml = skill.sub_tasks.map(st => `
+                    <div class="flex items-start gap-2 mb-2 group">
+                        <input type="checkbox" class="mt-1 rounded text-blue-600 cursor-pointer" ${st.is_completed ? 'checked' : ''} onclick="event.stopPropagation()">
+                        <div class="flex-1">
+                            <span class="text-sm text-slate-700 font-medium ${st.is_completed ? 'line-through text-slate-400' : ''}">${st.text}</span>
+                            ${st.completion_note ? `<p class="text-[11px] text-emerald-600 mt-0.5 font-medium"><i class="fa-solid fa-check-double mr-1"></i>${st.completion_note}</p>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+                        ${skill.category === 'AI-Era Competency' ? '<div class="absolute top-0 right-0 w-16 h-16 bg-purple-500 opacity-5 rounded-bl-[100px]"></div>' : ''}
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] font-bold px-2 py-1 rounded-md border uppercase tracking-wider ${badgeClass}">${skill.category}</span>
+                            <span class="text-xs font-semibold ${skill.status === 'completed' ? 'text-emerald-500' : (skill.status === 'in-progress' ? 'text-blue-500' : 'text-slate-400')}">
+                                ${skill.status === 'completed' ? 'Completed' : (skill.status === 'in-progress' ? 'In Progress' : 'Planned')}
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-lg mb-1">${skill.title}</h4>
+                        <p class="text-xs text-slate-500 mb-4 h-8 line-clamp-2">${skill.goal}</p>
+                        
+                        <div class="bg-slate-50 rounded-xl p-3 mb-4 border border-slate-100">
+                            ${subTasksHtml}
+                        </div>
+
+                        <button onclick="openSkillPractice('${skill.id}')" class="w-full py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 text-indigo-700 text-sm font-bold transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Scenario Practice
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            panel.innerHTML = `
+                <div class="max-w-4xl mx-auto pb-10">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 mb-6 shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center justify-between relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 text-9xl text-slate-50 opacity-50 pointer-events-none">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <div class="flex-1 relative z-10">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Stage Goal</label>
+                            <input type="text" value="${m.goal}" class="w-full text-lg font-bold text-slate-800 outline-none bg-transparent border-b border-transparent hover:border-slate-300 focus:border-blue-500 transition-colors" title="Click to edit">
+                        </div>
+                        <div class="w-full md:w-1/3 relative z-10">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Personal Notes</label>
+                            <input type="text" value="${m.user_notes}" placeholder="Add a note..." class="w-full text-sm font-medium text-slate-600 outline-none bg-slate-50 border border-slate-200 p-2 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                        </div>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-blue-500"></i> Required Skills
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        ${skillsHtml}
+                    </div>
+
+                    ${m.status === 'in-progress' || m.status === 'completed' ? `
+                    <div class="mt-8 text-center border-t border-slate-200 pt-8">
+                        <button onclick="openMilestoneTest()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-purple-200 transition-all hover:-translate-y-1 inline-flex items-center gap-3">
+                            <i class="fa-solid fa-shield-check text-xl"></i>
+                            Assess This Stage
+                        </button>
+                        <p class="text-xs text-slate-500 mt-3">AI will synthesize all practice results to issue a completion certificate.</p>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // --- INTERACTION LOGIC ---
+        function openSkillPractice(skillId) {
+            const m = milestoneData.find(x => x.id === selectedMilestoneId);
+            const skill = m.skills.find(x => x.id === skillId);
+            
+            document.getElementById('apTitle').innerText = skill.title;
+            document.getElementById('apScenario').innerText = skill.ai_practice_scenario;
+            document.getElementById('apAnswer').value = '';
+            document.getElementById('apResult').classList.add('hidden');
+            document.getElementById('apSubmitBtn').classList.remove('hidden');
+            
+            document.getElementById('aiPracticeModal').classList.remove('hidden');
+        }
+
+        function closeSkillPractice() {
+            document.getElementById('aiPracticeModal').classList.add('hidden');
+        }
+
+        function submitSkillPractice() {
+            document.getElementById('apSubmitBtn').classList.add('hidden');
+            document.getElementById('apResult').classList.remove('hidden');
+            // In production, this is where the API sends a prompt to the LLM
+        }
+
+        function openMilestoneTest() {
+            document.getElementById('milestoneTestModal').classList.remove('hidden');
+        }
+
+        function closeMilestoneTest() {
+            document.getElementById('milestoneTestModal').classList.add('hidden');
+        }
+
+        // --- OPTIMIZER LOGIC ---
+        function openOptimizerModal() {
+            const country = document.getElementById('targetCountry').value || "Vietnam";
+            document.getElementById('optTargetCountryLabel').innerText = country;
+            document.getElementById('optTargetCountryRes').innerText = country;
+
+            document.getElementById('aiOptimizerModal').classList.remove('hidden');
+            document.getElementById('optLoading').classList.remove('hidden');
+            document.getElementById('optResult').classList.add('hidden');
+            document.getElementById('optApplyBtn').classList.add('hidden');
+
+            setTimeout(() => {
+                document.getElementById('optLoading').classList.add('hidden');
+                document.getElementById('optResult').classList.remove('hidden');
+                document.getElementById('optApplyBtn').classList.remove('hidden');
+            }, 1500);
+        }
+
+        function closeOptimizerModal() {
+            document.getElementById('aiOptimizerModal').classList.add('hidden');
+        }
+
+        function applyOptimizerChanges() {
+            const country = document.getElementById('targetCountry').value || "Vietnam";
+            const m3 = milestoneData.find(m => m.id === 'm3');
+            if(m3) {
+                m3.user_notes = "Optimized for the " + country;
+                
+                // Update the existing skill
+                const s5 = m3.skills.find(s => s.id === 's5');
+                if(s5) s5.goal = "Shorten the schedule and focus on the Vercel API.";
+
+                // Add a new skill
+                if(!m3.skills.find(s => s.id === 's6')) {
+                    m3.skills.push({
+                        id: 's6', title: 'Generative UI', category: 'AI-Era Competency',
+                        status: 'planned', goal: 'Generate flexible React interfaces from LLM JSON.',
+                        user_notes: 'Currently critical.', 
+                        ai_practice_scenario: 'How do you render a <WeatherCard /> when AI returns JSON with type="weather"?',
+                        sub_tasks: [
+                            { id: 'st6_1', text: 'Vercel AI SDK Core', is_completed: false, completion_note: '' }
+                        ]
+                    });
+                }
+            }
+            
+            closeOptimizerModal();
+            selectMilestone('m3'); // Automatically switch to milestone 3
+        }
+
+        // Initialize
+        window.onload = function() {
+            document.getElementById('targetCountry').addEventListener('input', function(e) {
+                document.getElementById('lblCountry').innerText = e.target.value || 'Vietnam';
+            });
+            initRadarChart();
+            renderHorizontalMilestones();
+            renderMilestoneDetails();
+        };
+    </script>
+</body>
+</html>
