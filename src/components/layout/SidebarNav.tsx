@@ -3,6 +3,7 @@ import {
   Compass,
   Map,
   Sparkles,
+  Wand2,
   X,
   Layers,
   BookOpenCheck,
@@ -13,6 +14,7 @@ import {
   LogOut,
   GraduationCap,
 } from 'lucide-react';
+import { useAppContext } from '../../context/AppContext';
 
 interface SidebarNavProps {
   userName: string;
@@ -32,6 +34,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   onOpenCareerChat,
 }) => {
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+  const { t } = useAppContext();
 
   return (
     <>
@@ -53,7 +56,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               <Compass size={20} />
             </div>
             <div className="drawer-title-wrap">
-              <span className="drawer-menu-title brand-title-glowing">Skill Compass AI</span>
+              <span className="drawer-menu-title brand-title-glowing">{t('brandName')}</span>
             </div>
           </div>
           <button className="drawer-close-btn" onClick={onClose} title="Close menu">
@@ -63,6 +66,18 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
         {/* Navigation List */}
         <nav className="sidebar-menu-list">
+          <button
+            className={`sidebar-menu-btn ${activePage === 'page-onboarding' ? 'active' : ''}`}
+            onClick={() => {
+              onSelectPage('page-onboarding');
+              onClose();
+            }}
+          >
+            <Wand2 size={20} className="menu-btn-icon" style={{ color: 'var(--primary)' }} />
+            <span className="menu-btn-label">Tạo Lộ Trình AI</span>
+            <span className="menu-btn-badge" style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)' }}>New</span>
+          </button>
+
           <button
             className={`sidebar-menu-btn ${activePage === 'page-roadmap' ? 'active' : ''}`}
             onClick={() => {
@@ -110,7 +125,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           </button>
         </nav>
 
-        {/* Lower Section & Sidebar Footer User Card */}
+        {/* Lower Section */}
         <div className="sidebar-footer-container">
           {/* AI Advisor Button */}
           <button
@@ -137,6 +152,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                 onClick={() => {
                   alert('Change account information feature');
                   setIsAccountMenuOpen(false);
+                  onClose();
                 }}
               >
                 <UserPlus size={16} />

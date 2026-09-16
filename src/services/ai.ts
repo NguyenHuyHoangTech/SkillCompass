@@ -59,6 +59,59 @@ export const getAvailableModels = async (key: string): Promise<{success: boolean
     }
 };
 
+export interface SkillOverviewResponse {
+    market_level_evaluation: string;
+    technical_assessment_question: string;
+    ikigai_questions: {
+        love: string;
+        money: string;
+    }
+}
+
+export const analyzeUserSkillsOverview = async (skills: string[]): Promise<SkillOverviewResponse> => {
+    const prompt = `Bạn là một chuyên gia hướng nghiệp và chuyên gia kỹ thuật. Người dùng vừa cung cấp danh sách kỹ năng của họ. 
+DỮ LIỆU ĐẦU VÀO:
+- Kỹ năng người dùng: [${skills.join(', ')}]
+NHIỆM VỤ:
+1. Đánh giá sơ bộ mức độ hiện tại của bộ kỹ năng này trên thị trường (Ví dụ: Fresher, Junior, Mid, Senior...).
+2. Tạo ra 1 câu hỏi test kỹ năng thực chiến (dạng tình huống) dựa trên bộ kỹ năng họ vừa nhập. Đừng giải đáp, chỉ hỏi.
+3. Đưa ra 2 câu hỏi định hướng theo triết lý Ikigai:
+   - love: Sở thích (Bạn thích gì nhất trong những thứ đã học?)
+   - money: Thu nhập (Bạn kỳ vọng được trả lương/làm việc như thế nào?)
+
+TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block markdown, chỉ JSON thuần tuý):
+{
+    "market_level_evaluation": "Đánh giá của bạn...",
+    "technical_assessment_question": "Câu hỏi thực chiến...",
+    "ikigai_questions": {
+        "love": "Câu hỏi sở thích...",
+        "money": "Câu hỏi thu nhập..."
+    }
+}`;
+
+    try {
+        const response = await ai.models.generateContent({
+            model: modelName,
+            contents: prompt,
+        });
+        let rawText = response.text || "";
+        rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const data = JSON.parse(rawText) as SkillOverviewResponse;
+        return data;
+    } catch (error) {
+        console.error("AI Error:", error);
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        return {
+            market_level_evaluation: "⚠️ AI đang quá tải (Quota). Dựa trên kỹ năng, bạn đang ở mức Fresher/Junior đầy tiềm năng.",
+            technical_assessment_question: `Bạn sẽ áp dụng ${skills.join(', ')} vào một dự án thực tế như thế nào?`,
+            ikigai_questions: {
+                love: "Bạn thích nhất kỹ năng nào trong số các kỹ năng trên?",
+                money: "Bạn kỳ vọng mức lương bao nhiêu cho vị trí này?"
+            }
+        };
+    }
+};
+
 export const testGeminiKey = async (key: string, model: string, customMessage: string = "Test message"): Promise<{success: boolean, message: string, reply?: string}> => {
     try {
         const testAi = new GoogleGenAI({ apiKey: key });
@@ -71,6 +124,179 @@ export const testGeminiKey = async (key: string, model: string, customMessage: s
     } catch (e: any) {
         console.error("Test API Key failed:", e);
         return { success: false, message: e.message || "Connection failed!" };
+    }
+};
+
+
+export interface CareerSuggestion {
+    title: string;
+    description: string;
+    why_it_fits: string;
+}
+
+export interface ComprehensiveCareerAnalysisResponse {
+    dominant_riasec: string;
+    personality_analysis: string;
+    career_goals: CareerSuggestion[];
+}
+
+export const analyzeRiasecAndSuggestCareers = async (
+    previousData: any,
+    riasecAnswers: any
+): Promise<ComprehensiveCareerAnalysisResponse | null> => {
+    const prompt = `Bạn là một chuyên gia tâm lý hướng nghiệp và phân tích dữ liệu nghề nghiệp. 
+
+DỮ LIỆU ĐẦU VÀO:
+- Kỹ năng ban đầu & Kết quả trả lời bài test kỹ năng/Ikigai của người dùng: ${JSON.stringify(previousData)}
+- Câu trả lời bài test RIASEC của người dùng (Sở thích học tập/làm việc): ${JSON.stringify(riasecAnswers)}
+
+NHIỆM VỤ:
+1. Phân tích nhóm tính cách RIASEC nổi trội nhất của người dùng (Realistic, Investigative, Artistic, Social, Enterprising, Conventional).
+2. Tổng hợp toàn bộ dữ liệu (Kỹ năng + Ikigai + RIASEC).
+3. Đề xuất 3 mục tiêu nghề nghiệp (Career Goals) phù hợp nhất tổng hòa được cả 3 yếu tố trên.
+
+YÊU CẦU OUTPUT:
+Trả về ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block markdown, chỉ JSON thuần tuý):
+{
+    "dominant_riasec": "Tên nhóm tính cách nổi trội nhất...",
+    "personality_analysis": "Nhận xét tổng quan về tính cách và tiềm năng...",
+    "career_goals": [
+        {
+            "title": "Tên nghề nghiệp 1",
+            "description": "Mô tả ngắn gọn",
+            "why_it_fits": "Lý do phù hợp dựa trên 3 yếu tố trên"
+        }
+    ]
+}`;
+
+    try {
+        const response = await ai.models.generateContent({
+            model: modelName,
+            contents: prompt,
+        });
+        let rawText = response.text || "";
+        rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const data = JSON.parse(rawText) as ComprehensiveCareerAnalysisResponse;
+        return data;
+    } catch (error) {
+        console.error("AI Error:", error);
+        return null;
+    }
+};
+
+export interface CareerGoalConsultationResponse {
+    status: 'confirmed' | 'analyzing';
+    response_message: string;
+    selected_goal: string | null;
+}
+
+export const consultCareerGoalSelection = async (
+    suggestedGoals: any,
+    userFeedback: string
+): Promise<CareerGoalConsultationResponse | null> => {
+    const prompt = `Bạn là một Career Coach đồng hành cùng người dùng để chốt lộ trình sự nghiệp.
+
+DỮ LIỆU ĐẦU VÀO:
+- 3 mục tiêu đã đề xuất ở bước trước: ${JSON.stringify(suggestedGoals)}
+- Lựa chọn hoặc câu hỏi thắc mắc của người dùng hiện tại: "${userFeedback}"
+
+NHIỆM VỤ:
+- Nếu người dùng chọn 1 mục tiêu cụ thể: Xác nhận mục tiêu đó và chuyển sang giai đoạn chốt.
+- Nếu người dùng còn phân vân hoặc đặt câu hỏi: Phân tích ưu/nhược điểm của từng hướng đi dựa trên dữ liệu kỹ năng và Ikigai của họ, giúp họ đưa ra quyết định cuối cùng.
+
+YÊU CẦU OUTPUT:
+Trả về ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block markdown, chỉ JSON thuần tuý):
+{
+    "status": "confirmed" hoặc "analyzing",
+    "response_message": "Câu trả lời gửi đến người dùng (Xác nhận mục tiêu hoặc phân tích ưu nhược điểm...)",
+    "selected_goal": "Tên mục tiêu đã chốt (nếu status là confirmed, ngược lại để null)"
+}`;
+
+    try {
+        const response = await ai.models.generateContent({
+            model: modelName,
+            contents: prompt,
+        });
+        let rawText = response.text || "";
+        rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const data = JSON.parse(rawText) as CareerGoalConsultationResponse;
+        return data;
+    } catch (error) {
+        console.error("AI Error:", error);
+        return null;
+    }
+};
+
+export interface DetailedRoadmapPhase {
+    phase: string;
+    duration: string;
+    focus: string;
+    action_items: string[];
+}
+
+export interface DetailedRoadmapResponse {
+    goal: string;
+    short_term: DetailedRoadmapPhase;
+    medium_term: DetailedRoadmapPhase;
+    long_term: DetailedRoadmapPhase;
+    advice: string;
+}
+
+export const generateDetailedRoadmap = async (
+    finalGoal: string,
+    baselineProfile: any
+): Promise<DetailedRoadmapResponse | null> => {
+    const prompt = `Bạn là một Kiến trúc sư phát triển năng lực cá nhân (L&D Expert). Mục tiêu cuối cùng của người dùng đã được chốt.
+
+DỮ LIỆU ĐẦU VÀO:
+- Mục tiêu cuối cùng đã chọn: "${finalGoal}"
+- Xuất phát điểm hiện tại của người dùng (Kỹ năng, Ikigai, RIASEC): ${JSON.stringify(baselineProfile)}
+
+NHIỆM VỤ:
+Xây dựng một lộ trình (Roadmap) hành động chi tiết từ vạch xuất phát hiện tại đến khi đạt được mục tiêu cuối cùng. 
+Roadmap cần bao gồm:
+1. Giai đoạn ngắn hạn (0 - 3 tháng): Cần bù đắp lỗ hổng kỹ năng gì ngay lập tức?
+2. Giai đoạn trung hạn (3 - 6 tháng): Dự án thực tế cần làm, chứng chỉ hoặc kiến thức nâng cao cần học.
+3. Giai đoạn dài hạn (6 - 12+ tháng): Cách định vị bản thân để đạt mục tiêu cuối.
+Trình bày theo các bước rõ ràng, dễ thực thi.
+
+YÊU CẦU OUTPUT:
+Trả về ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block markdown, chỉ JSON thuần tuý):
+{
+    "goal": "Tên mục tiêu...",
+    "short_term": {
+        "phase": "Ngắn hạn (0 - 3 tháng)",
+        "duration": "0-3 tháng",
+        "focus": "Mục tiêu trọng tâm...",
+        "action_items": ["Hành động 1...", "Hành động 2..."]
+    },
+    "medium_term": {
+        "phase": "Trung hạn (3 - 6 tháng)",
+        "duration": "3-6 tháng",
+        "focus": "Mục tiêu trọng tâm...",
+        "action_items": ["Hành động 1...", "Hành động 2..."]
+    },
+    "long_term": {
+        "phase": "Dài hạn (6 - 12+ tháng)",
+        "duration": "6-12+ tháng",
+        "focus": "Mục tiêu trọng tâm...",
+        "action_items": ["Hành động 1...", "Hành động 2..."]
+    },
+    "advice": "Lời khuyên tổng kết..."
+}`;
+
+    try {
+        const response = await ai.models.generateContent({
+            model: modelName,
+            contents: prompt,
+        });
+        let rawText = response.text || "";
+        rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const data = JSON.parse(rawText) as DetailedRoadmapResponse;
+        return data;
+    } catch (error) {
+        console.error("AI Error:", error);
+        return null;
     }
 };
 

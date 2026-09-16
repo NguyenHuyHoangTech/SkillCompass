@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Sparkles, Layers, CheckSquare, PieChart } from 'lucide-react';
+import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Sparkles, Layers, CheckSquare, PieChart, Moon, Sun, Globe } from 'lucide-react';
+import { useAppContext } from '../../context/AppContext';
+import { AiConfigMenu } from '../ai/AiConfigMenu';
 
 interface TopNavbarProps {
   userName: string;
@@ -22,6 +24,8 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  const { theme, setTheme, language, setLanguage, t } = useAppContext();
 
   const roadmapSubTabs = [
     { id: 'view-all', label: 'Full Overview', icon: Layers },
@@ -55,7 +59,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               <Compass size={24} className="logo-compass-icon" />
             </div>
             <div className="top-nav-title-wrap">
-              <span className="top-brand-name brand-title-glowing">Skill Compass AI</span>
+              <span className="top-brand-name brand-title-glowing">{t('brandName')}</span>
             </div>
           </button>
         </div>
@@ -81,8 +85,33 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           </nav>
         )}
 
+        {/* Onboarding Steps Portal Target */}
+        {activePage === 'page-onboarding' && (
+          <div id="onboarding-step-portal-target" className="top-nav-center-subtabs" style={{ display: 'flex', alignItems: 'center' }}></div>
+        )}
+
         {/* Right: Featured AI Button & User Dropdown Menu */}
         <div className="top-nav-auth-actions" ref={dropdownRef}>
+          {/* Quick Language Toggle */}
+          <button 
+            className="top-icon-btn"
+            onClick={() => setLanguage(language === 'vi' ? 'en' : 'vi')}
+            title={t('language')}
+          >
+            <Globe size={18} />
+            <span style={{ marginLeft: 4, fontSize: 12, fontWeight: 'bold' }}>{language.toUpperCase()}</span>
+          </button>
+
+          {/* Quick Theme Toggle */}
+          <button 
+            className="top-icon-btn"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            title={t('theme')}
+            style={{ marginRight: 8 }}
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
           {onOpenCareerChat && (
             <button
               className="top-header-ai-featured-btn"
@@ -90,13 +119,14 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
               title="Open Future Career AI Advisor"
             >
               <Sparkles size={15} className="ai-btn-spark" />
-              <span>AI Advisor</span>
+              <span>{t('aiAdvisor')}</span>
             </button>
           )}
 
+          <AiConfigMenu />
+
           {isLoggedIn ? (
             <div className="user-dropdown-wrapper">
-              {/* Clickable Profile Badge */}
               <button
                 className="top-nav-user-profile-btn"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}

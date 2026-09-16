@@ -3,6 +3,7 @@ import type { Milestone, Skill, SubTopic } from '../../types/roadmap';
 import { Search, Layers, X, Sparkles, Filter } from 'lucide-react';
 import { StarSphereCanvas } from '../roadmap/StarSphereCanvas';
 import { StarSkillModal } from '../roadmap/StarSkillModal';
+import { useAppContext } from '../../context/AppContext';
 
 interface AllSkillsPageProps {
   milestones: Milestone[];
@@ -15,6 +16,7 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
   onOpenQuiz,
   onToggleCheck,
 }) => {
+  const { t } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategoryName, setSelectedCategoryName] = useState<string>('all');
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
@@ -43,36 +45,36 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
       {/* 1. Floating Search Bar (Top-Left) */}
       <div className="cosmic-top-left-search">
         <div className="cosmic-search-box glass-panel">
-          <Search size={16} color="#38bdf8" className="search-icon" />
+          <Search size={16} color="var(--primary)" className="search-icon" />
           <input
             type="text"
-            placeholder="Tìm kiếm ngôi sao kỹ năng..."
+            placeholder={t('searchSkills')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="cosmic-search-input"
           />
           {searchQuery && (
-            <button className="cosmic-clear-btn" onClick={() => setSearchQuery('')} title="Xóa tìm kiếm">
+            <button className="cosmic-clear-btn" onClick={() => setSearchQuery('')} title="Clear">
               <X size={14} />
             </button>
           )}
         </div>
       </div>
 
-      {/* 2. Industry/Category Selector at BOTTOM-RIGHT EDGE (Mép dưới bên phải) - Pops up when clicked */}
+      {/* 2. Industry/Category Selector at BOTTOM-RIGHT EDGE */}
       <div className="cosmic-bottom-right-industry-wrap">
         {/* Expandable Industry Category Popover Menu */}
         {isCategoryMenuOpen && (
           <div className="cosmic-bottom-industry-menu glass-panel">
             <div className="cosmic-menu-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Filter size={14} color="#38bdf8" />
-                <span>CHỌN NGÀNH KỸ NĂNG</span>
+                <Filter size={14} color="var(--primary)" />
+                <span>{t('selectCategory')}</span>
               </div>
               <button
                 className="cosmic-menu-close-btn"
                 onClick={() => setIsCategoryMenuOpen(false)}
-                title="Đóng menu"
+                title={t('closeMenu')}
               >
                 ×
               </button>
@@ -87,7 +89,7 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
                 }}
               >
                 <Layers size={14} style={{ marginRight: 6 }} />
-                <span>Tất Cả Ngành</span>
+                <span>{t('allCategories')}</span>
                 <span className="cosmic-count-badge">{allSkills.length}</span>
               </button>
 
@@ -106,7 +108,7 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
                       setSelectedCategoryName(catName);
                       setIsCategoryMenuOpen(false);
                     }}
-                    title={`Thắp sáng tất cả kỹ năng thuộc ${catName}`}
+                    title={catName}
                   >
                     <Sparkles size={13} style={{ marginRight: 6, color: '#fbbf24' }} />
                     <span>{catName}</span>
@@ -122,11 +124,11 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
         <button
           className={`cosmic-industry-toggle-trigger-btn ${isCategoryMenuOpen || selectedCategoryName !== 'all' ? 'active' : ''}`}
           onClick={() => setIsCategoryMenuOpen(!isCategoryMenuOpen)}
-          title="Nhấn để chọn & thắp sáng ngành kỹ năng"
+          title="Select Industry"
         >
           <Filter size={15} />
           <span>
-            {selectedCategoryName === 'all' ? 'Chọn Ngành Kỹ Năng' : `Ngành: ${selectedCategoryName}`}
+            {selectedCategoryName === 'all' ? t('allCategories') : `${t('industry')}: ${selectedCategoryName}`}
           </span>
           <span className="toggle-arrow-icon">{isCategoryMenuOpen ? '▲' : '▼'}</span>
         </button>
@@ -146,7 +148,7 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
         />
       </div>
 
-      {/* Star Skill Detail Modal (Triggered on Double-Clicking any star) */}
+      {/* Star Skill Detail Modal */}
       {selectedStarData && currentModalSkill && (
         <StarSkillModal
           skill={currentModalSkill}

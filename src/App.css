@@ -37,6 +37,28 @@
   --shadow-lg: 0 16px 36px -8px rgba(15, 23, 42, 0.1);
 }
 
+[data-theme="dark"] {
+  --bg-dark: #000000;
+  --bg-card: rgba(10, 10, 10, 0.95);
+  --bg-card-hover: rgba(20, 20, 20, 0.98);
+  --border-glass: rgba(50, 50, 50, 0.8);
+  --border-glow: rgba(56, 189, 248, 0.2);
+  
+  --primary: #38bdf8;
+  --primary-glow: rgba(56, 189, 248, 0.15);
+  --ocean: #60a5fa;
+  --sky-accent: #7dd3fc;
+  --purple: #c084fc;
+  --purple-glow: rgba(192, 132, 252, 0.15);
+  
+  --text-main: #ffffff;
+  --text-muted: #cbd5e1;
+  --text-dim: #94a3b8;
+  
+  --shadow-glass: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 36px -8px rgba(0, 0, 0, 0.6);
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -54,14 +76,19 @@ html {
 }
 
 body {
-  background-color: #f8fafc;
-  background-image: 
-    radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.08) 0%, transparent 45%);
+  background-color: var(--bg-dark);
+  background-image: none; /* No gradient background for pure dark mode / light mode consistency, unless specified */
   color: var(--text-main);
   font-family: var(--font-family);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="light"] body {
+  background-image: 
+    radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.08) 0%, transparent 45%);
 }
 
 .app-main-outer-shell {
