@@ -43,7 +43,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     // Language state
     const [language, setLanguageState] = useState<Language>(() => {
         const savedLang = localStorage.getItem('skill_compass_lang');
-        return (savedLang === 'en' || savedLang === 'vi') ? savedLang : 'vi';
+        return (savedLang === 'en' || savedLang === 'vi') ? savedLang : 'en';
     });
 
     // Theme state
@@ -77,9 +77,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         setThemeState(newTheme);
     };
 
-    const t = (key: keyof typeof translations['vi']): string => {
-        const langDict = translations[language] || translations.vi;
-        return langDict[key] || translations.vi[key] || String(key);
+    const t = (key: keyof typeof translations['en']): string => {
+        const langDict = translations[language] || translations.en;
+        return langDict[key] || translations.en[key] || String(key);
     };
 
     return (

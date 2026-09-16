@@ -61,7 +61,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories }) => {
   );
 
   // Map all skills directly from the milestone
-  const displaySkills = skillsList.map((skill, idx) => {
+  const displaySkills = skillsList.map((skill) => {
      let cleaned = skill.name;
      if (cleaned.length > 20) {
         const parts = cleaned.split('&');
@@ -76,7 +76,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories }) => {
      return {
         id: skill.id,
         name: cleaned,
-        value: Math.min(skill.value, currentMarket.benchmarks[idx % currentMarket.benchmarks.length] || 100)
+        value: skill.value
      };
   });
 

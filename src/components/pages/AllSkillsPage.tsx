@@ -40,6 +40,21 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
     ? allSkills.find((s) => s.id === selectedStarData.skill.id) || selectedStarData.skill
     : null;
 
+  // Skills filtered by selected industry category
+  const categorySkills = selectedCategoryName === 'all' 
+    ? [] 
+    : milestones.flatMap(m => 
+        m.categories
+          .filter(c => c.name === selectedCategoryName)
+          .flatMap(c => c.skills.map(s => ({ skill: s, milestoneTitle: m.title, categoryName: c.name })))
+      );
+
+  const totalCategorySkills = categorySkills.length;
+  const completedCategorySkills = categorySkills.filter(item => {
+    const comp = item.skill.subTopics.filter(st => st.isCompleted).length;
+    return item.skill.subTopics.length > 0 && comp === item.skill.subTopics.length;
+  }).length;
+
   return (
     <div className="all-skills-pure-space-page">
       {/* 1. Floating Search Bar (Top-Left) */}
@@ -60,6 +75,72 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
           )}
         </div>
       </div>
+
+      {/* 1.5. Floating Industry Learned Skills Drawer (When Category Filter Active) */}
+      {selectedCategoryName !== 'all' && (
+        <div className="cosmic-industry-skills-panel glass-panel">
+          <div className="industry-panel-header">
+            <div className="industry-title-wrap">
+              <span className="industry-badge">🎯 {t('industry')}</span>
+              <h3 className="industry-name-title">{selectedCategoryName}</h3>
+            </div>
+            <button 
+              className="industry-panel-close"
+              onClick={() => setSelectedCategoryName('all')}
+              title="Show all categories"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          <div className="industry-panel-stats">
+            <div className="industry-stat-bar-track">
+              <div 
+                className="industry-stat-bar-fill" 
+                style={{ width: `${totalCategorySkills > 0 ? (completedCategorySkills / totalCategorySkills) * 100 : 0}%` }}
+              />
+            </div>
+            <span className="industry-stat-text">
+              Learned <strong>{completedCategorySkills}/{totalCategorySkills}</strong> skills ({totalCategorySkills > 0 ? Math.round((completedCategorySkills / totalCategorySkills) * 100) : 0}% Mastery)
+            </span>
+          </div>
+
+          <div className="industry-skills-list custom-scrollbar">
+            {categorySkills.map(({ skill, milestoneTitle, categoryName }) => {
+              const completedCount = skill.subTopics.filter(st => st.isCompleted).length;
+              const totalCount = skill.subTopics.length;
+              const isMastered = totalCount > 0 && completedCount === totalCount;
+              const inProgress = completedCount > 0 && !isMastered;
+
+              return (
+                <div 
+                  key={skill.id} 
+                  className={`industry-skill-item-card ${isMastered ? 'mastered' : inProgress ? 'in-progress' : ''}`}
+                  onClick={() => setSelectedStarData({ skill, categoryName, milestoneTitle })}
+                  title="Click to view details & exercises"
+                >
+                  <div className="ind-skill-info">
+                    <span className="ind-skill-name">{skill.name}</span>
+                    <span className="ind-skill-meta">
+                      {milestoneTitle} • {completedCount}/{totalCount} exercises
+                    </span>
+                  </div>
+                  
+                  <div className="ind-skill-status">
+                    {isMastered ? (
+                      <span className="status-pill mastered">✅ Mastered</span>
+                    ) : inProgress ? (
+                      <span className="status-pill in-progress">⚡ {skill.levelPercentage}%</span>
+                    ) : (
+                      <span className="status-pill pending">⏳ 0%</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* 2. Industry/Category Selector at BOTTOM-RIGHT EDGE */}
       <div className="cosmic-bottom-right-industry-wrap">

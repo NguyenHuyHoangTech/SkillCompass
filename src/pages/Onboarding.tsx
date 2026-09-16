@@ -134,38 +134,46 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onFinish }) => {
     };
 
     const selectGoal = (goal: CareerGoalResponse) => {
-        initialMockRoadmap.targetRole = goal.title;
-        initialMockRoadmap.milestones = goal.milestones.map((m: any, i: number) => ({
-            id: m.id,
-            title: m.title,
-            roleName: goal.title,
-            description: m.goal,
-            badge: `Stage ${i+1}`,
-            overallProgress: 0,
-            overallAiEvaluation: undefined,
-            categories: [
-                {
-                    id: `cat-${i}`,
-                    name: 'Core Skills',
-                    description: 'Required skills for this stage',
-                    skills: m.skills.map((s: any, j: number) => ({
-                        id: `sk-${i}-${j}`,
-                        name: s.title,
-                        icon: 'Book',
-                        levelPercentage: 0,
-                        subTopics: (s.sub_tasks || []).map((st: any, k: number) => ({
-                            id: `sub-${i}-${j}-${k}`,
-                            title: st.text || 'Subtopic',
-                            description: st.completion_note || 'Study content',
-                            isCompleted: false,
-                            assessmentScore: 0
+        const newRoadmap: any = {
+            id: `roadmap-${Date.now()}`,
+            userId: "usr-1001",
+            userName: "John Doe",
+            targetRole: goal.title,
+            currentMilestoneId: goal.milestones[0]?.id || "m1",
+            updatedAt: new Date().toISOString(),
+            milestones: goal.milestones.map((m: any, i: number) => ({
+                id: m.id || `m-${i + 1}`,
+                title: m.title,
+                roleName: goal.title,
+                description: m.goal || m.description || '',
+                badge: `Stage ${i + 1}`,
+                overallProgress: 0,
+                courseLinks: m.course_links || [],
+                categories: [
+                    {
+                        id: `cat-${i}`,
+                        name: 'Core & Specialized Skills',
+                        description: 'Required competencies for this stage',
+                        skills: (m.skills || []).map((s: any, j: number) => ({
+                            id: `sk-${i}-${j}`,
+                            name: s.title || s.name || `Skill ${j + 1}`,
+                            icon: 'Book',
+                            levelPercentage: 0,
+                            courseLinks: s.course_links || [],
+                            subTopics: (s.sub_tasks || []).map((st: any, k: number) => ({
+                                id: `sub-${i}-${j}-${k}`,
+                                title: st.text || st.title || 'Practical Topic',
+                                description: st.completion_note || st.description || 'Core learning content',
+                                isCompleted: false,
+                                assessmentScore: 0
+                            }))
                         }))
-                    }))
-                }
-            ]
-        })) as any;
-        initialMockRoadmap.currentMilestoneId = goal.milestones[0]?.id || "";
-        localStorage.setItem('skill_compass_roadmap', JSON.stringify(initialMockRoadmap));
+                    }
+                ]
+            }))
+        };
+
+        localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(newRoadmap));
         if (onFinish) {
             onFinish();
         } else {

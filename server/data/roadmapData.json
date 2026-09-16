@@ -3,8 +3,8 @@
   "userId": "usr-1001",
   "userName": "John Doe",
   "targetRole": "UI/UX & Frontend Engineer",
-  "currentMilestoneId": "ms-stage-1",
-  "updatedAt": "2026-09-16T17:15:25.325Z",
+  "currentMilestoneId": "ms-future-ai-1789586369372",
+  "updatedAt": "2026-09-16T19:21:24.279Z",
   "milestones": [
     {
       "id": "ms-stage-1",
@@ -12,7 +12,7 @@
       "roleName": "UI/UX & Frontend Mindset",
       "description": "Master the mindset of user experience (UX) design and basic visual interface (UI) principles before writing the first line of code.",
       "badge": "🎨 UI/UX Mindset",
-      "overallProgress": 100,
+      "overallProgress": 53,
       "categories": [
         {
           "id": "cat-ux-fundamentals",
@@ -43,16 +43,16 @@
                 },
                 {
                   "id": "sub-auto-sk-ux-principles-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về UX Principles & Visuals",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on UX Principles & Visuals",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -92,9 +92,9 @@
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Visual Hierarchy & Layout Balance",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Visual Hierarchy & Layout Balance",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -112,23 +112,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-1-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-1-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -146,23 +146,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-1-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 4",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 4",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-1-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 4",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 4",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -180,23 +180,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-1-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 5",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 5",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-1-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 5",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 5",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -264,9 +264,9 @@
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Flexbox, CSS Grid & SASS",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Flexbox, CSS Grid & SASS",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -299,16 +299,16 @@
                 },
                 {
                   "id": "sub-auto-sk-react-tailwind-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Tailwind CSS & React Components",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Tailwind CSS & React Components",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -340,16 +340,16 @@
                 },
                 {
                   "id": "sub-auto-sk-animations-media-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Micro-interactions & Fonts/WebP",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Micro-interactions & Fonts/WebP",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -391,16 +391,16 @@
                 },
                 {
                   "id": "sub-auto-sk-mobile-performance-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Mobile-First & Performance Tuning",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Mobile-First & Performance Tuning",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -432,16 +432,16 @@
                 },
                 {
                   "id": "sub-auto-sk-browser-a11y-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Cross-Browser & Web Accessibility",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Cross-Browser & Web Accessibility",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -459,23 +459,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-3-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-3-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -493,23 +493,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-3-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 4",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 4",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-3-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 4",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 4",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -522,7 +522,7 @@
       "roleName": "Lead UI/UX Engineer",
       "description": "Applying AI in design, mastering Figma Tokens, Storybook, and enterprise-scale Design Systems.",
       "badge": "🤖 AI & Design System",
-      "overallProgress": 6,
+      "overallProgress": 83,
       "categories": [
         {
           "id": "cat-ai-design-system",
@@ -533,7 +533,7 @@
               "id": "sk-storybook-tokens",
               "name": "Storybook & Design Tokens",
               "icon": "Sparkles",
-              "levelPercentage": 27,
+              "levelPercentage": 99,
               "subTopics": [
                 {
                   "id": "sub-storybook-docs",
@@ -544,125 +544,125 @@
                 },
                 {
                   "id": "sub-auto-sk-storybook-tokens-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Storybook & Design Tokens",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
-                  "isCompleted": false,
+                  "title": "Build mini project applying Storybook & Design Tokens",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-storybook-tokens-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
-                  "isCompleted": false,
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Storybook & Design Tokens",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Storybook & Design Tokens",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
               "id": "sk-dummy-ms-stage-4-0",
               "name": "Additional Skill 1",
               "icon": "Star",
-              "levelPercentage": 0,
+              "levelPercentage": 99,
               "subTopics": [
                 {
                   "id": "sub-dummy-ms-stage-4-0",
                   "title": "Practice Topic 1",
                   "description": "Additional practice to master this stage.",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-4-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
-                  "isCompleted": false,
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-4-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
-                  "isCompleted": false,
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
               "id": "sk-dummy-ms-stage-4-1",
               "name": "Additional Skill 2",
               "icon": "Star",
-              "levelPercentage": 0,
+              "levelPercentage": 99,
               "subTopics": [
                 {
                   "id": "sub-dummy-ms-stage-4-1",
                   "title": "Practice Topic 2",
                   "description": "Additional practice to master this stage.",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-4-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 2",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
-                  "isCompleted": false,
+                  "title": "Build mini project applying Additional Skill 2",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-4-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
-                  "isCompleted": false,
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 2",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 2",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
               "id": "sk-rnd-ms-stage-4-0",
               "name": "Dynamic Skill 4",
               "icon": "Hexagon",
-              "levelPercentage": 0,
+              "levelPercentage": 99,
               "subTopics": [
                 {
                   "id": "sub-rnd-ms-stage-4-0",
                   "title": "Advanced Practice 4",
                   "description": "Advanced practice for comprehensive coverage.",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-4-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 4",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
-                  "isCompleted": false,
+                  "title": "Build mini project applying Dynamic Skill 4",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-4-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
-                  "isCompleted": false,
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 4",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 4",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -680,63 +680,62 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-4-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 5",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 5",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-4-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 5",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 5",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
               "id": "sk-rnd-ms-stage-4-2",
               "name": "Dynamic Skill 6",
               "icon": "Hexagon",
-              "levelPercentage": 0,
+              "levelPercentage": 99,
               "subTopics": [
                 {
                   "id": "sub-rnd-ms-stage-4-2",
                   "title": "Advanced Practice 6",
                   "description": "Advanced practice for comprehensive coverage.",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-4-2-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 6",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
-                  "isCompleted": false,
+                  "title": "Build mini project applying Dynamic Skill 6",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-4-2-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
-                  "isCompleted": false,
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 6",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 6",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
         }
-      ],
-      "isForceCompleted": true
+      ]
     },
     {
       "id": "ms-stage-5",
@@ -744,7 +743,7 @@
       "roleName": "Principal Frontend Architect",
       "description": "Designing large-scale application architecture, centralized State Management, and integrating GraphQL/REST APIs.",
       "badge": "🏗️ System Architect",
-      "overallProgress": 0,
+      "overallProgress": 10,
       "categories": [
         {
           "id": "cat-micro-frontend",
@@ -766,23 +765,23 @@
                 },
                 {
                   "id": "sub-auto-sk-micro-fe-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Module Federation & GraphQL",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Module Federation & GraphQL",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-micro-fe-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Module Federation & GraphQL",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Module Federation & GraphQL",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -800,23 +799,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-5-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-5-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -834,23 +833,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-5-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 2",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 2",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-5-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 2",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 2",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -885,23 +884,23 @@
                 },
                 {
                   "id": "sub-auto-sk-leadership-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Tech Strategy & Mentorship",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Tech Strategy & Mentorship",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-leadership-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Tech Strategy & Mentorship",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Tech Strategy & Mentorship",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -919,23 +918,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-6-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-6-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -953,23 +952,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-6-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 2",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 2",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-6-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 2",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 2",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -987,23 +986,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-6-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 4",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 4",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-6-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 4",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 4",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1021,23 +1020,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-6-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 5",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 5",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-6-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 5",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 5",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -1072,23 +1071,23 @@
                 },
                 {
                   "id": "sub-auto-sk-genai-ux-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Agentic Systems & LLM UX",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Agentic Systems & LLM UX",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-genai-ux-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Agentic Systems & LLM UX",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Agentic Systems & LLM UX",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1106,23 +1105,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-7-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-7-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1140,23 +1139,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-7-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 2",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 2",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-7-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 2",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 2",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1174,23 +1173,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-7-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 4",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 4",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-7-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 4",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 4",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -1225,23 +1224,23 @@
                 },
                 {
                   "id": "sub-auto-sk-cto-vision-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Global Scaling & Tech Investment",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Global Scaling & Tech Investment",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-cto-vision-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Global Scaling & Tech Investment",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Global Scaling & Tech Investment",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1259,23 +1258,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-8-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-8-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1293,23 +1292,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-8-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 2",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 2",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-8-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 2",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 2",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1327,23 +1326,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-8-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 4",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 4",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-8-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 4",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 4",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1361,23 +1360,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-8-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 5",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 5",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-8-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 5",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 5",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1395,23 +1394,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-8-2-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 6",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 6",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-8-2-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 6",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 6",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1429,23 +1428,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-8-3-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 7",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 7",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-8-3-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 7",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 7",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -1480,23 +1479,23 @@
                 },
                 {
                   "id": "sub-auto-sk-quantum-security-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Quantum Security & ZK-Rollups",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Quantum Security & ZK-Rollups",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-quantum-security-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Quantum Security & ZK-Rollups",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Quantum Security & ZK-Rollups",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1514,23 +1513,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-9-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-9-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1548,23 +1547,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-9-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 2",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 2",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-9-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 2",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 2",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1582,23 +1581,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-9-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 4",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 4",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-9-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 4",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 4",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1616,23 +1615,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-9-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 5",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 5",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-9-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 5",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 5",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -1667,23 +1666,23 @@
                 },
                 {
                   "id": "sub-auto-sk-webxr-three-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Three.js & VisionOS WebXR",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Three.js & VisionOS WebXR",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-webxr-three-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Three.js & VisionOS WebXR",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Three.js & VisionOS WebXR",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1701,23 +1700,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-10-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-10-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1735,23 +1734,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-10-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 2",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 2",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-10-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 2",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 2",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1769,23 +1768,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-10-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 4",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 4",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-10-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 4",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 4",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -1820,23 +1819,23 @@
                 },
                 {
                   "id": "sub-auto-sk-bci-ux-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Neural Signal Processing & Bio-UX",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Neural Signal Processing & Bio-UX",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-bci-ux-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Neural Signal Processing & Bio-UX",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Neural Signal Processing & Bio-UX",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1854,23 +1853,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-11-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-11-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1888,23 +1887,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-11-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 2",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 2",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-11-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 2",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 2",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             }
           ]
@@ -1939,23 +1938,23 @@
                 },
                 {
                   "id": "sub-auto-sk-ipfs-space-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng IPFS & Deep Space Latency Opt",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying IPFS & Deep Space Latency Opt",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-ipfs-space-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về IPFS & Deep Space Latency Opt",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on IPFS & Deep Space Latency Opt",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -1973,23 +1972,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-12-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 1",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 1",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-12-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 1",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 1",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -2007,23 +2006,23 @@
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-12-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Additional Skill 2",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Additional Skill 2",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-dummy-ms-stage-12-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Additional Skill 2",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Additional Skill 2",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -2041,23 +2040,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-12-0-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 4",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 4",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-12-0-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 4",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 4",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -2075,23 +2074,23 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-12-1-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 5",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 5",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-12-1-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 5",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 5",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
               ]
             },
             {
@@ -2109,23 +2108,145 @@
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-12-2-1",
-                  "title": "Thực hành xây dựng dự án mini ứng dụng Dynamic Skill 6",
-                  "description": "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động.",
+                  "title": "Build mini project applying Dynamic Skill 6",
+                  "description": "Apply newly acquired knowledge into a mini project to understand how it works.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-auto-sk-rnd-ms-stage-12-2-2",
-                  "title": "Kiểm tra và review mã nguồn (Code/Design Review)",
-                  "description": "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng.",
+                  "title": "Code & Design Review",
+                  "description": "Evaluate code quality and find optimization methods for performance and quality.",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }
               ],
               "requirements": [
-                "Hoàn thành 100% bài tập thực hành về Dynamic Skill 6",
-                "Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)",
-                "Áp dụng thành công vào ít nhất 1 dự án thực tế"
+                "Complete 100% of practical exercises on Dynamic Skill 6",
+                "Pass internal capability assessment test (Score > 80)",
+                "Successfully apply to at least 1 real-world project"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ms-future-ai-1789584169480",
+      "title": "Stage 4: Fullstack AI Native & Cloud Architect",
+      "roleName": "AI Native Fullstack Lead",
+      "description": "AI-proposed future milestone: Integrating AI LLM Engines (Gemini/OpenAI), Vector Databases, RAG Systems, and AWS Serverless/Docker Cloud Computing.",
+      "badge": "🤖 AI Cloud Master",
+      "overallProgress": 100,
+      "categories": [
+        {
+          "id": "cat-ai-integration",
+          "name": "4.1. AI Model Integration & Vector DB",
+          "description": "Building smart AI Native products",
+          "skills": [
+            {
+              "id": "sk-ai-llm-api",
+              "name": "Gemini AI API & RAG Architecture",
+              "icon": "Zap",
+              "levelPercentage": 99,
+              "subTopics": [
+                {
+                  "id": "sub-ai-prompting",
+                  "title": "Prompt Engineering & Structured JSON Outputs",
+                  "description": "Designing optimal prompts for AI to return structured data",
+                  "isCompleted": true,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-vector-db",
+                  "title": "Vector Database & Embeddings (Pinecone / Chroma)",
+                  "description": "Building enterprise RAG semantic search systems",
+                  "isCompleted": true,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cat-cloud-devops",
+          "name": "4.2. Containerization & Cloud DevOps",
+          "description": "Automating cloud infrastructure deployment",
+          "skills": [
+            {
+              "id": "sk-aws-docker",
+              "name": "Docker Containers & AWS Deploy",
+              "icon": "Server",
+              "levelPercentage": 99,
+              "subTopics": [
+                {
+                  "id": "sub-docker-compose",
+                  "title": "Dockerizing React & Node.js Express",
+                  "description": "Packaging fullstack applications into complete Docker Containers",
+                  "isCompleted": true,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ms-future-ai-1789586369372",
+      "title": "Stage 4: Fullstack AI Native & Cloud Architect",
+      "roleName": "AI Native Fullstack Lead",
+      "description": "AI-proposed future milestone: Integrating AI LLM Engines (Gemini/OpenAI), Vector Databases, RAG Systems, and AWS Serverless/Docker Cloud Computing.",
+      "badge": "🤖 AI Cloud Master",
+      "overallProgress": 0,
+      "categories": [
+        {
+          "id": "cat-ai-integration",
+          "name": "4.1. AI Model Integration & Vector DB",
+          "description": "Building smart AI Native products",
+          "skills": [
+            {
+              "id": "sk-ai-llm-api",
+              "name": "Gemini AI API & RAG Architecture",
+              "icon": "Zap",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-ai-prompting",
+                  "title": "Prompt Engineering & Structured JSON Outputs",
+                  "description": "Designing optimal prompts for AI to return structured data",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-vector-db",
+                  "title": "Vector Database & Embeddings (Pinecone / Chroma)",
+                  "description": "Building enterprise RAG semantic search systems",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cat-cloud-devops",
+          "name": "4.2. Containerization & Cloud DevOps",
+          "description": "Automating cloud infrastructure deployment",
+          "skills": [
+            {
+              "id": "sk-aws-docker",
+              "name": "Docker Containers & AWS Deploy",
+              "icon": "Server",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-docker-compose",
+                  "title": "Dockerizing React & Node.js Express",
+                  "description": "Packaging fullstack applications into complete Docker Containers",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
               ]
             }
           ]

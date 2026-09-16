@@ -23,7 +23,7 @@ export const AITester: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [apiKey, setApiKey] = useState('');
   const [models, setModels] = useState<string[]>([]);
-  const [selectedModel, setSelectedModel] = useState('gemini-1.5-flash');
+  const [selectedModel, setSelectedModel] = useState('gemini-3.6-flash');
   
   const [isTestingKey, setIsTestingKey] = useState(false);
   const [keyStatus, setKeyStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -137,10 +137,11 @@ export const AITester: React.FC = () => {
     <>
       {/* Floating Action Button */}
       <motion.button
-        className="fixed bottom-6 right-6 p-4 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-600/30 hover:bg-indigo-700 z-50 flex items-center justify-center transition-colors"
-        whileHover={{ scale: 1.05 }}
+        className="fixed bottom-[90px] right-6 p-3.5 bg-slate-900 dark:bg-slate-900 text-cyan-400 dark:text-cyan-300 rounded-full border border-cyan-500/50 shadow-xl shadow-cyan-950/50 hover:bg-slate-800 hover:scale-105 z-50 flex items-center justify-center transition-all"
+        whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
+        title="AI Config & Model Tester"
       >
         <Bot className="w-6 h-6" />
       </motion.button>

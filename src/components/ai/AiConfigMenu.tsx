@@ -4,10 +4,10 @@ import { updateAIConfig, getAvailableModels } from '../../services/ai';
 export const AiConfigMenu: React.FC = () => {
     const [showApiConfig, setShowApiConfig] = useState(false);
     const [tempApiKey, setTempApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
-    const [tempModel, setTempModel] = useState(localStorage.getItem('gemini_model_name') || 'gemini-flash-latest');
-    
+    const [tempModel, setTempModel] = useState(localStorage.getItem('gemini_model_name') || 'gemini-3.6-flash');
+
     const [isKeyValid, setIsKeyValid] = useState(!!localStorage.getItem('gemini_api_key'));
-    const [keyTestResult, setKeyTestResult] = useState<{success: boolean, message: string} | null>(null);
+    const [keyTestResult, setKeyTestResult] = useState<{ success: boolean, message: string } | null>(null);
     const [isTestingKey, setIsTestingKey] = useState(false);
     const [availableModels, setAvailableModels] = useState<string[]>([]);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -31,12 +31,12 @@ export const AiConfigMenu: React.FC = () => {
         setIsKeyValid(res.success);
         if (res.success && res.models.length > 0) {
             setAvailableModels(res.models);
-            
+
             let nextModel = tempModel;
             if (!res.models.includes(tempModel)) {
-                nextModel = res.models.includes('gemini-2.5-flash') ? 'gemini-2.5-flash' : res.models[0];
+                nextModel = res.models.includes('gemini-3.6-flash') ? 'gemini-3.6-flash' : res.models[0];
             }
-            
+
             setTempModel(nextModel);
             updateAIConfig(tempApiKey, nextModel);
         }
@@ -45,7 +45,7 @@ export const AiConfigMenu: React.FC = () => {
 
     return (
         <div className="relative" ref={dropdownRef}>
-            <button 
+            <button
                 onClick={() => setShowApiConfig(!showApiConfig)}
                 className="top-header-ai-featured-btn"
                 style={{ background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border-glass)' }}
@@ -56,28 +56,28 @@ export const AiConfigMenu: React.FC = () => {
             </button>
 
             {showApiConfig && (
-                <div 
+                <div
                     className="absolute right-0 mt-2 w-80 rounded-xl shadow-xl p-4 z-50 glass-panel"
                     style={{ background: 'var(--bg-card)', border: '1px solid var(--border-glass)', top: '100%' }}
                 >
                     <h3 className="text-sm font-bold mb-3" style={{ color: 'var(--text-main)' }}>Cấu hình Gemini API</h3>
-                    
+
                     <div className="space-y-4" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                         <div>
                             <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>API Key</label>
                             <div className="flex gap-2" style={{ display: 'flex', gap: '8px' }}>
-                                <input 
-                                    type="password" 
+                                <input
+                                    type="password"
                                     value={tempApiKey}
                                     onChange={(e) => {
                                         setTempApiKey(e.target.value);
                                         setIsKeyValid(false);
                                         setKeyTestResult(null);
                                     }}
-                                    placeholder="AIzaSy..." 
+                                    placeholder="AIzaSy..."
                                     style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-tertiary)', color: 'var(--text-main)', fontSize: '0.85rem' }}
                                 />
-                                <button 
+                                <button
                                     onClick={handleVerifyKey}
                                     disabled={isTestingKey || !tempApiKey}
                                     style={{ padding: '0 12px', borderRadius: '8px', background: 'var(--primary)', color: '#fff', fontSize: '0.85rem', fontWeight: 600, border: 'none', cursor: (isTestingKey || !tempApiKey) ? 'not-allowed' : 'pointer', opacity: (isTestingKey || !tempApiKey) ? 0.6 : 1 }}
@@ -91,11 +91,11 @@ export const AiConfigMenu: React.FC = () => {
                                 </div>
                             )}
                         </div>
-                        
+
                         {isKeyValid && (
                             <div style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '12px' }}>
                                 <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Chọn Model</label>
-                                <select 
+                                <select
                                     value={tempModel}
                                     onChange={(e) => {
                                         setTempModel(e.target.value);

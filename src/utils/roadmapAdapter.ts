@@ -15,12 +15,12 @@ export const convertToUserRoadmap = (
             const subTopics: SubTopic[] = [
                 {
                     id: `st-${sm.id}-${sIdx}-1`,
-                    title: `Hiểu tổng quan về ${ss.title}`,
+                    title: `Understand overview of ${ss.title}`,
                     isCompleted: false
                 },
                 {
                     id: `st-${sm.id}-${sIdx}-2`,
-                    title: `Thực hành cơ bản ${ss.title}`,
+                    title: `Basic practice of ${ss.title}`,
                     isCompleted: false
                 }
             ];
@@ -46,7 +46,7 @@ export const convertToUserRoadmap = (
 
         const category: SkillCategory = {
             id: `cat-${sm.id}-1`,
-            name: "Kỹ năng trọng tâm",
+            name: "Core Skills",
             skills: complexSkills
         };
 
@@ -58,7 +58,7 @@ export const convertToUserRoadmap = (
             id: sm.id,
             title: sm.title,
             roleName: targetCareer,
-            description: sm.goal || `Mục tiêu: ${sm.title}`,
+            description: sm.goal || `Goal: ${sm.title}`,
             badge: "🏆",
             overallProgress: overallProgress,
             categories: [category],
@@ -69,7 +69,7 @@ export const convertToUserRoadmap = (
     return {
         id: `roadmap-${Date.now()}`,
         userId: "user-1",
-        userName: "Người dùng mới",
+        userName: "New User",
         targetRole: targetCareer,
         currentMilestoneId: complexMilestones.length > 0 ? complexMilestones[0].id : '',
         milestones: complexMilestones,

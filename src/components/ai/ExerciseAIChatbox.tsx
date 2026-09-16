@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, Send } from 'lucide-react';
+import { executeWithFallback } from '../../services/ai';
 
 interface Message {
   id: string;
@@ -45,7 +46,7 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const msg = textToSend || inputText;
     if (!msg.trim()) return;
 
@@ -60,26 +61,19 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
     if (!textToSend) setInputText('');
     setIsTyping(true);
 
-    // Simulate smart AI response tailored to practical exercise
-    setTimeout(() => {
-      let aiReply = '';
-      const lower = msg.toLowerCase();
+    try {
+      const prompt = `You are a friendly, expert AI Programming Tutor helping a student with their practical exercise.
+Topic: "${subTopicTitle}"
+Skill: "${skillName}"
+Milestone: "${milestoneTitle}"
+Scenario: "${scenarioText || 'General practice'}"
+Student's code/answer snippet: "${userAnswerCode || 'None'}"
 
-      if (lower.includes('hint') || lower.includes('step 1') || lower.includes('start')) {
-        aiReply = `💡 Practical Guidance Hint for "${subTopicTitle}":\n\n1. Step 1: Analyze structure: Identify the main components of the exercise.\n2. Step 2: Use Standard Tags: Use correct semantic tags (<header>, <nav>, <main>, <article>, <footer>).\n3. Step 3: Optimize Accessibility: Add alt attributes, aria-labels, and clear h1-h3 headings.\n\nWould you like me to show a sample of standard HTML code?`;
-      } else if (lower.includes('check') || lower.includes('code') || lower.includes('review')) {
-        if (userAnswerCode.trim().length > 0) {
-          aiReply = `🔍 AI Review Of Your Work:\n\nYour submitted snippet:\n${userAnswerCode.slice(0, 150)}...\n\n✅ Preliminary assessment: Your structure is on the right track! It shows a logical data organization mindset.\n\n📌 Recommendation: Ensure heading tag hierarchy is not skipped and check color contrast for mobile display.`;
-        } else {
-          aiReply = `🔍 Please enter your solution or code snippet into the workspace on the left, then message me "Review code" so I can evaluate it in detail!`;
-        }
-      } else if (lower.includes('seo') || lower.includes('accessibility') || lower.includes('a11y')) {
-        aiReply = `⚡ SEO & Accessibility Tips:\n- Only use one <h1> tag per page.\n- Add lang="en" attribute to <html> tag and descriptive alt text for all images.\n- Use <button> tags for clickable actions instead of <div onClick>.`;
-      } else if (lower.includes('grade') || lower.includes('submit')) {
-        aiReply = `🏆 Click the "🏆 Submit for AI Coach to Grade" button at the bottom left to have the AI system calculate your percentage score and save the result to your Roadmap!`;
-      } else {
-        aiReply = `🤖 Regarding the practical exercise "${subTopicTitle}":\n\nYou need to focus on applying practical design principles. ${scenarioText ? `Pay special attention to the project scenario: ${scenarioText.slice(0, 90)}...` : ''}\n\nDo you need me to explain any part in more detail?`;
-      }
+Student's question: "${msg}"
+
+Provide a clear, practical, encouraging response in English (2-4 sentences max). Give code hints, best practices, or code reviews as appropriate.`;
+
+      const aiReply = await executeWithFallback(prompt, 'SANDBOX_PRACTICE');
 
       const aiMsg: Message = {
         id: `msg-ai-${Date.now()}`,
@@ -87,10 +81,19 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
         text: aiReply,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
-
       setMessages((prev) => [...prev, aiMsg]);
+    } catch (err) {
+      console.error("AI Chatbox Error:", err);
+      const aiMsg: Message = {
+        id: `msg-ai-${Date.now()}`,
+        sender: 'ai',
+        text: `Regarding "${subTopicTitle}": Make sure you structure your solution logically, follow clean code principles, and test step-by-step!`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMessages((prev) => [...prev, aiMsg]);
+    } finally {
       setIsTyping(false);
-    }, 750);
+    }
   };
 
   const quickPrompts = [
@@ -101,63 +104,52 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
   ];
 
   return (
-    <div className="exercise-ai-chatbox glass-panel" style={{ display: 'flex', flexDirection: 'column', height: '100%', borderRadius: '16px', border: '1px solid #bae6fd', background: '#ffffff', overflow: 'hidden' }}>
+    <div className="exercise-ai-chatbox flex flex-col h-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-lg">
       {/* Header Chat */}
-      <div style={{ padding: '14px 16px', background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Bot size={20} color="#ffffff" />
+      <div className="p-3.5 px-4 bg-gradient-to-r from-sky-600 to-blue-700 dark:from-slate-800 dark:to-slate-900 text-white flex items-center justify-between shrink-0 border-b border-sky-500/30 dark:border-slate-800">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8.5 h-8.5 rounded-full bg-white/20 dark:bg-slate-700/60 flex items-center justify-center">
+            <Bot size={20} className="text-white" />
           </div>
           <div>
-            <h4 style={{ margin: 0, fontSize: '0.94rem', fontWeight: 800, color: '#ffffff' }}>
+            <h4 className="m-0 text-sm font-extrabold text-white">
               Practical AI Coach
             </h4>
-            <span style={{ fontSize: '0.74rem', color: '#e0f2fe', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80' }} /> 🟢 Direct Guidance Assistant
+            <span className="text-[11px] text-sky-100 dark:text-slate-300 flex items-center gap-1 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> 🟢 Direct Guidance Assistant
             </span>
           </div>
         </div>
 
-        <span style={{ fontSize: '0.74rem', background: 'rgba(255,255,255,0.18)', padding: '4px 10px', borderRadius: '20px', color: '#ffffff', fontWeight: 700 }}>
+        <span className="text-[11px] bg-white/20 dark:bg-slate-700/80 px-2.5 py-1 rounded-full text-white font-bold">
           Dedicated Tutor
         </span>
       </div>
 
       {/* Messages Stream - Smooth Internal Scrolling */}
-      <div style={{ flex: 1, minHeight: 0, padding: '16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', background: '#f8fafc' }}>
+      <div className="flex-1 min-h-0 p-4 overflow-y-auto flex flex-col gap-3 bg-slate-50 dark:bg-slate-950">
         {messages.map((m) => (
           <div
             key={m.id}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: m.sender === 'user' ? 'flex-end' : 'flex-start',
-            }}
+            className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}`}
           >
             <div
-              style={{
-                maxWidth: '86%',
-                padding: '12px 14px',
-                borderRadius: m.sender === 'user' ? '16px 16px 2px 16px' : '16px 16px 16px 2px',
-                background: m.sender === 'user' ? '#0284c7' : '#ffffff',
-                color: m.sender === 'user' ? '#ffffff' : '#0f172a',
-                border: m.sender === 'user' ? 'none' : '1px solid #e2e8f0',
-                boxShadow: m.sender === 'user' ? '0 2px 8px rgba(2, 132, 199, 0.25)' : '0 1px 3px rgba(0,0,0,0.05)',
-                fontSize: '0.86rem',
-                lineHeight: 1.55,
-                whiteSpace: 'pre-wrap',
-              }}
+              className={`max-w-[86%] p-3 rounded-2xl text-xs sm:text-sm leading-relaxed whitespace-pre-wrap ${
+                m.sender === 'user'
+                  ? 'rounded-br-xs bg-sky-600 dark:bg-cyan-600 text-white shadow-md'
+                  : 'rounded-bl-xs bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-sm'
+              }`}
             >
               {m.text}
             </div>
-            <span style={{ fontSize: '0.68rem', color: '#94a3b8', marginTop: '4px', padding: '0 4px' }}>
+            <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 px-1">
               {m.timestamp}
             </span>
           </div>
         ))}
 
         {isTyping && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0284c7', fontSize: '0.8rem', fontStyle: 'italic', padding: '8px' }}>
+          <div className="flex items-center gap-1.5 text-sky-600 dark:text-cyan-400 text-xs italic p-2">
             <Bot size={16} className="spin-icon" /> AI Coach is typing a response...
           </div>
         )}
@@ -165,23 +157,12 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
       </div>
 
       {/* Quick Prompts Chips */}
-      <div style={{ padding: '8px 12px', background: '#ffffff', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '6px', overflowX: 'auto' }}>
+      <div className="p-2 px-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex gap-1.5 overflow-x-auto hide-scrollbar">
         {quickPrompts.map((p, idx) => (
           <button
             key={idx}
             onClick={() => handleSendMessage(p.action)}
-            style={{
-              padding: '6px 10px',
-              borderRadius: '20px',
-              border: '1px solid #bae6fd',
-              background: '#f0f9ff',
-              color: '#0369a1',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease',
-            }}
+            className="px-2.5 py-1.5 rounded-full border border-sky-200 dark:border-slate-700 bg-sky-50 dark:bg-slate-800 text-sky-700 dark:text-cyan-300 text-xs font-bold whitespace-nowrap hover:bg-sky-100 dark:hover:bg-slate-700 transition-colors shrink-0"
           >
             {p.label}
           </button>
@@ -194,41 +175,23 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
           e.preventDefault();
           handleSendMessage();
         }}
-        style={{ padding: '12px', background: '#ffffff', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '8px' }}
+        className="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex gap-2"
       >
         <input
           type="text"
           placeholder="Ask AI Coach for practical guidance..."
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          style={{
-            flex: 1,
-            padding: '10px 14px',
-            borderRadius: '10px',
-            border: '1px solid #cbd5e1',
-            outline: 'none',
-            fontSize: '0.86rem',
-            color: '#0f172a',
-            background: '#f8fafc',
-          }}
+          className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 outline-none text-xs sm:text-sm text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-slate-800/80 focus:border-sky-500 dark:focus:border-cyan-400"
         />
         <button
           type="submit"
           disabled={!inputText.trim() || isTyping}
-          style={{
-            padding: '10px 16px',
-            borderRadius: '10px',
-            border: 'none',
-            background: '#0284c7',
-            color: '#ffffff',
-            fontWeight: 700,
-            fontSize: '0.86rem',
-            cursor: inputText.trim() ? 'pointer' : 'not-allowed',
-            opacity: inputText.trim() ? 1 : 0.6,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-          }}
+          className={`px-4 py-2.5 rounded-xl border-none font-bold text-xs sm:text-sm text-white flex items-center gap-1.5 transition-all ${
+            inputText.trim() && !isTyping
+              ? 'bg-sky-600 dark:bg-cyan-600 hover:bg-sky-700 dark:hover:bg-cyan-500 cursor-pointer shadow-md'
+              : 'bg-slate-300 dark:bg-slate-800 text-slate-500 cursor-not-allowed opacity-60'
+          }`}
         >
           <Send size={15} />
           <span>Send</span>

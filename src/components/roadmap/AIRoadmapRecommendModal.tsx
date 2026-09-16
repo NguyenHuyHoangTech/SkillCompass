@@ -60,8 +60,8 @@ export const AIRoadmapRecommendModal: React.FC<AIRoadmapRecommendModalProps> = (
               <i className="fa-solid fa-wand-magic-sparkles"></i>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-800">SkillPath AI Đề Xuất</h2>
-              <p className="text-xs text-slate-500 font-medium">Tối ưu hóa lộ trình tương lai của bạn</p>
+              <h2 className="text-xl font-bold text-slate-800">SkillPath AI Recommendations</h2>
+              <p className="text-xs text-slate-500 font-medium">Optimize your future roadmap</p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
@@ -77,9 +77,9 @@ export const AIRoadmapRecommendModal: React.FC<AIRoadmapRecommendModalProps> = (
                 <div className="absolute inset-0 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin"></div>
                 <i className="fa-solid fa-robot absolute inset-0 flex items-center justify-center text-indigo-500 text-xl"></i>
               </div>
-              <h3 className="font-bold text-slate-700 mb-2">AI đang phân tích tiến độ...</h3>
+              <h3 className="font-bold text-slate-700 mb-2">AI is analyzing progress...</h3>
               <p className="text-sm text-slate-500 max-w-sm">
-                Chúng tôi đang đánh giá kỹ năng hiện tại và xu hướng thị trường để thiết kế các chặng tiếp theo phù hợp nhất cho bạn.
+                We are evaluating your current skills and market trends to design the optimal next stages for you.
               </p>
             </div>
           ) : (
@@ -87,11 +87,11 @@ export const AIRoadmapRecommendModal: React.FC<AIRoadmapRecommendModalProps> = (
               <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl mb-6 text-sm border border-emerald-100 flex gap-3">
                 <i className="fa-solid fa-circle-check mt-0.5 text-emerald-500"></i>
                 <p>
-                  <strong>AI Đã tìm thấy hướng đi tối ưu!</strong> Dựa trên việc bạn đã nắm vững nền tảng, AI đề xuất thay thế các chặng tương lai bằng các kỹ năng chuyên sâu và tích hợp AI dưới đây để tăng sức cạnh tranh trên thị trường.
+                  <strong>AI found an optimal path!</strong> Based on your core foundation, AI recommends replacing future stages with deep technical skills and AI integration below to boost market competitiveness.
                 </p>
               </div>
 
-              <h4 className="font-bold text-slate-700 mb-4 uppercase tracking-wider text-xs">Lộ trình đề xuất</h4>
+              <h4 className="font-bold text-slate-700 mb-4 uppercase tracking-wider text-xs">Proposed Roadmap</h4>
               
               <div className="space-y-4">
                 {mockSuggestedMilestones.map((ms, idx) => (
@@ -103,7 +103,7 @@ export const AIRoadmapRecommendModal: React.FC<AIRoadmapRecommendModalProps> = (
                       <h5 className="font-bold text-slate-800 text-sm mb-1">{ms.title}</h5>
                       <p className="text-xs text-slate-500 mb-2">{ms.description}</p>
                       <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md">
-                        Khoảng {ms.categoriesCount * 2} tuần
+                        Approx {ms.categoriesCount * 2} weeks
                       </span>
                     </div>
                   </div>
@@ -119,7 +119,7 @@ export const AIRoadmapRecommendModal: React.FC<AIRoadmapRecommendModalProps> = (
             onClick={onClose}
             className="px-5 py-2 font-semibold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"
           >
-            Hủy bỏ
+            Cancel
           </button>
           <button 
             type="button" 
@@ -127,9 +127,9 @@ export const AIRoadmapRecommendModal: React.FC<AIRoadmapRecommendModalProps> = (
             disabled={isAnalyzing}
             className="px-5 py-2 font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center gap-2"
           >
-            {isAnalyzing ? 'Đang phân tích...' : (
+            {isAnalyzing ? 'Analyzing...' : (
               <>
-                <i className="fa-solid fa-check"></i> Áp dụng Lộ trình Mới
+                <i className="fa-solid fa-check"></i> Apply New Roadmap
               </>
             )}
           </button>

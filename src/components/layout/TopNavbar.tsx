@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Sparkles, Layers, CheckSquare, PieChart, Moon, Sun, Globe } from 'lucide-react';
+import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Sparkles, Layers, CheckSquare, PieChart, Moon, Sun } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { AiConfigMenu } from '../ai/AiConfigMenu';
 
@@ -24,7 +24,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
+
   const { theme, setTheme, language, setLanguage, t } = useAppContext();
 
   const roadmapSubTabs = [
@@ -87,23 +87,13 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
         {/* Onboarding Steps Portal Target */}
         {activePage === 'page-onboarding' && (
-          <div id="onboarding-step-portal-target" className="top-nav-center-subtabs" style={{ display: 'flex', alignItems: 'center' }}></div>
+          <div id="onboarding-step-portal-target" style={{ display: 'flex', alignItems: 'center' }}></div>
         )}
 
         {/* Right: Featured AI Button & User Dropdown Menu */}
         <div className="top-nav-auth-actions" ref={dropdownRef}>
-          {/* Quick Language Toggle */}
-          <button 
-            className="top-icon-btn"
-            onClick={() => setLanguage(language === 'vi' ? 'en' : 'vi')}
-            title={t('language')}
-          >
-            <Globe size={18} />
-            <span style={{ marginLeft: 4, fontSize: 12, fontWeight: 'bold' }}>{language.toUpperCase()}</span>
-          </button>
-
           {/* Quick Theme Toggle */}
-          <button 
+          <button
             className="top-icon-btn"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             title={t('theme')}

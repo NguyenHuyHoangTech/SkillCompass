@@ -6,6 +6,7 @@ import type {
   Milestone,
 } from '../types/roadmap';
 import { initialMockRoadmap } from '../data/mockRoadmapData';
+import { executeWithFallback } from './ai';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
@@ -14,17 +15,7 @@ function getLocalMockRoadmap(): UserRoadmap {
   if (cached) {
     try {
       const parsed: UserRoadmap = JSON.parse(cached);
-      if (parsed && Array.isArray(parsed.milestones)) {
-        let updated = false;
-        for (const initialMs of initialMockRoadmap.milestones) {
-          if (!parsed.milestones.some((m) => m.id === initialMs.id)) {
-            parsed.milestones.push(initialMs);
-            updated = true;
-          }
-        }
-        if (updated) {
-          localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(parsed));
-        }
+      if (parsed && Array.isArray(parsed.milestones) && parsed.milestones.length > 0) {
         return parsed;
       }
     } catch {
@@ -70,7 +61,7 @@ export class ApiService {
       });
       if (!res.ok) throw new Error('API error');
       const result = await res.json();
-      localStorage.setItem('skill_compass_roadmap_v2', JSON.stringify(result.data));
+      localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(result.data));
       return result.data;
     } catch {
       const data = getLocalMockRoadmap();
@@ -86,9 +77,7 @@ export class ApiService {
 
               const completedList = sk.subTopics.filter((s) => s.isCompleted);
               if (sk.subTopics.length > 0) {
-                let pct = Math.round((completedList.length / sk.subTopics.length) * 100);
-                if (pct === 100) pct = 99;
-                sk.levelPercentage = pct;
+                sk.levelPercentage = Math.round((completedList.length / sk.subTopics.length) * 100);
               } else {
                 sk.levelPercentage = 0;
               }
@@ -99,7 +88,7 @@ export class ApiService {
 
         const allSubTopics = milestone.categories.flatMap((c) => c.skills.flatMap((s) => s.subTopics));
         const completedCount = allSubTopics.filter((st) => st.isCompleted).length;
-        milestone.overallProgress = Math.round((completedCount / allSubTopics.length) * 100);
+        milestone.overallProgress = allSubTopics.length > 0 ? Math.round((completedCount / allSubTopics.length) * 100) : 0;
 
         saveLocalMockRoadmap(data);
       }
@@ -116,7 +105,7 @@ export class ApiService {
       });
       if (!res.ok) throw new Error('API error');
       const result = await res.json();
-      localStorage.setItem('skill_compass_roadmap', JSON.stringify(result.data));
+      localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(result.data));
       return result.data;
     } catch {
       const data = getLocalMockRoadmap();
@@ -301,7 +290,7 @@ export class ApiService {
     } catch {
       const msg = userMessage.toLowerCase();
 
-      // Check if user is asking for a new future milestone / next step
+      // First check if user is asking for a new future milestone
       if (msg.includes("phase 4") || msg.includes("ai native") || msg.includes("cloud") || (msg.includes("milestone") && msg.includes("ai"))) {
         const proposedMilestone: Milestone = {
           id: `ms-future-ai-${Date.now()}`,
@@ -457,21 +446,17 @@ export class ApiService {
         };
       }
 
-      if (msg.includes("how long") || msg.includes("time")) {
+      try {
+        const prompt = `You are an expert AI Career Coach & IT Industry Advisor. The user is currently studying milestone ID: "${milestoneId}".
+User Message: "${userMessage}".
+Provide a concise, highly practical, and encouraging response (2-4 sentences) in English. Help them with career guidance, learning strategies, or motivation.`;
+        const geminiReply = await executeWithFallback(prompt, 'CAREER_IKIGAI_CONSULTANT');
+        return { text: geminiReply };
+      } catch (aiErr) {
         return {
-          text: `Based on your current progress (approximately 70% of skill goals achieved), if you study for 2 hours a day, you are expected to be ready to transition to the next future milestone in **3 to 5 weeks**! 🚀`
+          text: `I am your AI Career Advisor! I can help you with career orientation, answer skill-related questions, and propose new future roadmaps. How can I assist you today? 😊`
         };
       }
-
-      if (msg.includes("salary") || msg.includes("income")) {
-        return {
-          text: `The expected salary at this milestone in the IT market typically ranges from **$2,500 - $4,500 / month**. Upon completing the AI Quiz tests with high scores, you can confidently negotiate for optimal compensation! 💰`
-        };
-      }
-
-      return {
-        text: `I am your AI Career Advisor! I can help you with career orientation, answer skill-related questions, and **Propose New Future Roadmaps** (e.g., Stage 4 AI Native Lead, Stage 5 Design System Master...). Would you like me to propose a new milestone? 😊`
-      };
     }
   }
 }

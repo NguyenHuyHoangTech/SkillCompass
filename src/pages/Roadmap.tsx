@@ -11,6 +11,7 @@ import { AIQuizModal } from '../components/ai/AIQuizModal';
 import { AICareerChatbot } from '../components/ai/AICareerChatbot';
 import { EditMilestoneModal } from '../components/roadmap/EditMilestoneModal';
 import { AIRoadmapRecommendModal } from '../components/roadmap/AIRoadmapRecommendModal';
+import { AIMilestoneEvaluator } from '../components/ai/AIMilestoneEvaluator';
 import { AnalyticsPage } from '../components/pages/AnalyticsPage';
 import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
 import { AllSkillsPage } from '../components/pages/AllSkillsPage';
@@ -74,8 +75,10 @@ export default function Roadmap() {
     try {
       const data = await ApiService.getRoadmap();
       setRoadmap(data);
-      if (data.currentMilestoneId) {
+      if (data.currentMilestoneId && data.milestones.some((m) => m.id === data.currentMilestoneId)) {
         setActiveMilestoneId(data.currentMilestoneId);
+      } else if (data.milestones && data.milestones.length > 0) {
+        setActiveMilestoneId(data.milestones[0].id);
       }
     } catch (err) {
       console.error('Failed to load roadmap:', err);
@@ -86,6 +89,14 @@ export default function Roadmap() {
 
   const handleSelectMilestone = (id: string) => {
     setActiveMilestoneId(id);
+    if (roadmap) {
+      const updated = { ...roadmap, currentMilestoneId: id };
+      localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(updated));
+    }
+    const el = document.getElementById('sec-checklist');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const handleOpenQuiz = (skill: Skill, subTopic: SubTopic) => {
@@ -122,8 +133,13 @@ export default function Roadmap() {
 
   const handleSelectSubTab = (tabId: string) => {
     setActiveSubTab(tabId);
+    setActivePage('page-roadmap');
+
     if (tabId === 'view-all') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const scrollEl = document.getElementById('sec-checklist-scroll') || document.querySelector('.roadmap-page-view');
+      if (scrollEl) {
+        scrollEl.scrollTo({ top: 0, behavior: 'smooth' });
+      }
       return;
     }
 
@@ -137,7 +153,11 @@ export default function Roadmap() {
     if (targetId) {
       const el = document.getElementById(targetId);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-4', 'ring-blue-500/50', 'dark:ring-cyan-400/50', 'transition-all', 'duration-500', 'rounded-2xl');
+        setTimeout(() => {
+          el.classList.remove('ring-4', 'ring-blue-500/50', 'dark:ring-cyan-400/50');
+        }, 2000);
       }
     }
   };
@@ -233,7 +253,9 @@ export default function Roadmap() {
     }));
 
     const newMilestones = [...keptMilestones, ...mapped];
-    setRoadmap({ ...roadmap, milestones: newMilestones });
+    const updatedRoadmap = { ...roadmap, milestones: newMilestones };
+    setRoadmap(updatedRoadmap);
+    localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(updatedRoadmap));
     if (mapped.length > 0) {
       setActiveMilestoneId(mapped[0].id);
     } else if (newMilestones.length > 0) {
@@ -257,7 +279,7 @@ export default function Roadmap() {
     roadmap.milestones.find((m) => m.id === activeMilestoneId) || roadmap.milestones[0];
 
   return (
-    <div className="app-main-outer-shell h-screen flex flex-col overflow-hidden bg-slate-50">
+    <div className="app-main-outer-shell h-screen flex flex-col overflow-hidden bg-slate-50 dark:bg-slate-950">
       {/* 1. Sticky Top Navbar with Main Page Tabs (Roadmap, All Skills, Exercises & Tests) */}
       <TopNavbar
         userName={roadmap.userName}
@@ -287,15 +309,15 @@ export default function Roadmap() {
           )}
           
           {activePage === 'page-roadmap' && (
-            <div className="roadmap-page-view flex flex-col sm:flex-row h-full overflow-hidden bg-slate-50">
-              <div className="w-full sm:w-[380px] bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl h-full overflow-hidden">
-                <div className="p-6 flex-1 flex flex-col h-full overflow-hidden">
-
+            <div className="roadmap-page-view flex flex-col sm:flex-row h-full overflow-y-auto sm:overflow-hidden bg-slate-50 dark:bg-slate-950">
+              {/* Left Sidebar (Spider Chart): Order 2 on mobile (below skills), Order 1 on desktop (sidebar) */}
+              <div className="w-full sm:w-[380px] bg-white dark:bg-slate-900 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 z-20 shadow-md sm:shadow-xl h-auto sm:h-full overflow-visible sm:overflow-hidden order-2 sm:order-1">
+                <div className="p-4 sm:p-6 flex-1 flex flex-col h-auto sm:h-full">
                   {/* Spider Chart */}
-                  <div className="flex-1 flex flex-col h-full overflow-hidden" id="sec-radar">
+                  <div className="flex-1 flex flex-col h-auto sm:h-full" id="sec-radar">
                     <div className="flex justify-between items-end mb-3 shrink-0">
-                      <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wider">Skill Gap Analysis</h2>
-                      <span className="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-md">{roadmap.targetRole || 'Frontend Dev'}</span>
+                      <h2 className="text-sm font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">Skill Gap Analysis</h2>
+                      <span className="text-xs text-blue-600 dark:text-cyan-400 font-semibold bg-blue-50 dark:bg-slate-800 px-2 py-1 rounded-md border border-blue-100 dark:border-slate-700">{roadmap.targetRole || 'Frontend Dev'}</span>
                     </div>
                     <SpiderChart
                       categories={activeMilestone.categories}
@@ -305,9 +327,9 @@ export default function Roadmap() {
                 </div>
               </div>
 
-              {/* Right Main Content */}
-              <div className="flex-1 flex flex-col h-full relative overflow-hidden bg-slate-50/50">
-                <div className="shrink-0 bg-white border-b border-slate-200 z-10 shadow-sm">
+              {/* Right Main Content (Milestones & Skills): Order 1 on mobile (top of screen), Order 2 on desktop */}
+              <div className="flex-1 flex flex-col h-auto sm:h-full relative overflow-visible sm:overflow-hidden bg-slate-50/50 dark:bg-slate-950/50 order-1 sm:order-2">
+                <div className="shrink-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 z-10 shadow-sm">
                   <RoadmapHeader
                     milestones={roadmap.milestones}
                     activeMilestoneId={activeMilestoneId}
@@ -320,12 +342,22 @@ export default function Roadmap() {
                   />
                 </div>
 
-                <div className="flex-1 overflow-y-auto hide-scrollbar p-4 sm:p-8" id="sec-checklist">
-                  <SkillCategoryList
-                    categories={activeMilestone.categories}
-                    onOpenQuiz={handleOpenQuiz}
-                    onToggleCheck={handleToggleCheck}
-                  />
+                <div className="flex-1 overflow-y-visible sm:overflow-y-auto hide-scrollbar p-4 sm:p-8 space-y-6" id="sec-checklist-scroll">
+                  <div id="sec-checklist">
+                    <SkillCategoryList
+                      categories={activeMilestone.categories}
+                      onOpenQuiz={handleOpenQuiz}
+                      onToggleCheck={handleToggleCheck}
+                    />
+                  </div>
+
+                  <div id="sec-optimizer" className="max-w-4xl mx-auto pt-4 border-t border-slate-200 dark:border-slate-800">
+                    <AIMilestoneEvaluator
+                      milestone={activeMilestone}
+                      onRefreshRoadmap={loadRoadmap}
+                      onOpenCareerChat={() => setIsCareerChatOpen(true)}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

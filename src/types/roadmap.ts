@@ -1,3 +1,11 @@
+export interface CourseLink {
+  title: string;
+  provider: string; // e.g. Coursera, Udemy, YouTube, freeCodeCamp, edX
+  url: string;
+  rating?: number;
+  isFree?: boolean;
+}
+
 export interface SubTopic {
   id: string;
   title: string;
@@ -6,6 +14,7 @@ export interface SubTopic {
   assessmentScore?: number; // 0 - 100
   lastAssessedAt?: string;
   aiFeedback?: string;
+  courseUrl?: string;
 }
 
 export interface Skill {
@@ -15,6 +24,7 @@ export interface Skill {
   levelPercentage: number; // 0 - 100
   requirements?: string[];
   subTopics: SubTopic[];
+  courseLinks?: CourseLink[];
 }
 
 export interface SkillCategory {
@@ -47,6 +57,7 @@ export interface Milestone {
   isForceCompleted?: boolean;
   startDate?: string;
   endDate?: string;
+  courseLinks?: CourseLink[];
 }
 
 export interface UserRoadmap {

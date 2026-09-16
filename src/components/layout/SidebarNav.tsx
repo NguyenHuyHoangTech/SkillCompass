@@ -73,9 +73,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               onClose();
             }}
           >
-            <Wand2 size={20} className="menu-btn-icon" style={{ color: 'var(--primary)' }} />
-            <span className="menu-btn-label">Tạo Lộ Trình AI</span>
-            <span className="menu-btn-badge" style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)' }}>New</span>
+            <Wand2 size={20} className="menu-btn-icon" />
+            <span className="menu-btn-label">AI Roadmap Generator</span>
           </button>
 
           <button
@@ -87,7 +86,6 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           >
             <Map size={20} className="menu-btn-icon" />
             <span className="menu-btn-label">Career Roadmap</span>
-            <span className="menu-btn-badge">Main</span>
           </button>
 
           <button
@@ -121,7 +119,6 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           >
             <GraduationCap size={20} className="menu-btn-icon" />
             <span className="menu-btn-label">Course Library</span>
-            <span className="menu-btn-badge" style={{ background: '#3b82f6', color: 'white' }}>New</span>
           </button>
         </nav>
 

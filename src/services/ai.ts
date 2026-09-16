@@ -1,19 +1,32 @@
 import { GoogleGenAI } from '@google/genai';
 
+export type AIRole = 'SKILL_EVALUATOR' | 'CAREER_IKIGAI_CONSULTANT' | 'ROADMAP_ARCHITECT' | 'SANDBOX_PRACTICE';
+
+export const ROLE_API_KEYS: Record<AIRole, string> = {
+    SKILL_EVALUATOR: import.meta.env.VITE_GEMINI_API_KEY_SKILL_EVALUATOR || '',
+    CAREER_IKIGAI_CONSULTANT: import.meta.env.VITE_GEMINI_API_KEY_CAREER_CONSULTANT || '',
+    ROADMAP_ARCHITECT: import.meta.env.VITE_GEMINI_API_KEY_ROADMAP_ARCHITECT || '',
+    SANDBOX_PRACTICE: import.meta.env.VITE_GEMINI_API_KEY_SANDBOX_PRACTICE || '',
+};
+
+export const ALL_GEMINI_KEYS: string[] = [
+    import.meta.env.VITE_GEMINI_API_KEY_SKILL_EVALUATOR || '',
+    import.meta.env.VITE_GEMINI_API_KEY_CAREER_CONSULTANT || '',
+    import.meta.env.VITE_GEMINI_API_KEY_ROADMAP_ARCHITECT || '',
+    import.meta.env.VITE_GEMINI_API_KEY_SANDBOX_PRACTICE || '',
+    import.meta.env.VITE_GEMINI_API_KEY_RESERVE_BACKUP || '',
+];
+
 // Initialize the API with the provided key or environment variable
 let apiKeysList: string[] = [
     localStorage.getItem('gemini_api_key') || '',
     import.meta.env.VITE_GEMINI_API_KEY || '',
-    // Add your API keys here as strings, e.g., 'AIzaSy...', 'AIzaSy...'
+    ...ALL_GEMINI_KEYS
 ].filter(Boolean);
-
-if (apiKeysList.length === 0) {
-    apiKeysList.push('AQ.Ab8RN6JDlnH8wQy06XFKjWScBEUvJunwZkBJsEFIAiU21keBhw'); // default fallback
-}
 
 let currentKeyIndex = 0;
 export let _ai = new GoogleGenAI({ apiKey: apiKeysList[currentKeyIndex] });
-export let _modelName = localStorage.getItem('gemini_model_name') || 'gemini-3.5-flash';
+export let _modelName = localStorage.getItem('gemini_model_name') || 'gemini-3.6-flash';
 
 export const setApiKeysList = (keys: string[]) => {
     apiKeysList = keys.filter(Boolean);
@@ -36,9 +49,39 @@ export const updateAIConfig = (newKey: string, newModel: string) => {
     }
 };
 
-const executeWithFallback = async (_prompt: string): Promise<string> => {
-    // Force mock mode for UI testing by throwing an error immediately
-    throw new Error("MOCK_MODE_ENABLED");
+export const executeWithFallback = async (prompt: string, role?: AIRole): Promise<string> => {
+    const primaryKey = role ? ROLE_API_KEYS[role] : (apiKeysList[0] || ALL_GEMINI_KEYS[0]);
+    const keysToTry = Array.from(new Set([primaryKey, ...ALL_GEMINI_KEYS, ...apiKeysList])).filter(Boolean);
+
+    const modelsToTry = Array.from(new Set([
+        _modelName,
+        'gemini-3.5-flash-lite',
+        'gemini-3.1-flash-lite',
+        'gemini-flash-lite-latest',
+        'gemini-3.6-flash'
+    ])).filter(Boolean);
+
+    let lastError: any = null;
+    for (const key of keysToTry) {
+        const client = new GoogleGenAI({ apiKey: key });
+        for (const model of modelsToTry) {
+            try {
+                const response = await client.models.generateContent({
+                    model,
+                    contents: prompt,
+                });
+                if (response.text) {
+                    return response.text;
+                }
+            } catch (error) {
+                console.warn(`Gemini API call failed [Role: ${role || 'DEFAULT'}, Key: ...${key.slice(-6)}, Model: ${model}]:`, error);
+                lastError = error;
+            }
+        }
+    }
+
+    console.warn("All Gemini API keys & models failed, throwing error for fallback response:", lastError);
+    throw lastError || new Error("All AI models failed");
 };
 
 export const getAvailableModels = async (key: string): Promise<{success: boolean, models: string[], message: string}> => {
@@ -69,23 +112,23 @@ export interface SkillOverviewResponse {
 }
 
 export const analyzeUserSkillsOverview = async (skills: string[]): Promise<SkillOverviewResponse> => {
-    const prompt = `Bạn là một chuyên gia hướng nghiệp và chuyên gia kỹ thuật. Người dùng vừa cung cấp danh sách kỹ năng của họ. 
-DỮ LIỆU ĐẦU VÀO:
-- Kỹ năng người dùng: [${skills.join(', ')}]
-NHIỆM VỤ:
-1. Đánh giá sơ bộ mức độ hiện tại của bộ kỹ năng này trên thị trường (Ví dụ: Fresher, Junior, Mid, Senior...).
-2. Tạo ra 1 câu hỏi test kỹ năng thực chiến (dạng tình huống) dựa trên bộ kỹ năng họ vừa nhập. Đừng giải đáp, chỉ hỏi.
-3. Đưa ra 2 câu hỏi định hướng theo triết lý Ikigai:
-   - love: Sở thích (Bạn thích gì nhất trong những thứ đã học?)
-   - money: Thu nhập (Bạn kỳ vọng được trả lương/làm việc như thế nào?)
+    const prompt = `You are a career advisor and technical expert. The user provided their list of skills. 
+INPUT DATA:
+- User skills: [${skills.join(', ')}]
+TASK:
+1. Provide a preliminary market level evaluation for this skill set (e.g., Fresher, Junior, Mid, Senior...).
+2. Create 1 practical scenario-based technical assessment question based on these skills. Do not answer, only ask.
+3. Provide 2 orientation questions based on Ikigai philosophy:
+   - love: Interests (What do you enjoy most among the things you learned?)
+   - money: Income expectations & working preference.
 
-TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block markdown, chỉ JSON thuần tuý):
+RETURN EXACTLY ONE JSON OBJECT in this structure (no markdown code blocks, raw JSON only):
 {
-    "market_level_evaluation": "Đánh giá của bạn...",
-    "technical_assessment_question": "Câu hỏi thực chiến...",
+    "market_level_evaluation": "Your evaluation...",
+    "technical_assessment_question": "Practical question...",
     "ikigai_questions": {
-        "love": "Câu hỏi sở thích...",
-        "money": "Câu hỏi thu nhập..."
+        "love": "Interest question...",
+        "money": "Income question..."
     }
 }`;
 
@@ -102,11 +145,11 @@ TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block ma
         console.error("AI Error:", error);
         await new Promise(resolve => setTimeout(resolve, 1500));
         return {
-            market_level_evaluation: "⚠️ AI đang quá tải (Quota). Dựa trên kỹ năng, bạn đang ở mức Fresher/Junior đầy tiềm năng.",
-            technical_assessment_question: `Bạn sẽ áp dụng ${skills.join(', ')} vào một dự án thực tế như thế nào?`,
+            market_level_evaluation: "⚠️ AI Quota limit reached. Based on your skills, you are at a promising Fresher/Junior level.",
+            technical_assessment_question: `How would you apply ${skills.join(', ')} in a real-world project?`,
             ikigai_questions: {
-                love: "Bạn thích nhất kỹ năng nào trong số các kỹ năng trên?",
-                money: "Bạn kỳ vọng mức lương bao nhiêu cho vị trí này?"
+                love: "Which of the above skills do you enjoy working with the most?",
+                money: "What salary range do you expect for this position?"
             }
         };
     }
@@ -138,33 +181,31 @@ export interface ComprehensiveCareerAnalysisResponse {
     dominant_riasec: string;
     personality_analysis: string;
     career_goals: CareerSuggestion[];
-}
-
-export const analyzeRiasecAndSuggestCareers = async (
+}export const analyzeRiasecAndSuggestCareers = async (
     previousData: any,
     riasecAnswers: any
 ): Promise<ComprehensiveCareerAnalysisResponse | null> => {
-    const prompt = `Bạn là một chuyên gia tâm lý hướng nghiệp và phân tích dữ liệu nghề nghiệp. 
+    const prompt = `You are a career psychology expert and career data analyst. 
 
-DỮ LIỆU ĐẦU VÀO:
-- Kỹ năng ban đầu & Kết quả trả lời bài test kỹ năng/Ikigai của người dùng: ${JSON.stringify(previousData)}
-- Câu trả lời bài test RIASEC của người dùng (Sở thích học tập/làm việc): ${JSON.stringify(riasecAnswers)}
+INPUT DATA:
+- Initial skills & user's Ikigai test responses: ${JSON.stringify(previousData)}
+- User's RIASEC test responses (Learning/Work preferences): ${JSON.stringify(riasecAnswers)}
 
-NHIỆM VỤ:
-1. Phân tích nhóm tính cách RIASEC nổi trội nhất của người dùng (Realistic, Investigative, Artistic, Social, Enterprising, Conventional).
-2. Tổng hợp toàn bộ dữ liệu (Kỹ năng + Ikigai + RIASEC).
-3. Đề xuất 3 mục tiêu nghề nghiệp (Career Goals) phù hợp nhất tổng hòa được cả 3 yếu tố trên.
+TASK:
+1. Analyze the user's dominant RIASEC personality types (Realistic, Investigative, Artistic, Social, Enterprising, Conventional).
+2. Synthesize all data (Skills + Ikigai + RIASEC).
+3. Propose 3 best-fitting Career Goals incorporating all 3 factors above.
 
-YÊU CẦU OUTPUT:
-Trả về ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block markdown, chỉ JSON thuần tuý):
+OUTPUT REQUIREMENT:
+Return EXACTLY ONE JSON OBJECT with the following structure (no markdown code blocks, raw JSON only):
 {
-    "dominant_riasec": "Tên nhóm tính cách nổi trội nhất...",
-    "personality_analysis": "Nhận xét tổng quan về tính cách và tiềm năng...",
+    "dominant_riasec": "Dominant personality group name...",
+    "personality_analysis": "Overall analysis of personality and potential...",
     "career_goals": [
         {
-            "title": "Tên nghề nghiệp 1",
-            "description": "Mô tả ngắn gọn",
-            "why_it_fits": "Lý do phù hợp dựa trên 3 yếu tố trên"
+            "title": "Career Title 1",
+            "description": "Brief description",
+            "why_it_fits": "Reason for fit based on the 3 factors"
         }
     ]
 }`;
@@ -194,22 +235,22 @@ export const consultCareerGoalSelection = async (
     suggestedGoals: any,
     userFeedback: string
 ): Promise<CareerGoalConsultationResponse | null> => {
-    const prompt = `Bạn là một Career Coach đồng hành cùng người dùng để chốt lộ trình sự nghiệp.
+    const prompt = `You are a Career Coach accompanying the user to finalize their career roadmap.
 
-DỮ LIỆU ĐẦU VÀO:
-- 3 mục tiêu đã đề xuất ở bước trước: ${JSON.stringify(suggestedGoals)}
-- Lựa chọn hoặc câu hỏi thắc mắc của người dùng hiện tại: "${userFeedback}"
+INPUT DATA:
+- 3 suggested goals from previous step: ${JSON.stringify(suggestedGoals)}
+- User's current choice or question: "${userFeedback}"
 
-NHIỆM VỤ:
-- Nếu người dùng chọn 1 mục tiêu cụ thể: Xác nhận mục tiêu đó và chuyển sang giai đoạn chốt.
-- Nếu người dùng còn phân vân hoặc đặt câu hỏi: Phân tích ưu/nhược điểm của từng hướng đi dựa trên dữ liệu kỹ năng và Ikigai của họ, giúp họ đưa ra quyết định cuối cùng.
+TASK:
+- If user selected 1 specific goal: Confirm that goal and move to final stage.
+- If user is hesitant or asking questions: Analyze pros/cons of each direction based on their skills and Ikigai data, helping them make a decision.
 
-YÊU CẦU OUTPUT:
-Trả về ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block markdown, chỉ JSON thuần tuý):
+OUTPUT REQUIREMENT:
+Return EXACTLY ONE JSON OBJECT (no markdown code blocks, raw JSON only):
 {
-    "status": "confirmed" hoặc "analyzing",
-    "response_message": "Câu trả lời gửi đến người dùng (Xác nhận mục tiêu hoặc phân tích ưu nhược điểm...)",
-    "selected_goal": "Tên mục tiêu đã chốt (nếu status là confirmed, ngược lại để null)"
+    "status": "confirmed" or "analyzing",
+    "response_message": "Response to user (Confirmation or pros/cons analysis...)",
+    "selected_goal": "Selected goal title (if confirmed, else null)"
 }`;
 
     try {
@@ -242,47 +283,47 @@ export interface DetailedRoadmapResponse {
     advice: string;
 }
 
-export const generateDetailedRoadmap = async (
+export const generateGoalActionPlan = async (
     finalGoal: string,
     baselineProfile: any
 ): Promise<DetailedRoadmapResponse | null> => {
-    const prompt = `Bạn là một Kiến trúc sư phát triển năng lực cá nhân (L&D Expert). Mục tiêu cuối cùng của người dùng đã được chốt.
+    const prompt = `You are a Learning & Development Expert. The user's final career goal is locked.
 
-DỮ LIỆU ĐẦU VÀO:
-- Mục tiêu cuối cùng đã chọn: "${finalGoal}"
-- Xuất phát điểm hiện tại của người dùng (Kỹ năng, Ikigai, RIASEC): ${JSON.stringify(baselineProfile)}
+INPUT DATA:
+- Final target goal: "${finalGoal}"
+- Current baseline profile (Skills, Ikigai, RIASEC): ${JSON.stringify(baselineProfile)}
 
-NHIỆM VỤ:
-Xây dựng một lộ trình (Roadmap) hành động chi tiết từ vạch xuất phát hiện tại đến khi đạt được mục tiêu cuối cùng. 
-Roadmap cần bao gồm:
-1. Giai đoạn ngắn hạn (0 - 3 tháng): Cần bù đắp lỗ hổng kỹ năng gì ngay lập tức?
-2. Giai đoạn trung hạn (3 - 6 tháng): Dự án thực tế cần làm, chứng chỉ hoặc kiến thức nâng cao cần học.
-3. Giai đoạn dài hạn (6 - 12+ tháng): Cách định vị bản thân để đạt mục tiêu cuối.
-Trình bày theo các bước rõ ràng, dễ thực thi.
+TASK:
+Build a detailed action Roadmap from their current starting point to achieving the final goal.
+The Roadmap must include:
+1. Short-term phase (0 - 3 months): What immediate skill gaps must be bridged?
+2. Medium-term phase (3 - 6 months): Practical projects to build, certificates or advanced knowledge to learn.
+3. Long-term phase (6 - 12+ months): How to position oneself to reach the final goal.
+Present in clear, actionable steps.
 
-YÊU CẦU OUTPUT:
-Trả về ĐÚNG MỘT JSON OBJECT theo cấu trúc (không dùng code block markdown, chỉ JSON thuần tuý):
+OUTPUT REQUIREMENT:
+Return EXACTLY ONE JSON OBJECT (no markdown code blocks, raw JSON only):
 {
-    "goal": "Tên mục tiêu...",
+    "goal": "Goal name...",
     "short_term": {
-        "phase": "Ngắn hạn (0 - 3 tháng)",
-        "duration": "0-3 tháng",
-        "focus": "Mục tiêu trọng tâm...",
-        "action_items": ["Hành động 1...", "Hành động 2..."]
+        "phase": "Short-term (0 - 3 months)",
+        "duration": "0-3 months",
+        "focus": "Core focus...",
+        "action_items": ["Action 1...", "Action 2..."]
     },
     "medium_term": {
-        "phase": "Trung hạn (3 - 6 tháng)",
-        "duration": "3-6 tháng",
-        "focus": "Mục tiêu trọng tâm...",
-        "action_items": ["Hành động 1...", "Hành động 2..."]
+        "phase": "Medium-term (3 - 6 months)",
+        "duration": "3-6 months",
+        "focus": "Core focus...",
+        "action_items": ["Action 1...", "Action 2..."]
     },
     "long_term": {
-        "phase": "Dài hạn (6 - 12+ tháng)",
-        "duration": "6-12+ tháng",
-        "focus": "Mục tiêu trọng tâm...",
-        "action_items": ["Hành động 1...", "Hành động 2..."]
+        "phase": "Long-term (6 - 12+ months)",
+        "duration": "6-12+ months",
+        "focus": "Core focus...",
+        "action_items": ["Action 1...", "Action 2..."]
     },
-    "advice": "Lời khuyên tổng kết..."
+    "advice": "Summary advice..."
 }`;
 
     try {
@@ -304,7 +345,7 @@ export const generateAssessmentQuestion = async (skill: string): Promise<string>
     const prompt = `You are a technical recruitment expert. Please provide 1 SHORT, practical situational question (maximum 2 sentences) to assess a candidate's proficiency in the skill "${skill}". The question should closely reflect a real-world working scenario, avoiding purely theoretical questions. Please respond in English.`;
     
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'SKILL_EVALUATOR');
         return responseText || `Can you share your most practical experience working with ${skill}?`;
     } catch (error) {
         console.error("AI Error:", error);
@@ -317,7 +358,7 @@ export const evaluateAssessmentAnswer = async (skill: string, answer: string): P
 Provide an EXTREMELY SHORT evaluation of this answer (1-2 sentences). Praise them if correct, or give constructive feedback if wrong. Maintain a professional and constructive tone. Please respond in English.`;
     
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'SKILL_EVALUATOR');
         return responseText || "Your answer has been recorded and well evaluated.";
     } catch (error) {
         console.error("AI Error:", error);
@@ -329,7 +370,7 @@ export const generateSandboxScenario = async (career: string): Promise<string> =
     const prompt = `You are the direct manager of a "${career}". Provide a SHORT hypothetical sandbox scenario (about 3-4 sentences) describing a practical, slightly challenging problem or task that someone in this role must solve on their very first day of work. For example: The boss drops a broken Excel file... Please respond in English.`;
     
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'SANDBOX_PRACTICE');
         return responseText || `Welcome to your first day! An unexpected task related to ${career} has just been assigned to you. Where do you start?`;
     } catch (error) {
         console.error("AI Error:", error);
@@ -351,7 +392,7 @@ export const evaluateSandboxChoice = async (career: string, choiceType: string):
 Provide a SHORT evaluation (2-3 sentences) regarding the professional mindset behind this choice. Suggest 1 specific skill or mindset they NEED TO ADD in the future to grow stronger in this role. Please respond in English.`;
     
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'SANDBOX_PRACTICE');
         return responseText || "Your choice shows a solid practical mindset. However, always be open to learning new skills.";
     } catch (error) {
         console.error("AI Error:", error);
@@ -359,16 +400,20 @@ Provide a SHORT evaluation (2-3 sentences) regarding the professional mindset be
     }
 };
 
-export interface Milestone {
-    id: string;
+export interface CourseLink {
     title: string;
-    status: 'completed' | 'in-progress' | 'planned';
-    progress: number;
-    start_date: string;
-    end_date: string;
-    goal: string;
-    user_notes: string;
-    skills: Skill[];
+    provider: string; // e.g., Coursera, Udemy, YouTube, freeCodeCamp, edX
+    url: string;
+    rating?: number;
+    is_free?: boolean;
+}
+
+export interface SubTask {
+    id: string;
+    text: string;
+    is_completed: boolean;
+    completion_note?: string;
+    course_url?: string;
 }
 
 export interface Skill {
@@ -380,51 +425,100 @@ export interface Skill {
     user_notes: string;
     ai_practice_scenario: string;
     sub_tasks: SubTask[];
+    course_links?: CourseLink[];
 }
 
-export interface SubTask {
+export interface Milestone {
     id: string;
-    text: string;
-    is_completed: boolean;
-    completion_note: string;
+    title: string;
+    status: 'completed' | 'in-progress' | 'planned';
+    progress: number;
+    start_date: string;
+    end_date: string;
+    goal: string;
+    user_notes: string;
+    skills: Skill[];
+    course_links?: CourseLink[];
+}
+
+export interface TimeframePhase {
+    timeframe: string; // "Ngắn hạn (0 - 3 tháng)", "Trung hạn (3 - 6 tháng)", "Dài hạn (6 - 12+ tháng)"
+    period: 'short_term' | 'medium_term' | 'long_term';
+    focus_goal: string;
+    skills: {
+        name: string;
+        description: string;
+        subtasks: string[];
+        recommended_courses?: CourseLink[];
+    }[];
+    key_milestone_output: string;
+}
+
+export interface DetailedTimeframeRoadmap {
+    career_title: string;
+    short_term: TimeframePhase;
+    medium_term: TimeframePhase;
+    long_term: TimeframePhase;
+}
+
+export interface RoadmapOptimizationResult {
+    country: string;
+    market_trends: string;
+    in_demand_skills: string[];
+    ai_skill_recommendation: {
+        skill_name: string;
+        reason: string;
+        action_plan: string;
+    };
+    suggested_course_links?: CourseLink[];
 }
 
 export const generateRoadmap = async (skills: string[], career: string, sandboxFeedback: string): Promise<Milestone[]> => {
-    const prompt = `You are an excellent AI Career Coach. Please design a Career Roadmap in a standard JSON format for someone who wants to become a "${career}".
-Their current skills: ${skills.join(', ')}.
-Feedback on their working mindset: ${sandboxFeedback}.
+    const prompt = `You are an expert ROADMAP_ARCHITECT AI. Please design a 3-stage Career Roadmap in standard JSON format for someone who wants to become a "${career}".
+Current skills: ${skills.join(', ')}.
+Mindset feedback: ${sandboxFeedback}.
 
-Output requirements: 
-Extract EXACTLY AND ONLY a JSON array (no markdown \`\`\`json or extra text) containing exactly 3 objects representing 3 Milestones.
-The JSON structure for each Milestone is as follows:
+Output Requirements:
+Return EXACTLY ONE JSON array containing EXACTLY 3 Milestones:
+1. "Milestone 1: Ready for Internship" (Foundations & Git/basics)
+2. "Milestone 2: Junior" (Production frameworks, APIs, projects)
+3. "Milestone 3: AI Era" (Generative AI integration, Cursor/Copilot, System Architecture)
+
+Each Milestone object structure:
 {
     "id": "m1", // m1, m2, m3
-    "title": "Milestone Title (e.g., Ready for Internship)",
+    "title": "Milestone 1: Ready for Internship",
     "status": "completed", // m1: completed, m2: in-progress, m3: planned
-    "progress": 100, // 100, 35, 0...
+    "progress": 100, // 100, 35, 0
     "start_date": "01/09/2026",
     "end_date": "15/11/2026",
-    "goal": "Main goal",
-    "user_notes": "Encouraging notes",
-    "skills": [ // 1-2 skills per milestone
+    "goal": "Core foundations & baseline projects",
+    "user_notes": "Master foundational skills",
+    "course_links": [
+        { "title": "Coursera Web Development", "provider": "Coursera", "url": "https://www.coursera.org", "is_free": false }
+    ],
+    "skills": [
         {
-            "id": "s1", 
+            "id": "s1",
             "title": "Skill name",
-            "category": "Core Tech or AI-Era Competency",
-            "status": "completed", // matching the milestone's status
+            "category": "Core Technical or AI-Era Competency",
+            "status": "completed",
             "goal": "Skill goal",
             "user_notes": "",
             "ai_practice_scenario": "1 tough practical question regarding this skill",
-            "sub_tasks": [ // 1-2 sub tasks
+            "sub_tasks": [
                 { "id": "st1_1", "text": "Subtask name", "is_completed": true, "completion_note": "Pass" }
+            ],
+            "course_links": [
+                { "title": "FreeCodeCamp Interactive Course", "provider": "freeCodeCamp", "url": "https://www.freecodecamp.org", "is_free": true }
             ]
         }
     ]
 }
-Ensure the content is in English, practical, and the JSON is directly parseable.`;
+Ensure content is in English, practical, and directly parseable JSON without extra markdown wrapper text.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'ROADMAP_ARCHITECT');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s) || rawText.match(/\{.*\}/s);
         if (match) rawText = match[0];
@@ -437,18 +531,87 @@ Ensure the content is in English, practical, and the JSON is directly parseable.
     }
 };
 
+export const generateDetailedRoadmap = async (skills: string[], career: string): Promise<DetailedTimeframeRoadmap> => {
+    const prompt = `You are an expert ROADMAP_ARCHITECT AI. Generate a 3-timeframe detailed learning plan for becoming a "${career}".
+Current skills: ${skills.join(', ')}.
+
+Timeframe Stages:
+1. Ngắn hạn (0 - 3 tháng): Short-term foundation & internship readiness
+2. Trung hạn (3 - 6 tháng): Medium-term Junior developer projects
+3. Dài hạn (6 - 12+ tháng): Long-term AI Era architecture & advanced mastery
+
+Return EXACTLY ONE JSON object with this structure:
+{
+  "career_title": "${career}",
+  "short_term": {
+    "timeframe": "Ngắn hạn (0 - 3 tháng)",
+    "period": "short_term",
+    "focus_goal": "Goal for months 0-3",
+    "skills": [
+      {
+        "name": "Core Technology",
+        "description": "Foundational concepts",
+        "subtasks": ["Basic syntax", "First mini project"],
+        "recommended_courses": [
+          { "title": "JavaScript Complete Guide", "provider": "Udemy", "url": "https://www.udemy.com", "is_free": false }
+        ]
+      }
+    ],
+    "key_milestone_output": "Internship-ready Github portfolio"
+  },
+  "medium_term": {
+    "timeframe": "Trung hạn (3 - 6 tháng)",
+    "period": "medium_term",
+    "focus_goal": "Goal for months 3-6",
+    "skills": [...],
+    "key_milestone_output": "Junior Full-Stack Production App"
+  },
+  "long_term": {
+    "timeframe": "Dài hạn (6 - 12+ tháng)",
+    "period": "long_term",
+    "focus_goal": "Goal for months 6-12+",
+    "skills": [...],
+    "key_milestone_output": "AI-Augmented Architect Certification"
+  }
+}
+Return raw JSON object without markdown wrapper.`;
+
+    try {
+        const responseText = await executeWithFallback(prompt, 'ROADMAP_ARCHITECT');
+        let rawText = responseText;
+        const match = rawText.match(/\{.*\}/s);
+        if (match) rawText = match[0];
+        rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+        return JSON.parse(rawText) as DetailedTimeframeRoadmap;
+    } catch (error) {
+        console.error("AI Detailed Roadmap Error:", error);
+        return getMockDetailedRoadmap(career);
+    }
+};
+
 export const optimizeRoadmap = async (_currentRoadmap: any, country: string): Promise<string> => {
-    const prompt = `Briefly analyze (2-3 sentences) current IT hiring trends in the "${country}" market. Then suggest 1 LATEST AI skill the candidate needs to learn to avoid becoming obsolete. Format as follows:
-Analysis: ...
-Suggestion: ...
+    const prompt = `You are an expert ROADMAP_ARCHITECT AI. Analyze IT recruitment trends in the market "${country}" (such as Vietnam, Singapore, USA, Japan, Germany, etc.).
+Suggest 1 LATEST AI skill the candidate must learn to stay highly competitive and avoid AI obsolescence.
+
+Format output cleanly as:
+🌏 IT Market Hiring Trends (${country}):
+[2-3 sentences analyzing job market demand and tech hiring in ${country}]
+
+🚀 Must-Learn AI Skill Recommendation:
+[Skill name] - [Why this AI skill is essential for the ${country} market]
+
+💡 Recommended Learning Action & Course Link:
+- Course: [Course Title]
+- Link: [Official Course/Platform URL e.g. https://www.coursera.org or https://www.udemy.com]
+
 Please respond in English.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
-        return responseText || `The ${country} market is hungry for AI-integrated personnel. Learn more about Generative AI.`;
+        const responseText = await executeWithFallback(prompt, 'ROADMAP_ARCHITECT');
+        return responseText || `The ${country} IT market is in high demand for AI-augmented developers. Focus on Generative AI integration.`;
     } catch (error) {
         console.error("AI Error:", error);
-        return `The ${country} market is in high demand for high-quality personnel.`;
+        return `🌏 IT Market Hiring Trends (${country}):\nThe ${country} tech industry is prioritizing developers who integrate AI tools into their workflows.\n\n🚀 Must-Learn AI Skill Recommendation:\nPrompt Engineering & AI API Integration - Essential for remaining competitive.\n\n💡 Recommended Learning Action:\n- Course: Generative AI for Software Engineers\n- Link: https://www.coursera.org/learn/generative-ai-software-development`;
     }
 };
 
@@ -458,7 +621,7 @@ Scenario provided: "${scenario}".
 Their answer: "${answer}".
 Provide a SHORT evaluation (2-3 sentences) of their answer. Emphasize their programming/problem-solving mindset. Please respond in English.`;
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'SANDBOX_PRACTICE');
         return responseText || `The approach is quite good. Pay more attention to code optimization.`;
     } catch (error) {
         console.error("AI Error:", error);
@@ -499,7 +662,7 @@ Based on the Ikigai model, propose exactly 3 IT (or related) job titles that fit
 Please respond in English.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'CAREER_IKIGAI_CONSULTANT');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s) || rawText.match(/\{.*\}/s);
         if (match) rawText = match[0];
@@ -549,7 +712,7 @@ Return EXACTLY ONE JSON OBJECT with the structure:
 Please respond in English.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'CAREER_IKIGAI_CONSULTANT');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s) || rawText.match(/\{.*\}/s);
         if (match) rawText = match[0];
@@ -586,7 +749,7 @@ Return EXACTLY ONE JSON ARRAY, with no extra text or markdown blocks, in the str
 Please respond in English.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'CAREER_IKIGAI_CONSULTANT');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s) || rawText.match(/\{.*\}/s);
         if (match) rawText = match[0];
@@ -662,7 +825,7 @@ Return EXACTLY ONE JSON OBJECT with the structure:
 Please respond in English.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'ROADMAP_ARCHITECT');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s) || rawText.match(/\{.*\}/s);
         if (match) rawText = match[0];
@@ -687,13 +850,19 @@ Please respond in English.`;
 };
 
 export const refineRoadmap = async (currentMilestones: Milestone[], feedback: string): Promise<Milestone[] | null> => {
-    const prompt = `The user wants to adjust the current roadmap with this feedback: "${feedback}".
-Current Roadmap: ${JSON.stringify(currentMilestones)}
+    const prompt = `You are an expert ROADMAP_ARCHITECT AI.
+The user wants to adjust their current roadmap with the following personal feedback: "${feedback}".
+Current Roadmap Data: ${JSON.stringify(currentMilestones)}
 
-Based on the feedback, update the content of this roadmap (add/remove milestones or change the skills/timelines to learn). Return a NEW Milestone JSON ARRAY. Do not use markdown blocks, just return JSON. Please ensure all content is in English.`;
+Instructions:
+1. Update, add, or remove milestones, skills, or subtasks according to the user's personal feedback.
+2. CRITICAL REQUIREMENT: For EVERY skill and milestone in the refined roadmap, generate realistic external course links ("course_links": [{ "title": "Course Title", "provider": "Coursera/Udemy/freeCodeCamp/YouTube", "url": "https://...", "is_free": true }]) so the user can click directly to external learning platforms after finalizing their roadmap.
+3. Maintain the 3-stage milestone format ("Milestone 1: Ready for Internship", "Milestone 2: Junior", "Milestone 3: AI Era") unless explicitly requested otherwise.
+
+Return ONLY the updated JSON array of Milestones without markdown formatting wrappers.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'ROADMAP_ARCHITECT');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s) || rawText.match(/\{.*\}/s);
         if (match) rawText = match[0];
@@ -702,8 +871,78 @@ Based on the feedback, update the content of this roadmap (add/remove milestones
         return data;
     } catch (error) {
         console.error("AI Error:", error);
-        return null;
+        return currentMilestones.map(m => ({
+            ...m,
+            user_notes: `${m.user_notes ? m.user_notes + ' | ' : ''}Refined: ${feedback}`,
+            course_links: m.course_links && m.course_links.length > 0 ? m.course_links : [
+                { title: `Mastering ${m.title}`, provider: 'Coursera / Udemy', url: 'https://www.coursera.org', is_free: false },
+                { title: `Free Community Course: ${m.title}`, provider: 'YouTube / freeCodeCamp', url: 'https://www.freecodecamp.org', is_free: true }
+            ]
+        }));
     }
+};
+
+const getMockDetailedRoadmap = (career: string): DetailedTimeframeRoadmap => {
+    return {
+        career_title: career,
+        short_term: {
+            timeframe: "Ngắn hạn (0 - 3 tháng)",
+            period: 'short_term',
+            focus_goal: `Build foundational technical skills & prepare for internship as ${career}`,
+            skills: [
+                {
+                    name: 'HTML5/CSS3 & Modern JavaScript ES6+',
+                    description: 'Master core web fundamentals and DOM manipulation.',
+                    subtasks: ['Build responsive web layouts', 'Master ES6+ Promises & Fetch API'],
+                    recommended_courses: [
+                        { title: 'JavaScript Algorithms & Data Structures', provider: 'freeCodeCamp', url: 'https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures-v8/', is_free: true },
+                        { title: 'The Complete JavaScript Course 2026', provider: 'Udemy', url: 'https://www.udemy.com', is_free: false }
+                    ]
+                },
+                {
+                    name: 'Git Version Control & GitHub Workflow',
+                    description: 'Essential source control management for team collaboration.',
+                    subtasks: ['Git branching & merging', 'Pull requests & code reviews'],
+                    recommended_courses: [
+                        { title: 'Git & GitHub Tutorial for Beginners', provider: 'YouTube', url: 'https://www.youtube.com', is_free: true }
+                    ]
+                }
+            ],
+            key_milestone_output: 'Internship-ready GitHub portfolio with 2 public projects'
+        },
+        medium_term: {
+            timeframe: "Trung hạn (3 - 6 tháng)",
+            period: 'medium_term',
+            focus_goal: `Production-grade frameworks & Junior Developer responsibilities`,
+            skills: [
+                {
+                    name: 'React 19, Next.js App Router & Tailwind CSS',
+                    description: 'Build fast, accessible, server-rendered web applications.',
+                    subtasks: ['State management with Zustand/Redux', 'REST API & GraphQL integration'],
+                    recommended_courses: [
+                        { title: 'Next.js 15 & React Full Course', provider: 'YouTube / Vercel', url: 'https://nextjs.org/learn', is_free: true }
+                    ]
+                }
+            ],
+            key_milestone_output: 'Junior Fullstack Production Application deployed on Vercel/AWS'
+        },
+        long_term: {
+            timeframe: "Dài hạn (6 - 12+ tháng)",
+            period: 'long_term',
+            focus_goal: `Advanced System Architecture & AI Era Competency`,
+            skills: [
+                {
+                    name: 'Generative AI API Integration & Cursor/Copilot Masterclass',
+                    description: 'Leverage LLM APIs (Gemini, OpenAI), Vector Databases, and AI coding agents.',
+                    subtasks: ['Build RAG (Retrieval Augmented Generation) pipelines', 'Automate test & code generation with AI'],
+                    recommended_courses: [
+                        { title: 'Generative AI for Developers', provider: 'Coursera', url: 'https://www.coursera.org', is_free: false }
+                    ]
+                }
+            ],
+            key_milestone_output: 'AI-Native Senior Developer / Architect Portfolio'
+        }
+    };
 };
 
 const getMockMilestones = (career: string): Milestone[] => {
@@ -712,50 +951,67 @@ const getMockMilestones = (career: string): Milestone[] => {
             id: 'm1', title: 'Milestone 1: Ready for Internship', status: 'completed', progress: 100,
             start_date: '01/09/2026', end_date: '15/11/2026', goal: `Build foundations for ${career}`,
             user_notes: 'Completed basics',
+            course_links: [
+                { title: 'Web Developer Bootcamp 2026', provider: 'Udemy', url: 'https://www.udemy.com', is_free: false },
+                { title: 'FreeCodeCamp Web Development', provider: 'freeCodeCamp', url: 'https://www.freecodecamp.org', is_free: true }
+            ],
             skills: [
                 {
                     id: 's1', title: 'HTML / CSS / JavaScript', category: 'Core Tech', status: 'completed',
                     goal: 'Understand the core concepts', user_notes: '', ai_practice_scenario: 'Please describe how you apply this knowledge in practice.',
-                    sub_tasks: [{ id: 'st1', text: 'Master theory', is_completed: true, completion_note: 'Learned' }]
+                    sub_tasks: [{ id: 'st1', text: 'Master theory', is_completed: true, completion_note: 'Learned' }],
+                    course_links: [
+                        { title: 'JS ES6+ Complete Course', provider: 'Coursera', url: 'https://www.coursera.org', is_free: false }
+                    ]
                 },
                 {
                     id: 's1b', title: 'Git & GitHub', category: 'Tool', status: 'completed',
                     goal: 'Source code management', user_notes: '', ai_practice_scenario: '',
-                    sub_tasks: []
+                    sub_tasks: [],
+                    course_links: [
+                        { title: 'Git for Beginners', provider: 'YouTube', url: 'https://www.youtube.com', is_free: true }
+                    ]
                 }
             ]
         },
         {
             id: 'm2', title: 'Milestone 2: Junior', status: 'in-progress', progress: 35,
-            start_date: '16/11/2026', end_date: '15/03/2027', goal: 'Apply to projects',
+            start_date: '16/11/2026', end_date: '15/03/2027', goal: 'Apply to production projects',
             user_notes: 'Working on projects',
+            course_links: [
+                { title: 'React 19 & Next.js Guide', provider: 'Udemy', url: 'https://www.udemy.com', is_free: false }
+            ],
             skills: [
                 {
-                    id: 's2', title: 'ReactJS / VueJS', category: 'Core Tech', status: 'in-progress',
+                    id: 's2', title: 'ReactJS / Next.js', category: 'Core Tech', status: 'in-progress',
                     goal: 'Build smooth interfaces', user_notes: '', ai_practice_scenario: 'How do you optimize rendering performance in your project?',
-                    sub_tasks: [{ id: 'st2', text: 'Performance optimization', is_completed: false, completion_note: '' }]
-                },
-                {
-                    id: 's2b', title: 'Tailwind CSS', category: 'UI', status: 'planned',
-                    goal: 'Rapid styling', user_notes: '', ai_practice_scenario: '',
-                    sub_tasks: []
+                    sub_tasks: [{ id: 'st2', text: 'Performance optimization', is_completed: false, completion_note: '' }],
+                    course_links: [
+                        { title: 'Official Next.js Documentation & Labs', provider: 'Next.js Org', url: 'https://nextjs.org/learn', is_free: true }
+                    ]
                 }
             ]
         },
         {
             id: 'm3', title: 'Milestone 3: AI Era', status: 'planned', progress: 0,
-            start_date: '16/03/2027', end_date: '15/08/2027', goal: 'AI Integration',
+            start_date: '16/03/2027', end_date: '15/08/2027', goal: 'AI Integration & Obsolete-Proofing',
             user_notes: '',
+            course_links: [
+                { title: 'Generative AI API & Prompt Engineering', provider: 'Coursera', url: 'https://www.coursera.org', is_free: false }
+            ],
             skills: [
                 {
-                    id: 's3', title: 'ChatGPT / Cursor', category: 'AI-Era Competency', status: 'planned',
+                    id: 's3', title: 'ChatGPT / Gemini API / Cursor', category: 'AI-Era Competency', status: 'planned',
                     goal: 'Use AI tools effectively', user_notes: '', ai_practice_scenario: 'How do you write a prompt for an AI to generate bug-free code?',
-                    sub_tasks: [{ id: 'st3', text: 'Prompt Mastery', is_completed: false, completion_note: '' }]
+                    sub_tasks: [{ id: 'st3', text: 'Prompt Mastery', is_completed: false, completion_note: '' }],
+                    course_links: [
+                        { title: 'Google Gemini API Docs & Tutorials', provider: 'Google Cloud', url: 'https://ai.google.dev', is_free: true }
+                    ]
                 }
             ]
         }
     ];
-}
+};
 
 
 // --- NEW ONBOARDING REDESIGN FUNCTIONS ---
@@ -775,7 +1031,7 @@ Return EXACTLY ONE JSON ARRAY of objects with this structure:
 Please respond in English.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'SKILL_EVALUATOR');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s);
         if (match) rawText = match[0];
@@ -810,7 +1066,7 @@ Return EXACTLY ONE JSON ARRAY of objects with this structure:
 Please respond in English.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'SKILL_EVALUATOR');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s);
         if (match) rawText = match[0];
@@ -853,7 +1109,7 @@ Return EXACTLY ONE JSON ARRAY in the structure:
 Please respond in English.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'CAREER_IKIGAI_CONSULTANT');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s);
         if (match) rawText = match[0];
@@ -930,7 +1186,7 @@ Return EXACTLY ONE JSON ARRAY of objects with this structure (ensure JSON is val
 Please respond in English. DO NOT wrap in markdown, just output the raw JSON array.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'CAREER_IKIGAI_CONSULTANT');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s);
         if (match) rawText = match[0];
@@ -964,7 +1220,7 @@ Current Goals: ${JSON.stringify(currentGoals)}
 Based on the feedback, update the content of these goals (e.g., change the roadmap, shift the focus, adjust timelines). Return a NEW JSON ARRAY of CareerGoalResponse. Do not use markdown blocks, just return JSON. Please ensure all content is in English.`;
 
     try {
-        const responseText = await executeWithFallback(prompt);
+        const responseText = await executeWithFallback(prompt, 'CAREER_IKIGAI_CONSULTANT');
         let rawText = responseText;
         const match = rawText.match(/\[.*\]/s);
         if (match) rawText = match[0];

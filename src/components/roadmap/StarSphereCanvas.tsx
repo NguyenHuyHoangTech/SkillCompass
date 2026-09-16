@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { Milestone, Skill } from '../../types/roadmap';
-import { RotateCcw, Play, Pause, Eye } from 'lucide-react';
+import { RotateCcw, Play, Pause, Eye, ZoomIn, ZoomOut } from 'lucide-react';
 
 export interface StarNodeData {
   id: string;
@@ -48,6 +48,9 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
 
   // Rotation angles & drag ref
   const rotationRef = useRef({ rotX: 0.2, rotY: 0.5, velX: 0, velY: 0 });
+  const zoomScaleRef = useRef<number>(1.0);
+  const [zoomPercent, setZoomPercent] = useState<number>(100);
+
   const isDraggingRef = useRef(false);
   const lastMousePos = useRef({ x: 0, y: 0 });
   const lastClickTimeRef = useRef<number>(0);
@@ -57,7 +60,80 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
   const [hoveredStar, setHoveredStar] = useState<StarNodeData | null>(null);
   const [starList, setStarList] = useState<StarNodeData[]>([]);
 
-  // Gather all skills & generate 3D Sphere positions
+  // 3D Nebula Procedural Clouds & Background Stardust Particles
+  const backgroundStarsRef = useRef<Array<{ x0: number; y0: number; z0: number; size: number; alpha: number; pulseSpeed: number }>>([]);
+  const nebulaCloudsRef = useRef<Array<{ x0: number; y0: number; z0: number; radius: number; colorHex: string; baseAlpha: number }>>([]);
+
+  // Generate Procedural Nebula Dust & Background Stars on Mount
+  useEffect(() => {
+    if (backgroundStarsRef.current.length === 0) {
+      const bgStars = [];
+      for (let i = 0; i < 240; i++) {
+        const u = Math.random();
+        const theta = u * 2.0 * Math.PI;
+        const r = (0.3 + Math.random() * 0.95);
+
+        // Elliptical Galaxy Disk Mapping (Major Axis a=1.45, Minor Axis b=0.75, Height=0.35)
+        bgStars.push({
+          x0: r * Math.cos(theta) * 1.45,
+          y0: (Math.random() - 0.5) * 0.35,
+          z0: r * Math.sin(theta) * 0.75,
+          size: Math.random() * 1.5 + 0.3,
+          alpha: Math.random() * 0.6 + 0.3,
+          pulseSpeed: Math.random() * 2 + 1,
+        });
+      }
+      backgroundStarsRef.current = bgStars;
+    }
+
+    if (nebulaCloudsRef.current.length === 0) {
+      const palette = [
+        '#1d4ed8', // Deep Royal Blue
+        '#1e40af', // Dark Sapphire Blue
+        '#2563eb', // Ocean Blue
+        '#0369a1', // Deep Sky Blue
+        '#1e3a8a', // Midnight Navy Blue
+        '#3b82f6', // Rich Cobalt Blue
+      ];
+      const clouds = [];
+      for (let i = 0; i < 48; i++) {
+        const theta = Math.random() * Math.PI * 2;
+        const r = Math.random() * 0.92;
+
+        // Elliptical Gas Cloud Halo
+        clouds.push({
+          x0: r * Math.cos(theta) * 1.4,
+          y0: (Math.random() - 0.5) * 0.32,
+          z0: r * Math.sin(theta) * 0.72,
+          radius: Math.random() * 160 + 90,
+          colorHex: palette[i % palette.length],
+          baseAlpha: Math.random() * 0.18 + 0.1,
+        });
+      }
+      nebulaCloudsRef.current = clouds;
+    }
+  }, []);
+
+  const handleZoomIn = () => {
+    const next = Math.min(3.5, zoomScaleRef.current + 0.25);
+    zoomScaleRef.current = next;
+    setZoomPercent(Math.round(next * 100));
+  };
+
+  const handleZoomOut = () => {
+    const next = Math.max(0.35, zoomScaleRef.current - 0.25);
+    zoomScaleRef.current = next;
+    setZoomPercent(Math.round(next * 100));
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    const delta = e.deltaY < 0 ? 0.12 : -0.12;
+    const next = Math.min(3.5, Math.max(0.35, zoomScaleRef.current + delta));
+    zoomScaleRef.current = next;
+    setZoomPercent(Math.round(next * 100));
+  };
+
+  // Gather all skills & generate 3D Elliptical Galaxy positions
   useEffect(() => {
     const rawSkills: Array<{
       skill: Skill;
@@ -89,19 +165,21 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
     const isCategoryFilterActive = selectedCategoryName !== 'all';
 
     const nodes: StarNodeData[] = rawSkills.map((item, i) => {
-      // Global Sphere Fibonacci mapping
-      const phi = Math.acos(1 - 2 * (i + 0.5) / total);
-      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+      // 3D Elliptical Spiral Galaxy Distribution
+      const norm = (i + 0.5) / total;
+      const radius = Math.pow(norm, 0.65) * 1.15 + 0.1;
+      const angle = i * 2.4; // Golden spiral angle
 
-      const x0 = Math.sin(phi) * Math.cos(theta);
-      const y0 = Math.sin(phi) * Math.sin(theta);
-      const z0 = Math.cos(phi);
+      // Elliptical Major Axis (a=1.4), Minor Axis (b=0.68), Height Thickness (c=0.25)
+      const x0 = radius * Math.cos(angle) * 1.4;
+      const y0 = Math.sin(i * 3.7) * 0.25 * (1.1 - norm * 0.4);
+      const z0 = radius * Math.sin(angle) * 0.68;
 
       const completedCount = item.skill.subTopics.filter((st) => st.isCompleted).length;
       const totalCount = item.skill.subTopics.length;
       const isMastered = totalCount > 0 && completedCount === totalCount;
 
-      let color = '#38bdf8'; // Sky cyan default
+      let color = '#3b82f6'; // Deep cobalt blue default
       if (isMastered) color = '#34d399'; // Emerald completed
       else if (completedCount > 0) color = '#60a5fa'; // Blue in progress
       else color = '#a78bfa'; // Purple pending
@@ -143,9 +221,11 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
   // Reset View
   const handleResetView = () => {
     rotationRef.current = { rotX: 0.2, rotY: 0.5, velX: 0, velY: 0 };
+    zoomScaleRef.current = 1.0;
+    setZoomPercent(100);
   };
 
-  // Main Render Loop
+  // Main Render Loop (Nebula Engine 3D)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -164,7 +244,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
 
       const centerX = width / 2;
       const centerY = height / 2;
-      const sphereRadius = Math.min(width, height) * 0.32;
+      const sphereRadius = Math.min(width, height) * 0.32 * zoomScaleRef.current;
       const focalLength = 500;
 
       // Update rotation
@@ -186,11 +266,131 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
       const cosY = Math.cos(rotY);
       const sinY = Math.sin(rotY);
 
-      // Solid Pure Black Space Background
-      ctx.fillStyle = '#05070f';
+      const time = Date.now() * 0.0015;
+
+      // 1. Solid Deep Cosmic Void Space Background (Dark Navy Void)
+      ctx.fillStyle = '#010614';
       ctx.fillRect(0, 0, width, height);
 
-      const time = Date.now() * 0.002;
+      // 2. Swirling Ambient Cosmic Center Glow (Rich Dark Royal Blue & Deep Sapphire)
+      const ambientGrad = ctx.createRadialGradient(
+        centerX,
+        centerY,
+        10,
+        centerX,
+        centerY,
+        Math.max(width, height) * 0.65
+      );
+      ambientGrad.addColorStop(0, 'rgba(29, 78, 216, 0.35)'); // Deep Royal Blue Center
+      ambientGrad.addColorStop(0.35, 'rgba(30, 64, 175, 0.25)'); // Deep Sapphire Blue
+      ambientGrad.addColorStop(0.7, 'rgba(15, 23, 42, 0.18)'); // Midnight Blue Outer
+      ambientGrad.addColorStop(1, 'rgba(1, 6, 20, 0)');
+      ctx.fillStyle = ambientGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // 3. Render 3D Swirling Cosmic Nebula Gas Clouds
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      nebulaCloudsRef.current.forEach((cloud, idx) => {
+        const x1 = cloud.x0 * cosY + cloud.z0 * sinY;
+        const y1 = cloud.y0;
+        const z1 = -cloud.x0 * sinY + cloud.z0 * cosY;
+
+        const x2 = x1;
+        const y2 = y1 * cosX - z1 * sinX;
+        const z2 = y1 * sinX + z1 * cosX;
+
+        const scale = focalLength / (focalLength - z2 * sphereRadius);
+        const screenX = centerX + x2 * sphereRadius * scale;
+        const screenY = centerY + y2 * sphereRadius * scale;
+
+        const pulseRad = cloud.radius * scale * (1 + Math.sin(time * 0.7 + idx) * 0.1);
+        const opacity = cloud.baseAlpha * Math.min(1.2, Math.max(0.1, (z2 + 1.2) / 2));
+
+        const cloudGrad = ctx.createRadialGradient(
+          screenX,
+          screenY,
+          0,
+          screenX,
+          screenY,
+          Math.max(1, pulseRad)
+        );
+
+        // Convert Hex to RGBA
+        const hex = cloud.colorHex;
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+
+        cloudGrad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${opacity})`);
+        cloudGrad.addColorStop(0.45, `rgba(${r}, ${g}, ${b}, ${opacity * 0.45})`);
+        cloudGrad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+        ctx.fillStyle = cloudGrad;
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, Math.max(1, pulseRad), 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.restore();
+
+      // 4. Render Distant 3D Background Stardust Grid (Blue/Cyan Stars)
+      ctx.save();
+      backgroundStarsRef.current.forEach((bgStar, idx) => {
+        const x1 = bgStar.x0 * cosY + bgStar.z0 * sinY;
+        const y1 = bgStar.y0;
+        const z1 = -bgStar.x0 * sinY + bgStar.z0 * cosY;
+
+        const x2 = x1;
+        const y2 = y1 * cosX - z1 * sinX;
+        const z2 = y1 * sinX + z1 * cosX;
+
+        const scale = focalLength / (focalLength - z2 * sphereRadius * 1.25);
+        const screenX = centerX + x2 * sphereRadius * 1.25 * scale;
+        const screenY = centerY + y2 * sphereRadius * 1.25 * scale;
+
+        const twinkle = (Math.sin(time * bgStar.pulseSpeed + idx) + 1) * 0.5;
+        const alpha = bgStar.alpha * (0.3 + twinkle * 0.7) * Math.max(0.1, (z2 + 1.4) / 2.4);
+
+        ctx.fillStyle = idx % 5 === 0 ? '#38bdf8' : idx % 7 === 0 ? '#60a5fa' : '#ffffff';
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, Math.max(0.5, bgStar.size * scale), 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.restore();
+
+      // 4.5. Render 3D Glowing Elliptical Orbit Rings
+      ctx.save();
+      ctx.lineWidth = 1.2;
+      const orbitSteps = 64;
+      [0.55, 0.95, 1.35].forEach((rFactor) => {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(56, 189, 248, ${0.18 - rFactor * 0.04})`;
+        ctx.setLineDash([4, 6]);
+        for (let i = 0; i <= orbitSteps; i++) {
+          const angle = (i / orbitSteps) * Math.PI * 2;
+          const ox = Math.cos(angle) * 1.4 * rFactor;
+          const oy = 0;
+          const oz = Math.sin(angle) * 0.68 * rFactor;
+
+          const x1 = ox * cosY + oz * sinY;
+          const y1 = oy;
+          const z1 = -ox * sinY + oz * cosY;
+
+          const x2 = x1;
+          const y2 = y1 * cosX - z1 * sinX;
+          const z2 = y1 * sinX + z1 * cosX;
+
+          const scale = focalLength / (focalLength - z2 * sphereRadius);
+          const sx = centerX + x2 * sphereRadius * scale;
+          const sy = centerY + y2 * sphereRadius * scale;
+
+          if (i === 0) ctx.moveTo(sx, sy);
+          else ctx.lineTo(sx, sy);
+        }
+        ctx.stroke();
+      });
+      ctx.restore();
 
       // Calculate 3D transformations for all skill stars on the single 3D sphere
       const transformedStars: StarNodeData[] = starList.map((node) => {
@@ -223,7 +423,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
       const isSearchActive = searchQuery.trim().length > 0;
       const isCatFilterActive = selectedCategoryName !== 'all';
 
-      // Draw Constellation Lines between connected stars in the same category
+      // 5. Draw Constellation Lines between connected stars in the same category
       ctx.lineWidth = 1;
       const categoriesMap = new Map<string, StarNodeData[]>();
       transformedStars.forEach((s) => {
@@ -241,19 +441,19 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
             const starA = catStars[i];
             const starB = catStars[i + 1];
             
-            let alpha = Math.max(0.04, (starA.z + 1.2) * 0.12) * Math.max(0.04, (starB.z + 1.2) * 0.12);
+            let alpha = Math.max(0.06, (starA.z + 1.2) * 0.14) * Math.max(0.06, (starB.z + 1.2) * 0.14);
             if (isCatSelected) {
               // Highlight constellation lines for selected industry category
-              alpha = Math.min(0.9, alpha * 4.5);
+              alpha = Math.min(0.95, alpha * 4.5);
               ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
-              ctx.lineWidth = 1.8;
+              ctx.lineWidth = 2.0;
             } else if (isCatFilterActive) {
               alpha *= 0.2;
               ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
               ctx.lineWidth = 0.8;
             } else {
               ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
-              ctx.lineWidth = 1;
+              ctx.lineWidth = 1.1;
             }
 
             ctx.moveTo(starA.screenX, starA.screenY);
@@ -263,7 +463,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
         }
       });
 
-      // Render Star Nodes
+      // 6. Render Skill Star Nodes & Radiant Glowing Auras
       transformedStars.forEach((star) => {
         const isHovered = hoveredStar?.id === star.id;
         const isMatched = star.isMatchedSearch;
@@ -271,7 +471,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
         const isFocusActive = isSearchActive || isCatFilterActive;
         const isHighlighted = isMatched || isCatHighlighted || isHovered;
 
-        const depthAlpha = Math.min(1, Math.max(0.2, (star.z + 1.3) / 2.3));
+        const depthAlpha = Math.min(1, Math.max(0.25, (star.z + 1.3) / 2.3));
 
         // Dim non-highlighted stars when a search or category filter is active
         let starAlpha = isHovered ? 1 : depthAlpha;
@@ -280,13 +480,13 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
         }
 
         // Star dot sizes: Highlighted stars glow larger
-        let starRadius = (isHovered ? 5.2 : isHighlighted ? 4.2 : 2.2) * Math.max(0.6, star.scale);
+        let starRadius = (isHovered ? 5.5 : isHighlighted ? 4.5 : 2.5) * Math.max(0.6, star.scale);
 
         ctx.save();
         ctx.globalAlpha = starAlpha;
 
-        // 1. Draw Star Glow Aura (Radial Gradient)
-        const auraRadius = starRadius * (isHovered ? 6.5 : isHighlighted ? 5.0 : 2.5);
+        // Draw Star Glow Aura (Radial Gradient)
+        const auraRadius = starRadius * (isHovered ? 7.0 : isHighlighted ? 5.5 : 3.0);
         const auraGradient = ctx.createRadialGradient(
           star.screenX,
           star.screenY,
@@ -298,7 +498,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
 
         const starColor = isMatched ? '#f59e0b' : isCatHighlighted ? '#38bdf8' : star.color;
         auraGradient.addColorStop(0, starColor);
-        auraGradient.addColorStop(0.35, starColor + (isHighlighted ? 'dd' : '40'));
+        auraGradient.addColorStop(0.35, starColor + (isHighlighted ? 'dd' : '55'));
         auraGradient.addColorStop(1, 'transparent');
 
         ctx.fillStyle = auraGradient;
@@ -306,7 +506,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
         ctx.arc(star.screenX, star.screenY, auraRadius, 0, Math.PI * 2);
         ctx.fill();
 
-        // 2. Draw Pulsing Halo Ring for Highlighted Star Dots
+        // Draw Pulsing Halo Ring for Highlighted Star Dots
         if (isHighlighted || star.isMastered) {
           ctx.beginPath();
           const ringRadius = starRadius * (isHovered ? 2.6 : 2.0) + Math.sin(time * 3) * 1.5;
@@ -317,7 +517,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
           ctx.stroke();
         }
 
-        // 3. Draw 4-Point Light Spark Flare when Highlighted
+        // Draw 4-Point Light Spark Flare when Highlighted
         if (isHovered || isHighlighted) {
           ctx.strokeStyle = isMatched ? '#fde047' : '#ffffff';
           ctx.lineWidth = 1.2;
@@ -331,13 +531,13 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
           ctx.stroke();
         }
 
-        // 4. Draw Core Star Center (Crisp Dot Point)
+        // Draw Core Star Center (Crisp Dot Point)
         ctx.fillStyle = isHovered || isCatHighlighted ? '#ffffff' : starColor;
         ctx.beginPath();
         ctx.arc(star.screenX, star.screenY, Math.max(1.2, starRadius * 0.75), 0, Math.PI * 2);
         ctx.fill();
 
-        // 5. Draw Floating Skill Name Tag (for Hovered or Category Highlighted Stars)
+        // Draw Floating Skill Name Tag (for Hovered or Category Highlighted Stars)
         if (isHovered || isCatHighlighted || (isMatched && star.z > -0.2)) {
           ctx.font = isHovered || isCatHighlighted ? 'bold 12px Inter, sans-serif' : '10px Inter, sans-serif';
           ctx.fillStyle = isMatched ? '#fde047' : isCatHighlighted ? '#7dd3fc' : '#ffffff';
@@ -488,7 +688,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
   };
 
   return (
-    <div className="star-sphere-container" ref={containerRef}>
+    <div className="star-sphere-container" ref={containerRef} onWheel={handleWheel}>
       {/* 3D Canvas Viewport */}
       <canvas
         ref={canvasRef}
@@ -503,6 +703,26 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
 
       {/* Minimal Floating HUD Controls */}
       <div className="sphere-hud-controls">
+        <button
+          className="hud-btn"
+          onClick={handleZoomIn}
+          title="Zoom In (+)"
+        >
+          <ZoomIn size={15} />
+          <span>Zoom +</span>
+        </button>
+
+        <button
+          className="hud-btn"
+          onClick={handleZoomOut}
+          title="Zoom Out (-)"
+        >
+          <ZoomOut size={15} />
+          <span>Zoom -</span>
+        </button>
+
+        <span className="hud-zoom-badge" title="Current Zoom Scale">{zoomPercent}%</span>
+
         <button
           className="hud-btn"
           onClick={handleResetView}
