@@ -15,6 +15,7 @@ import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
 import { AllSkillsPage } from '../components/pages/AllSkillsPage';
 import { SettingsPage } from '../components/pages/SettingsPage';
 import { CoursesPage } from './CoursesPage';
+import { Onboarding } from './Onboarding';
 import '../App.css';
 
 export default function Roadmap() {
@@ -257,6 +258,10 @@ export default function Roadmap() {
 
         {/* 3. Main Viewport Container */}
         <div className="main-viewport flex-1 h-full overflow-hidden relative">
+          {activePage === 'page-onboarding' && (
+            <Onboarding onFinish={() => setActivePage('page-roadmap')} />
+          )}
+          
           {activePage === 'page-roadmap' && (
             <div className="roadmap-page-view flex flex-col sm:flex-row h-full overflow-hidden bg-slate-50">
               <div className="w-full sm:w-[380px] bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl h-full overflow-hidden">

@@ -16,7 +16,11 @@ import type {
 } from '../services/ai';
 import { initialMockRoadmap } from '../data/mockRoadmapData';
 
-export const Onboarding: React.FC = () => {
+interface OnboardingProps {
+    onFinish?: () => void;
+}
+
+export const Onboarding: React.FC<OnboardingProps> = ({ onFinish }) => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     
@@ -162,7 +166,11 @@ export const Onboarding: React.FC = () => {
         })) as any;
         initialMockRoadmap.currentMilestoneId = goal.milestones[0]?.id || "";
         localStorage.setItem('skill_compass_roadmap', JSON.stringify(initialMockRoadmap));
-        navigate('/roadmap');
+        if (onFinish) {
+            onFinish();
+        } else {
+            navigate('/roadmap');
+        }
     };
 
 
