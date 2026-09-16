@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { UserRoadmap, Skill, SubTopic, Milestone } from '../types/roadmap';
 import { ApiService } from '../services/apiService';
 import { TopNavbar } from '../components/layout/TopNavbar';
@@ -24,7 +25,7 @@ export default function Roadmap() {
 
   // Page Routing State (Sidebar Vertical Tabs switch DIFFERENT PAGES)
   const [activePage, setActivePage] = useState<string>(
-    window.location.pathname === '/roadmap' || localStorage.getItem('skill_compass_roadmap')
+    window.location.pathname === '/roadmap'
       ? 'page-roadmap'
       : 'page-onboarding'
   );
@@ -45,6 +46,25 @@ export default function Roadmap() {
   const [isEditMilestoneModalOpen, setIsEditMilestoneModalOpen] = useState(false);
   const [milestoneToEdit, setMilestoneToEdit] = useState<any>(null);
   const [isAIRecoModalOpen, setIsAIRecoModalOpen] = useState(false);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.pathname === '/roadmap') {
+      setActivePage('page-roadmap');
+    } else if (location.pathname === '/') {
+      setActivePage('page-onboarding');
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (activePage === 'page-roadmap' && location.pathname !== '/roadmap') {
+      navigate('/roadmap');
+    } else if (activePage === 'page-onboarding' && location.pathname !== '/') {
+      navigate('/');
+    }
+  }, [activePage, navigate, location.pathname]);
 
   useEffect(() => {
     loadRoadmap();

@@ -175,7 +175,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onFinish }) => {
 
 
     return (
-        <div className="relative min-h-screen bg-slate-50 overflow-y-auto font-sans">
+        <div className="relative h-full bg-slate-50 overflow-y-auto font-sans">
             <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-200 rounded-full blur-[120px] opacity-60 pointer-events-none"></div>
             <div className="fixed bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-emerald-200 rounded-full blur-[100px] opacity-50 pointer-events-none"></div>
 
