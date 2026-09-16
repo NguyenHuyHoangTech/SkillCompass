@@ -1,7 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
 
-// Initialize the API with the provided key
-const apiKey = 'AQ.Ab8RN6JDlnH8wQy06XFKjWScBEUvJunwZkBJsEFIAiU21keBhw';
+// Initialize the API with the provided key or environment variable
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || 'AQ.Ab8RN6JDlnH8wQy06XFKjWScBEUvJunwZkBJsEFIAiU21keBhw';
 const ai = new GoogleGenAI({ apiKey: apiKey });
 const modelName = 'gemini-3.6-flash';
 
