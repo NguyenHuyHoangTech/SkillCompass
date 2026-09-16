@@ -1048,39 +1048,106 @@ TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc:
         
         // Mock fallback response
         let mockResponse = "Tôi đã cập nhật danh sách kỹ năng dựa trên yêu cầu của bạn!";
+        let mockSkills: ChatGeneratedSkill[] = [
+            {
+                title: "Advanced System Architecture",
+                description: "Design highly scalable, fault-tolerant systems using modern architectural patterns.",
+                icon: "fa-server",
+                subTopics: [
+                    { title: "Core Concepts of Advanced System Architecture" },
+                    { title: "Advanced Patterns & Best Practices" },
+                    { title: "Real-world Implementation Project" },
+                    { title: "Debugging and Troubleshooting" }
+                ]
+            },
+            {
+                title: "Performance Optimization",
+                description: "Identify bottlenecks and optimize frontend/backend performance at scale.",
+                icon: "fa-bolt",
+                subTopics: [
+                    { title: "Core Concepts of Performance Optimization" },
+                    { title: "Advanced Patterns & Best Practices" },
+                    { title: "Real-world Implementation Project" }
+                ]
+            }
+        ];
+
+        const lowerMsg = userMessage.toLowerCase();
         if (!userMessage) {
             mockResponse = "Chào bạn! Dựa vào giai đoạn hiện tại, tôi đề xuất một vài kỹ năng quan trọng dưới đây. Bạn có muốn điều chỉnh hay thêm bớt gì không?";
-        } else if (userMessage.toLowerCase().includes("thêm")) {
+        } else if (lowerMsg.includes("thêm")) {
             mockResponse = "Đồng ý, tôi đã bổ sung thêm kỹ năng theo ý bạn.";
-        } else if (userMessage.toLowerCase().includes("xóa") || userMessage.toLowerCase().includes("bỏ")) {
+            mockSkills.push({
+                title: "Bonus Skill: Cloud Native",
+                description: "Hiểu biết thêm về môi trường Cloud và các dịch vụ AWS/GCP.",
+                icon: "fa-cloud",
+                subTopics: [{ title: "Cloud Basics" }, { title: "Deployment" }, { title: "Security" }]
+            });
+        } else if (lowerMsg.includes("xóa") || lowerMsg.includes("bỏ") || lowerMsg.includes("bớt")) {
             mockResponse = "Tôi đã loại bỏ kỹ năng không cần thiết theo yêu cầu.";
+            mockSkills = mockSkills.slice(0, 1);
+        } else {
+            const shortText = userMessage.length > 15 ? userMessage.substring(0, 15) + '...' : userMessage;
+            
+            const randomSkillsPool = [
+                [
+                    {
+                        title: `Tối ưu hóa: ${shortText}`,
+                        description: "Nâng cao hiệu suất dựa trên đặc thù yêu cầu của bạn.",
+                        icon: "fa-rocket",
+                        subTopics: [{ title: "Khái niệm cốt lõi" }, { title: "Kỹ thuật tối ưu nâng cao" }, { title: "Thực hành" }]
+                    },
+                    {
+                        title: "Bảo mật Nâng cao",
+                        description: "Các kỹ thuật bảo vệ ứng dụng khỏi lỗ hổng thông thường.",
+                        icon: "fa-shield-halved",
+                        subTopics: [{ title: "Nhận diện rủi ro" }, { title: "Phòng chống XSS, CSRF" }, { title: "Mã hóa dữ liệu" }]
+                    }
+                ],
+                [
+                    {
+                        title: `Kiến trúc Microservices cho ${shortText}`,
+                        description: "Thiết kế hệ thống chịu tải cao và dễ dàng mở rộng.",
+                        icon: "fa-network-wired",
+                        subTopics: [{ title: "Giới thiệu Microservices" }, { title: "API Gateway" }, { title: "Message Queues" }]
+                    },
+                    {
+                        title: "Kiểm thử Tự động",
+                        description: "Viết Unit test và E2E test để đảm bảo chất lượng.",
+                        icon: "fa-vial",
+                        subTopics: [{ title: "Jest & RTL" }, { title: "Cypress" }, { title: "TDD Flow" }]
+                    }
+                ],
+                [
+                    {
+                        title: `Data Management với ${shortText}`,
+                        description: "Quản lý dữ liệu lớn và tối ưu truy vấn.",
+                        icon: "fa-database",
+                        subTopics: [{ title: "SQL Optimization" }, { title: "NoSQL Patterns" }, { title: "Caching Strategies" }]
+                    },
+                    {
+                        title: "CI/CD Pipeline",
+                        description: "Thiết lập quy trình CI/CD hoàn chỉnh.",
+                        icon: "fa-code-branch",
+                        subTopics: [{ title: "Github Actions" }, { title: "Docker Builds" }, { title: "Auto Deployment" }]
+                    }
+                ]
+            ];
+            
+            const randomIndex = Math.floor(Math.random() * randomSkillsPool.length);
+            mockSkills = randomSkillsPool[randomIndex];
+            
+            const responses = [
+                `Tôi đã thiết kế lại danh sách kỹ năng cho "${shortText}". Bạn hãy xem nhé!`,
+                `Rất hay! Đây là những kỹ năng phù hợp với yêu cầu "${shortText}".`,
+                `Đã cập nhật! Hãy kiểm tra các kỹ năng mới liên quan tới "${shortText}".`
+            ];
+            mockResponse = responses[Math.floor(Math.random() * responses.length)];
         }
 
         return {
             chat_response: mockResponse,
-            proposed_skills: [
-                {
-                    title: "Advanced System Architecture",
-                    description: "Design highly scalable, fault-tolerant systems using modern architectural patterns.",
-                    icon: "fa-server",
-                    subTopics: [
-                        { title: "Core Concepts of Advanced System Architecture" },
-                        { title: "Advanced Patterns & Best Practices" },
-                        { title: "Real-world Implementation Project" },
-                        { title: "Debugging and Troubleshooting" }
-                    ]
-                },
-                {
-                    title: "Performance Optimization",
-                    description: "Identify bottlenecks and optimize frontend/backend performance at scale.",
-                    icon: "fa-bolt",
-                    subTopics: [
-                        { title: "Core Concepts of Performance Optimization" },
-                        { title: "Advanced Patterns & Best Practices" },
-                        { title: "Real-world Implementation Project" }
-                    ]
-                }
-            ]
+            proposed_skills: mockSkills
         };
     }
 };
