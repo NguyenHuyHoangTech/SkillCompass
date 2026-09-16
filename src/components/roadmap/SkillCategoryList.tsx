@@ -6,6 +6,7 @@ interface SkillCategoryListProps {
   onToggleCheck: (skill: Skill, subTopic: SubTopic, completed: boolean) => void;
   onAIReplace?: () => void;
   onManualAdd?: () => void;
+  onLearnSkill?: (skill: Skill) => void;
 }
 
 export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
@@ -13,6 +14,7 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
   onToggleCheck,
   onAIReplace,
   onManualAdd,
+  onLearnSkill,
 }) => {
   // Flatten skills with their category name attached
   const allSkills = categories.flatMap(cat => 
@@ -114,6 +116,14 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
                     )}
                 </div>
 
+                {onLearnSkill && (
+                  <button 
+                    onClick={() => onLearnSkill(skill)}
+                    className="w-full mt-auto py-2.5 bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white border border-blue-200 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-2 group"
+                  >
+                    <i className="fa-solid fa-graduation-cap group-hover:scale-110 transition-transform"></i> Tìm Khóa Học AI
+                  </button>
+                )}
             </div>
           );
         })}

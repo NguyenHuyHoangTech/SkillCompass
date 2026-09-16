@@ -10,6 +10,7 @@ interface AllSkillsPageProps {
   onOpenQuiz: (skill: Skill, subTopic: SubTopic) => void;
   onToggleCheck: (skill: Skill, subTopic: SubTopic, completed: boolean) => void;
   onClose?: () => void;
+  onLearnSkill?: (skill: Skill) => void;
 }
 
 export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
@@ -17,6 +18,7 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
   onOpenQuiz,
   onToggleCheck,
   onClose,
+  onLearnSkill,
 }) => {
   const { t } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
@@ -169,6 +171,7 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
           onClose={() => setSelectedStarData(null)}
           onOpenQuiz={onOpenQuiz}
           onToggleCheck={onToggleCheck}
+          onLearnSkill={onLearnSkill}
         />
       )}
     </div>

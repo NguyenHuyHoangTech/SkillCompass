@@ -1300,3 +1300,137 @@ TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc:
         };
     }
 };
+
+// ==========================================
+// COURSE GENERATOR (MOCK DATA)
+// ==========================================
+
+export interface AICourse {
+    id: string;
+    title: string;
+    instructor: string;
+    provider: string;
+    duration: string;
+    level: string;
+    rating: number;
+    enrolledCount: number;
+    thumbnailUrl: string;
+    tags: string[];
+    description: string;
+}
+
+export const generateMockCourses = async (skillName: string, userPrompt: string = ""): Promise<{ chat_response: string, courses: AICourse[] }> => {
+    await new Promise(r => setTimeout(r, 1500));
+    
+    // Some random instructors & providers
+    const instructors = ["Dr. Angela Yu", "Andrew Ng", "Colt Steele", "Maximilian Schwarzmüller", "Academind", "Google Cloud Training", "IBM Skills Network", "Meta Staff"];
+    const providers = ["Coursera", "Udemy", "edX", "Pluralsight", "Udacity"];
+    
+    const levels = ["Beginner", "Intermediate", "Advanced", "All Levels"];
+    
+    const responses = [
+        `Dưới đây là 3 khóa học tôi đã chọn lọc kỹ càng cho kỹ năng ${skillName}.`,
+        `Tuyệt vời! Tôi tìm thấy những khóa học này rất phù hợp với yêu cầu của bạn.`,
+        `Dựa trên định hướng của bạn, các khóa học về ${skillName} này sẽ giúp bạn tiến bộ nhanh nhất.`,
+        `Đây là những khóa học được đánh giá cao nhất về ${skillName} hiện nay.`
+    ];
+    
+    const chat_response = userPrompt 
+        ? `Tôi đã điều chỉnh lại kết quả theo yêu cầu "${userPrompt}". Dưới đây là các khóa học mới phù hợp hơn cho bạn.`
+        : responses[Math.floor(Math.random() * responses.length)];
+        
+    const generateCourse = (index: number): AICourse => {
+        const pvd = providers[Math.floor(Math.random() * providers.length)];
+        const inst = instructors[Math.floor(Math.random() * instructors.length)];
+        const lvl = levels[Math.floor(Math.random() * levels.length)];
+        
+        let prefix = ["Mastering", "Complete Guide to", "Introduction to", "Advanced", "The Ultimate", "Crash Course:"][Math.floor(Math.random() * 6)];
+        
+        // Random thumbnail matching tech vibes
+        const thumbs = [
+            "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&q=80",
+            "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
+            "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
+            "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80",
+            "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&q=80",
+            "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80"
+        ];
+        
+        return {
+            id: `course-${Date.now()}-${index}`,
+            title: `${prefix} ${skillName}`,
+            instructor: inst,
+            provider: pvd,
+            duration: `${Math.floor(Math.random() * 20) + 5} hours`,
+            level: lvl,
+            rating: 4 + Math.random(),
+            enrolledCount: Math.floor(Math.random() * 500000) + 10000,
+            thumbnailUrl: thumbs[Math.floor(Math.random() * thumbs.length)],
+            tags: [skillName, lvl, pvd],
+            description: `This comprehensive course will take you from absolute basics to advanced concepts in ${skillName}. Taught by industry expert ${inst}.`
+        };
+    };
+
+    return {
+        chat_response,
+        courses: [generateCourse(1), generateCourse(2), generateCourse(3)]
+    };
+};
+
+
+// ==========================================
+// CHECKLIST GENERATOR (MOCK DATA)
+// ==========================================
+
+export interface AIChecklistItem {
+    id: string;
+    title: string;
+    isCompleted: boolean;
+}
+
+export const generateMockChecklist = async (skillName: string, courseTitle: string, userPrompt: string = ""): Promise<{ chat_response: string, checklist: AIChecklistItem[] }> => {
+    await new Promise(r => setTimeout(r, 1500));
+    
+    let chat_response = "";
+    
+    const defaultChecklists = [
+        [
+            { id: "t1", title: `Ngày 1: Xem video giới thiệu và thiết lập môi trường cho ${skillName}`, isCompleted: false },
+            { id: "t2", title: `Ngày 2: Đọc tài liệu chương 1 và làm quiz 1 của khóa học`, isCompleted: false },
+            { id: "t3", title: `Ngày 3: Thực hành code theo video lab đầu tiên`, isCompleted: false },
+            { id: "t4", title: `Ngày 4: Hoàn thành Assignment tuần 1`, isCompleted: false },
+            { id: "t5", title: `Ngày 5: Ôn tập và đọc thêm tài liệu tham khảo ngoài khóa học`, isCompleted: false },
+        ],
+        [
+            { id: "t1", title: `Tháng đầu: Hoàn thành Module 1 của khóa ${courseTitle}`, isCompleted: false },
+            { id: "t2", title: `Thực hành: Làm mini-project áp dụng ${skillName}`, isCompleted: false },
+            { id: "t3", title: `Review: Xem lại code của các học viên khác trên diễn đàn`, isCompleted: false },
+            { id: "t4", title: `Cập nhật: Tham gia Webinar hoặc Q&A session nếu có`, isCompleted: false },
+        ],
+        [
+            { id: "t1", title: `30 phút/ngày: Xem 2 video bài giảng về ${skillName}`, isCompleted: false },
+            { id: "t2", title: `Cuối tuần: Làm 1 bài test định kỳ của hệ thống`, isCompleted: false },
+            { id: "t3", title: `Tìm kiếm 1 bài viết chuyên sâu trên Medium để đọc thêm`, isCompleted: false },
+        ]
+    ];
+    
+    let checklist = defaultChecklists[Math.floor(Math.random() * defaultChecklists.length)];
+    
+    if (userPrompt) {
+        chat_response = `Tôi đã nghe thấy yêu cầu "${userPrompt}". Tôi đã cấu trúc lại lịch học và Checklist cho bạn để phù hợp hơn với quỹ thời gian và cách học này.`;
+        // Generate dynamic looking checklist
+        checklist = [
+            { id: `dyn1-${Date.now()}`, title: `[Điều chỉnh] Tập trung học lý thuyết ${skillName} trong 1 giờ`, isCompleted: false },
+            { id: `dyn2-${Date.now()}`, title: `[Điều chỉnh] Tăng cường thực hành code trực tiếp trên trình duyệt`, isCompleted: false },
+            { id: `dyn3-${Date.now()}`, title: `[Điều chỉnh] Rút gọn phần giới thiệu, đi thẳng vào Assignment`, isCompleted: false },
+            { id: `dyn4-${Date.now()}`, title: `[Điều chỉnh] Ôn tập nhanh mỗi cuối tuần`, isCompleted: false },
+        ];
+    } else {
+        chat_response = `Dựa trên khóa học "${courseTitle}" về ${skillName}, tôi đề xuất lịch trình học và các nhiệm vụ (Checklist) chi tiết dưới đây. Bạn có muốn điều chỉnh thêm không (vd: "tôi chỉ rảnh 15p mỗi ngày")?`;
+    }
+    
+    return {
+        chat_response,
+        checklist
+    };
+};

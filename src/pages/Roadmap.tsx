@@ -13,7 +13,11 @@ import { EditMilestoneModal } from '../components/roadmap/EditMilestoneModal';
 import { AIRoadmapGeneratorModal } from '../components/roadmap/AIRoadmapGeneratorModal';
 import { AISkillGeneratorModal } from '../components/roadmap/AISkillGeneratorModal';
 import { AddSkillModal } from '../components/roadmap/AddSkillModal';
+import { AICourseAnalysisModal } from '../components/learning/AICourseAnalysisModal';
+import { AILearningHub } from '../components/learning/AILearningHub';
+import { CourseDashboard } from '../components/learning/CourseDashboard';
 import type { ChatGeneratedSkill, ChatGeneratedMilestone } from '../services/ai';
+import type { AICourse } from '../services/ai';
 import type { ManualSkillData } from '../components/roadmap/AddSkillModal';
 import { AnalyticsPage } from '../components/pages/AnalyticsPage';
 import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
@@ -53,6 +57,12 @@ export default function Roadmap() {
   const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
   const [isAiSkillGeneratorOpen, setIsAiSkillGeneratorOpen] = useState(false);
   const [isGalaxyModalOpen, setIsGalaxyModalOpen] = useState(false);
+
+  // Learning Hub States
+  const [learningSkill, setLearningSkill] = useState<Skill | null>(null);
+  const [isAnalyzingCourse, setIsAnalyzingCourse] = useState(false);
+  const [activeLearningPage, setActiveLearningPage] = useState<'none' | 'hub' | 'dashboard'>('none');
+  const [selectedCourse, setSelectedCourse] = useState<AICourse | null>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -121,6 +131,50 @@ export default function Roadmap() {
     const updatedData = await ApiService.addMilestoneToRoadmap(newMilestone);
     setRoadmap(updatedData);
     setActiveMilestoneId(newMilestone.id);
+  };
+
+  const handleStartLearning = (skill: Skill) => {
+    setLearningSkill(skill);
+    setIsAnalyzingCourse(true);
+  };
+
+  const handleAnalysisComplete = () => {
+    setIsAnalyzingCourse(false);
+    setActiveLearningPage('hub');
+  };
+
+  const handleApplyChecklist = async (items: string[]) => {
+    if (!roadmap || !learningSkill) return;
+    
+    // Convert new tasks to subtopics
+    const newSubTopics: SubTopic[] = items.map(item => ({
+        id: `st-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+        title: item,
+        isCompleted: false
+    }));
+    
+    // Find the skill and update it in the local state for immediate feedback
+    // Real implementation would use an API call
+    const updatedRoadmap = { ...roadmap };
+    
+    for (const ms of updatedRoadmap.milestones) {
+        for (const cat of ms.categories) {
+            const skillIndex = cat.skills.findIndex(s => s.id === learningSkill.id);
+            if (skillIndex !== -1) {
+                cat.skills[skillIndex].subTopics = [
+                    ...cat.skills[skillIndex].subTopics,
+                    ...newSubTopics
+                ];
+                // Recalculate progress
+                const completed = cat.skills[skillIndex].subTopics.filter(st => st.isCompleted).length;
+                cat.skills[skillIndex].levelPercentage = cat.skills[skillIndex].subTopics.length > 0
+                    ? Math.round((completed / cat.skills[skillIndex].subTopics.length) * 100)
+                    : 0;
+            }
+        }
+    }
+    
+    setRoadmap(updatedRoadmap);
   };
 
   const handleSuccessEvaluation = async () => {
@@ -250,9 +304,6 @@ export default function Roadmap() {
     }
   };
 
-  const handleAIReplaceSkills = async () => {
-    setIsAiSkillGeneratorOpen(true);
-  };
 
   const handleConfirmGeneratedSkills = (skills: ChatGeneratedSkill[], replaceUnlearned: boolean) => {
     if (!roadmap) return;
@@ -413,50 +464,77 @@ export default function Roadmap() {
             <Onboarding onFinish={() => setActivePage('page-roadmap')} />
           )}
           
-          {activePage === 'page-roadmap' && (
-            <div className="roadmap-page-view flex flex-col sm:flex-row h-full overflow-hidden bg-slate-50">
-              <div className="w-full sm:w-[380px] bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl h-full overflow-hidden">
-                <div className="p-6 flex-1 flex flex-col h-full overflow-hidden">
+          {activePage === 'page-roadmap' && (() => {
+            if (activeLearningPage === 'hub' && learningSkill) {
+              return (
+                <AILearningHub 
+                  skill={learningSkill}
+                  onSelectCourse={(course) => {
+                    setSelectedCourse(course);
+                    setActiveLearningPage('dashboard');
+                  }}
+                  onBack={() => setActiveLearningPage('none')}
+                />
+              );
+            }
 
-                  {/* Spider Chart */}
-                  <div className="flex-1 flex flex-col h-full overflow-hidden" id="sec-radar">
-                    <div className="flex justify-between items-end mb-3 shrink-0">
-                      <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wider">Skill Gap Analysis</h2>
-                      <span className="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-md">{roadmap.targetRole || 'Frontend Dev'}</span>
+            if (activeLearningPage === 'dashboard' && learningSkill && selectedCourse) {
+              return (
+                <CourseDashboard 
+                  skill={learningSkill}
+                  course={selectedCourse}
+                  onBack={() => setActiveLearningPage('hub')}
+                  onApplyChecklist={handleApplyChecklist}
+                />
+              );
+            }
+
+            return (
+              <div className="roadmap-page-view flex flex-col sm:flex-row h-full overflow-hidden bg-slate-50">
+                <div className="w-full sm:w-[380px] bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl h-full overflow-hidden">
+                  <div className="p-6 flex-1 flex flex-col h-full overflow-hidden">
+
+                    {/* Spider Chart */}
+                    <div className="flex-1 flex flex-col h-full overflow-hidden" id="sec-radar">
+                      <div className="flex justify-between items-end mb-3 shrink-0">
+                        <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wider">Skill Gap Analysis</h2>
+                        <span className="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-md">{roadmap.targetRole || 'Frontend Dev'}</span>
+                      </div>
+                      <SpiderChart
+                        categories={activeMilestone.categories}
+                        milestoneTitle={activeMilestone.title}
+                      />
                     </div>
-                    <SpiderChart
+                  </div>
+                </div>
+
+                {/* Right Main Content */}
+                <div className="flex-1 flex flex-col h-full relative overflow-hidden bg-slate-50/50">
+                  <div className="shrink-0 bg-white border-b border-slate-200 z-10 shadow-sm">
+                    <RoadmapHeader
+                      milestones={roadmap.milestones}
+                      activeMilestoneId={activeMilestoneId}
+                      onSelectMilestone={handleSelectMilestone}
+                      onEditMilestone={handleOpenEditMilestone}
+                      onDeleteMilestone={handleDeleteMilestone}
+                      onAddMilestone={handleOpenAddMilestone}
+                      onForceCompleteMilestone={handleForceCompleteMilestone}
+                    />
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto hide-scrollbar p-4 sm:p-8" id="sec-checklist">
+                    <SkillCategoryList 
                       categories={activeMilestone.categories}
-                      milestoneTitle={activeMilestone.title}
+                      onToggleCheck={handleToggleCheck}
+                      onAIReplace={() => setIsAiSkillGeneratorOpen(true)}
+                      onManualAdd={() => setIsAddSkillModalOpen(true)}
+                      onLearnSkill={handleStartLearning}
                     />
                   </div>
                 </div>
               </div>
-
-              {/* Right Main Content */}
-              <div className="flex-1 flex flex-col h-full relative overflow-hidden bg-slate-50/50">
-                <div className="shrink-0 bg-white border-b border-slate-200 z-10 shadow-sm">
-                  <RoadmapHeader
-                    milestones={roadmap.milestones}
-                    activeMilestoneId={activeMilestoneId}
-                    onSelectMilestone={handleSelectMilestone}
-                    onEditMilestone={handleOpenEditMilestone}
-                    onDeleteMilestone={handleDeleteMilestone}
-                    onAddMilestone={handleOpenAddMilestone}
-                    onForceCompleteMilestone={handleForceCompleteMilestone}
-                  />
-                </div>
-
-                <div className="flex-1 overflow-y-auto hide-scrollbar p-4 sm:p-8" id="sec-checklist">
-                  <SkillCategoryList 
-                    categories={activeMilestone.categories}
-                    onToggleCheck={handleToggleCheck}
-                    onAIReplace={handleAIReplaceSkills}
-                    onManualAdd={() => setIsAddSkillModalOpen(true)}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+            );
+          })()}
 
           {activePage === 'page-analytics' && (
             <AnalyticsPage milestone={activeMilestone} />
@@ -536,9 +614,16 @@ export default function Roadmap() {
                 onOpenQuiz={handleOpenQuiz}
                 onToggleCheck={handleToggleCheck}
                 onClose={() => setIsGalaxyModalOpen(false)}
+                onLearnSkill={handleStartLearning}
               />
             </div>
           )}
+
+          <AICourseAnalysisModal 
+            isOpen={isAnalyzingCourse}
+            skill={learningSkill}
+            onAnalysisComplete={handleAnalysisComplete}
+          />
         </div>
       </div>
     </div>

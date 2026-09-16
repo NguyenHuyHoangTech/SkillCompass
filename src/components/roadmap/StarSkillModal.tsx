@@ -9,6 +9,7 @@ interface StarSkillModalProps {
   onClose: () => void;
   onOpenQuiz: (skill: Skill, subTopic: SubTopic) => void;
   onToggleCheck: (skill: Skill, subTopic: SubTopic, completed: boolean) => void;
+  onLearnSkill?: (skill: Skill) => void;
 }
 
 export const StarSkillModal: React.FC<StarSkillModalProps> = ({
@@ -18,6 +19,7 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
   onClose,
   onOpenQuiz,
   onToggleCheck,
+  onLearnSkill,
 }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -159,8 +161,16 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="star-modal-footer">
-          <button className="btn-secondary" onClick={onClose}>
+        <div className="star-modal-footer flex-col sm:flex-row gap-3">
+          {onLearnSkill && (
+            <button 
+                onClick={() => onLearnSkill(skill)}
+                className="w-full sm:flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-colors shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2"
+            >
+                <i className="fa-solid fa-graduation-cap"></i> Tìm Khóa Học AI
+            </button>
+          )}
+          <button className="btn-secondary w-full sm:w-auto" onClick={onClose}>
             Close Window
           </button>
         </div>
