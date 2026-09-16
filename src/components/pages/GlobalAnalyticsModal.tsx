@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { X, TrendingUp, Award, Target, BrainCircuit, Activity } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { X, TrendingUp, Award, Target, BrainCircuit, Activity, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import type { Milestone, SkillCategory } from '../../types/roadmap';
 import { SpiderChart } from '../roadmap/SpiderChart';
 
@@ -14,6 +14,12 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
   onClose,
   milestones,
 }) => {
+  const [zoomLevel, setZoomLevel] = useState(1);
+
+  const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 0.25, 2.5));
+  const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.25, 0.5));
+  const handleResetZoom = () => setZoomLevel(1);
+
   const globalCategories = useMemo(() => {
     // 1. Extract all categories with their skills
     const categoryMap = new Map<string, { totalScore: number; count: number }>();
@@ -101,21 +107,37 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-8 bg-slate-50 flex flex-col lg:flex-row gap-8">
+        <div className="flex-1 min-h-0 overflow-y-auto p-6 md:p-8 bg-slate-50 flex flex-col gap-8">
           
-          {/* Left Column: Chart */}
-          <div className="w-full lg:w-1/2 flex flex-col h-full bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+          {/* Top Section: Chart */}
+          <div className="w-full shrink-0 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
             <div className="flex items-center gap-2 mb-6 z-10 relative">
                 <Target className="text-blue-500" size={20} />
                 <h3 className="font-bold text-lg text-slate-800">Biểu đồ Phân tích Năng lực (Theo Mảng)</h3>
             </div>
             
-            <div className="flex-1 min-h-[400px] flex items-center justify-center relative z-10" id="global-spider-chart">
+            <div className="w-full min-h-[400px] flex items-center justify-center relative z-10 py-8 overflow-hidden" id="global-spider-chart">
+                
+                {/* Zoom Controls */}
+                <div className="absolute top-2 right-2 flex flex-col gap-2 z-50 bg-white/80 p-2 rounded-xl border border-slate-200 shadow-sm backdrop-blur-sm">
+                    <button onClick={handleZoomIn} className="p-2 hover:bg-slate-100 rounded-lg text-slate-700 transition-colors" title="Phóng to">
+                        <ZoomIn size={18} />
+                    </button>
+                    <button onClick={handleResetZoom} className="p-2 hover:bg-slate-100 rounded-lg text-slate-700 transition-colors" title="Đặt lại">
+                        <RotateCcw size={18} />
+                    </button>
+                    <button onClick={handleZoomOut} className="p-2 hover:bg-slate-100 rounded-lg text-slate-700 transition-colors" title="Thu nhỏ">
+                        <ZoomOut size={18} />
+                    </button>
+                </div>
+
                 {pseudoCategories.length > 0 ? (
-                    <div className="transform scale-125 origin-center">
+                    <div className="w-full max-w-2xl mx-auto flex justify-center">
                         <SpiderChart 
                             categories={pseudoCategories} 
-                            milestoneTitle="Tất cả chặng đường" 
+                            milestoneTitle="Tất cả chặng đường"
+                            zoomLevel={zoomLevel}
+                            hideUI={true}
                         />
                     </div>
                 ) : (
@@ -127,8 +149,8 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-blue-50 to-transparent opacity-50 pointer-events-none rounded-full blur-3xl"></div>
           </div>
 
-          {/* Right Column: Stats */}
-          <div className="w-full lg:w-1/2 flex flex-col gap-6">
+          {/* Bottom Section: Stats */}
+          <div className="w-full shrink-0 flex flex-col gap-6">
             
             {/* Master Progress */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col sm:flex-row items-center gap-6">

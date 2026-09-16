@@ -5,6 +5,8 @@ import { Globe, ShieldCheck } from 'lucide-react';
 interface SpiderChartProps {
   categories: SkillCategory[];
   milestoneTitle: string;
+  zoomLevel?: number;
+  hideUI?: boolean;
 }
 
 interface CountryMarket {
@@ -15,7 +17,11 @@ interface CountryMarket {
   benchmarks: number[];
 }
 
-export const SpiderChart: React.FC<SpiderChartProps> = ({ categories }) => {
+export const SpiderChart: React.FC<SpiderChartProps> = ({ 
+  categories, 
+  zoomLevel = 1,
+  hideUI = false
+}) => {
   const [selectedMarketId, setSelectedMarketId] = useState<string>('market-vn');
 
   const countryMarkets: CountryMarket[] = [
@@ -127,8 +133,12 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories }) => {
   return (
     <div className="flex flex-col w-full h-full overflow-hidden">
         {/* SVG Radar Chart Wrapper (Fixed Height) */}
-        <div className="mb-6 h-64 shrink-0 relative w-full flex items-center justify-center bg-slate-50/50 rounded-2xl border border-slate-100 p-2">
-           <svg viewBox="0 0 370 370" className="w-full h-full max-w-[280px]">
+        <div className="mb-6 h-64 shrink-0 relative w-full flex items-center justify-center bg-slate-50/50 rounded-2xl border border-slate-100 p-2 overflow-hidden">
+           <svg 
+             viewBox="0 0 370 370" 
+             className="w-full h-full max-w-[280px]"
+             style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'center', transition: 'transform 0.3s ease' }}
+           >
              <defs>
                <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
                  <stop offset="0%" stopColor="rgba(59, 130, 246, 0.45)" />
@@ -245,11 +255,14 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories }) => {
                  </text>
                );
              })}
+           {/* End of SVG */}
            </svg>
-        </div>
+         </div>
 
-        {/* Legend & Country Selector Row */}
-        <div className="flex items-center justify-between gap-4 mb-6 relative shrink-0">
+         {!hideUI && (
+           <>
+             {/* Legend & Country Selector Row */}
+             <div className="flex items-center justify-between gap-4 mb-6 relative shrink-0">
             <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
@@ -314,6 +327,8 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories }) => {
                 </span>
             </div>
         </div>
+           </>
+         )}
     </div>
   );
 };

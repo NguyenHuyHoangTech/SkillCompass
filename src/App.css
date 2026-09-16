@@ -4175,10 +4175,10 @@ body {
   cursor: pointer;
 }
 
-/* Sphere HUD Controls (Placed at bottom right) */
+/* Sphere HUD Controls (Placed at top right) */
 .sphere-hud-controls {
   position: absolute;
-  bottom: 30px;
+  top: 30px;
   right: 30px;
   display: flex;
   flex-direction: column;
