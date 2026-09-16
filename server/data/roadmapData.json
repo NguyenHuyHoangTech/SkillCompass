@@ -179,7 +179,7 @@
                 {
                   "id": "sub-media-font-opt",
                   "title": "Tối Ưu Hình Ảnh (WebP/CDN) & Google Fonts",
-                  description: "Dùng ảnh WebP sắc nét dung lượng nhẹ và tích hợp tối đa 2-3 Font chữ thương hiệu",
+                  "description": "Dùng ảnh WebP sắc nét dung lượng nhẹ và tích hợp tối đa 2-3 Font chữ thương hiệu",
                   "isCompleted": false,
                   "assessmentScore": 0
                 }

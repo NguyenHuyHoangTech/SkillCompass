@@ -2,20 +2,23 @@ import React from 'react';
 import type { Milestone } from '../../types/roadmap';
 import { SpiderChart } from '../roadmap/SpiderChart';
 import { BarChart3, TrendingUp, Award, CheckCircle2 } from 'lucide-react';
+import { useAppContext } from '../../context/AppContext';
 
 interface AnalyticsPageProps {
   milestone: Milestone;
 }
 
 export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ milestone }) => {
+  const { t } = useAppContext();
+
   return (
     <div className="page-view-container">
       <div className="page-header-banner glass-panel">
         <div className="page-title-group">
-          <BarChart3 size={28} className="page-title-icon" />
+          <BarChart3 size={28} className="page-title-icon" style={{ color: 'var(--primary)' }} />
           <div>
-            <h2>Trang Thống Kê & Phân Tích Năng Lực Chuyên Sâu</h2>
-            <p>Báo cáo chỉ số thành thạo chi tiết cho mốc: {milestone.title}</p>
+            <h2>{t('analyticsTitle')}</h2>
+            <p>{t('analyticsSubtitle')} - {milestone.title}</p>
           </div>
         </div>
       </div>
@@ -27,20 +30,20 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ milestone }) => {
 
         <main className="dashboard-content">
           <div className="category-card glass-panel" style={{ padding: '24px' }}>
-            <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <TrendingUp size={20} color="#0284c7" /> Phân Tích Xu Hướng Năng Lực
+            <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary)' }}>
+              <TrendingUp size={20} color="var(--primary)" /> {t('overallProgress')}
             </h3>
             <div className="eval-grid-columns">
               <div className="eval-col strengths">
-                <div className="eval-col-title"><Award size={16} /> Nhóm Kỹ Năng Xuất Sắc</div>
-                <ul>
+                <div className="eval-col-title" style={{ color: 'var(--text-primary)' }}><Award size={16} /> {t('completedSkills')}</div>
+                <ul style={{ color: 'var(--text-secondary)' }}>
                   <li>UI/UX Mindset & Don't Make Me Think (Score: 90%)</li>
                   <li>Chuyên Sâu Flexbox & CSS Grid (Score: 90%)</li>
                 </ul>
               </div>
               <div className="eval-col actions">
-                <div className="eval-col-title"><CheckCircle2 size={16} /> Mục Tiêu Tiếp Theo</div>
-                <ul>
+                <div className="eval-col-title" style={{ color: 'var(--text-primary)' }}><CheckCircle2 size={16} /> {t('totalExercises')}</div>
+                <ul style={{ color: 'var(--text-secondary)' }}>
                   <li>Tối ưu hóa hình ảnh WebP & CDN</li>
                   <li>Chuẩn hóa Accessibility (A11y / WCAG)</li>
                 </ul>

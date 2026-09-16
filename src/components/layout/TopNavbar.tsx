@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Sparkles, Layers, CheckSquare, PieChart } from 'lucide-react';
+import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Sparkles, Layers, CheckSquare, PieChart, Moon, Sun, Globe } from 'lucide-react';
+import { useAppContext } from '../../context/AppContext';
+import { AiConfigMenu } from '../ai/AiConfigMenu';
 
 interface TopNavbarProps {
   userName: string;
@@ -22,12 +24,14 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  const { theme, setTheme, language, setLanguage, t } = useAppContext();
 
   const roadmapSubTabs = [
-    { id: 'view-all', label: 'Tổng Quan Đầy Đủ', icon: Layers },
-    { id: 'view-checklist', label: 'Checklist Kỹ Năng', icon: CheckSquare },
-    { id: 'view-radar', label: 'Biểu Đồ Radar Năng Lực', icon: PieChart },
-    { id: 'view-optimizer', label: 'AI Đánh Giá Giai Đoạn', icon: Sparkles },
+    { id: 'view-all', label: t('fullOverview'), icon: Layers },
+    { id: 'view-checklist', label: t('skillChecklist'), icon: CheckSquare },
+    { id: 'view-radar', label: t('radarChart'), icon: PieChart },
+    { id: 'view-optimizer', label: t('phaseEvaluation'), icon: Sparkles },
   ];
 
   // Close dropdown when clicking outside
@@ -49,18 +53,18 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             className="top-brand-unified-btn"
             onClick={onToggleSidebar}
-            title="Mở menu quản lý & điều hướng"
+            title={t('openMenu')}
           >
             <div className="top-nav-logo-unified glowing-brand-logo">
               <Compass size={24} className="logo-compass-icon" />
             </div>
             <div className="top-nav-title-wrap">
-              <span className="top-brand-name brand-title-glowing">Skill Compass AI</span>
+              <span className="top-brand-name brand-title-glowing">{t('brandName')}</span>
             </div>
           </button>
         </div>
 
-        {/* Center: Horizontal Sub-Tabs inside Header for Section Navigation within Page (Giữ Nguyên Như Cũ) */}
+        {/* Center: Horizontal Sub-Tabs inside Header for Section Navigation within Page */}
         {activePage === 'page-roadmap' && onSelectSubTab && (
           <nav className="top-nav-center-subtabs">
             {roadmapSubTabs.map((tab) => {
@@ -71,7 +75,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   key={tab.id}
                   className={`top-header-subtab-btn ${isActive ? 'active' : ''}`}
                   onClick={() => onSelectSubTab(tab.id)}
-                  title={`Nhảy đến mục: ${tab.label}`}
+                  title={tab.label}
                 >
                   <Icon size={15} />
                   <span>{tab.label}</span>
@@ -81,22 +85,48 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           </nav>
         )}
 
+        {/* Onboarding Steps Portal Target */}
+        {activePage === 'page-onboarding' && (
+          <div id="onboarding-step-portal-target" className="top-nav-center-subtabs" style={{ display: 'flex', alignItems: 'center' }}></div>
+        )}
+
         {/* Right: Featured AI Button & User Dropdown Menu */}
         <div className="top-nav-auth-actions" ref={dropdownRef}>
+          {/* Quick Language Toggle */}
+          <button 
+            className="top-icon-btn"
+            onClick={() => setLanguage(language === 'vi' ? 'en' : 'vi')}
+            title={t('language')}
+          >
+            <Globe size={18} />
+            <span style={{ marginLeft: 4, fontSize: 12, fontWeight: 'bold' }}>{language.toUpperCase()}</span>
+          </button>
+
+          {/* Quick Theme Toggle */}
+          <button 
+            className="top-icon-btn"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            title={t('theme')}
+            style={{ marginRight: 8 }}
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
           {onOpenCareerChat && (
             <button
               className="top-header-ai-featured-btn"
               onClick={onOpenCareerChat}
-              title="Mở AI Advisor Tư Vấn Tương Lai"
+              title={t('aiAdvisor')}
             >
               <Sparkles size={15} className="ai-btn-spark" />
-              <span>AI Advisor</span>
+              <span>{t('aiAdvisor')}</span>
             </button>
           )}
 
+          <AiConfigMenu />
+
           {isLoggedIn ? (
             <div className="user-dropdown-wrapper">
-              {/* Clickable Profile Badge */}
               <button
                 className="top-nav-user-profile-btn"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -113,7 +143,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 />
               </button>
 
-              {/* Sổ ra Dropdown Menu */}
               {isDropdownOpen && (
                 <div className="user-profile-dropdown-menu glass-panel">
                   <div className="dropdown-user-header">
@@ -130,7 +159,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     }}
                   >
                     <LogIn size={16} />
-                    <span>Đăng Nhập Tài Khoản Phụ</span>
+                    <span>{t('subAccountLogin')}</span>
                   </button>
 
                   <button
@@ -141,7 +170,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     }}
                   >
                     <UserPlus size={16} />
-                    <span>Đăng Ký Tài Khoản Mới</span>
+                    <span>{t('newAccountRegister')}</span>
                   </button>
 
                   <div className="dropdown-divider" />
@@ -154,7 +183,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     }}
                   >
                     <LogOut size={16} />
-                    <span>Đăng Xuất</span>
+                    <span>{t('logout')}</span>
                   </button>
                 </div>
               )}
@@ -166,14 +195,14 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 onClick={() => setIsLoggedIn(true)}
               >
                 <LogIn size={15} />
-                <span>Đăng Nhập</span>
+                <span>{t('login')}</span>
               </button>
               <button
                 className="btn-auth-register"
                 onClick={() => setIsLoggedIn(true)}
               >
                 <UserPlus size={15} />
-                <span>Đăng Ký</span>
+                <span>{t('register')}</span>
               </button>
             </div>
           )}

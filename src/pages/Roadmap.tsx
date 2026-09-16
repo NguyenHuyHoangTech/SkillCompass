@@ -13,6 +13,7 @@ import { AnalyticsPage } from '../components/pages/AnalyticsPage';
 import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
 import { AllSkillsPage } from '../components/pages/AllSkillsPage';
 import { SettingsPage } from '../components/pages/SettingsPage';
+import Onboarding from './Onboarding';
 import '../App.css';
 
 export default function Roadmap() {
@@ -20,7 +21,7 @@ export default function Roadmap() {
   const [activeMilestoneId, setActiveMilestoneId] = useState<string>('ms-stage-1');
 
   // Page Routing State (Sidebar Vertical Tabs switch DIFFERENT PAGES)
-  const [activePage, setActivePage] = useState<string>('page-roadmap');
+  const [activePage, setActivePage] = useState<string>('page-onboarding');
 
   // Sub-Tab Navigation inside Roadmap Page (Horizontal Tabs in Header)
   const [activeSubTab, setActiveSubTab] = useState<string>('view-all');
@@ -153,6 +154,10 @@ export default function Roadmap() {
 
         {/* 3. Main Viewport Container */}
         <div className="main-viewport">
+          {activePage === 'page-onboarding' && (
+            <Onboarding onFinish={() => setActivePage('page-roadmap')} />
+          )}
+
           {activePage === 'page-roadmap' && (
             <div className="roadmap-page-view">
               {/* Horizontal Milestone Tabs */}

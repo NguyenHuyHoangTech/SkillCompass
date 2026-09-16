@@ -1,12 +1,10 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
 import { 
-    updateAIConfig,
-    testGeminiKey,
-    getAvailableModels,
-    generateAssessmentQuestion, 
+    analyzeUserSkillsOverview, 
     evaluateAssessmentAnswer,
     generateDynamicRIASECCards,
     suggestIkigaiCareers,
@@ -18,66 +16,18 @@ import {
     type DualRoadmapsResponse,
     type Milestone
 } from '../services/ai';
+import { convertToUserRoadmap } from '../utils/roadmapAdapter';
 
 export default function Onboarding() {
     const navigate = useNavigate();
     const { state, setSkills, setCareer, setMilestones } = useAppContext();
     const [step, setStep] = useState(1);
-    
-    // API Config State
-    const [showApiConfig, setShowApiConfig] = useState(false);
-    const [tempApiKey, setTempApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
-    const [tempModel, setTempModel] = useState(localStorage.getItem('gemini_model_name') || 'gemini-1.5-flash');
-    
-    // API Key Test State
-    const [isKeyValid, setIsKeyValid] = useState(!!localStorage.getItem('gemini_api_key'));
-    const [keyTestResult, setKeyTestResult] = useState<{success: boolean, message: string} | null>(null);
-    const [isTestingKey, setIsTestingKey] = useState(false);
-    const [availableModels, setAvailableModels] = useState<string[]>([]);
-    
-    // Model Test State
-    const [testMessage, setTestMessage] = useState("Xin chào, bạn có hoạt động không?");
-    const [aiReply, setAiReply] = useState("");
-    const [isSendingMessage, setIsSendingMessage] = useState(false);
-
-    const handleVerifyKey = async () => {
-        setIsTestingKey(true);
-        setKeyTestResult(null);
-        const res = await getAvailableModels(tempApiKey);
-        setKeyTestResult({ success: res.success, message: res.success ? `Kết nối thành công! Đã tải ${res.models.length} models.` : res.message });
-        setIsKeyValid(res.success);
-        if (res.success && res.models.length > 0) {
-            setAvailableModels(res.models);
-            
-            let nextModel = tempModel;
-            if (!res.models.includes(tempModel)) {
-                nextModel = res.models.includes('gemini-2.5-flash') ? 'gemini-2.5-flash' : res.models[0];
-            }
-            
-            setTempModel(nextModel);
-            updateAIConfig(tempApiKey, nextModel);
-        }
-        setIsTestingKey(false);
-    };
-
-    const handleSendMessage = async () => {
-        setIsSendingMessage(true);
-        setAiReply("");
-        const res = await testGeminiKey(tempApiKey, tempModel, testMessage);
-        if (res.success) {
-            updateAIConfig(tempApiKey, tempModel);
-            if (res.reply) setAiReply(res.reply);
-        } else {
-            setAiReply(`Lỗi: ${res.message}`);
-        }
-        setIsSendingMessage(false);
-    };
     const [localSkills, setLocalSkills] = useState<string[]>(state.skills || []);
     const [customSkill, setCustomSkill] = useState('');
     
     // Assessment state (Step 2)
-    const [currentTestIndex, setCurrentTestIndex] = useState(0);
-    const [assessQuestion, setAssessQuestion] = useState('Đang tải câu hỏi...');
+    const [marketEvaluation, setMarketEvaluation] = useState('');
+    const [assessQuestion, setAssessQuestion] = useState('Đang phân tích kỹ năng của bạn...');
     const [assessAnswer, setAssessAnswer] = useState('');
     const [assessFeedback, setAssessFeedback] = useState('');
     const [isAssessing, setIsAssessing] = useState(false);
@@ -134,36 +84,28 @@ export default function Onboarding() {
         }
         setSkills(localSkills);
         setStep(2);
-        loadAssessmentQuestion(0);
-    };
-
-    const loadAssessmentQuestion = async (index: number) => {
-        setAssessQuestion('Đang tải câu hỏi...');
+        
+        setAssessQuestion('Đang phân tích kỹ năng của bạn...');
         setAssessAnswer('');
         setAssessFeedback('');
-        const q = await generateAssessmentQuestion(localSkills[index]);
-        setAssessQuestion(q);
+        setMarketEvaluation('');
+        
+        const overview = await analyzeUserSkillsOverview(localSkills);
+        setMarketEvaluation(overview.market_level_evaluation);
+        setAssessQuestion(overview.technical_assessment_question);
+        setIkigaiQuestions(overview.ikigai_questions);
     };
 
     const submitAssessmentAnswer = async () => {
         if (!assessAnswer.trim()) return;
         setIsAssessing(true);
-        const fb = await evaluateAssessmentAnswer(localSkills[currentTestIndex], assessAnswer);
+        const fb = await evaluateAssessmentAnswer(localSkills.join(', '), assessAnswer);
         setAssessFeedback(fb);
         setIsAssessing(false);
     };
 
     const nextAssessment = async () => {
-        if (currentTestIndex < localSkills.length - 1) {
-            setCurrentTestIndex(prev => prev + 1);
-            loadAssessmentQuestion(currentTestIndex + 1);
-        } else {
-            setStep(3); // Go to Ikigai Questions
-            setIsGeneratingIkigaiQuestions(true);
-            const questions = await generateIkigaiQuestions(localSkills);
-            setIkigaiQuestions(questions);
-            setIsGeneratingIkigaiQuestions(false);
-        }
+        setStep(3); // Go to Ikigai Questions directly (already pre-generated)
     };
 
     const submitIkigaiQuestions = async () => {
@@ -260,139 +202,57 @@ export default function Onboarding() {
     const finalizeAndGoToRoadmap = () => {
         if (!dualRoadmaps) return;
         const finalMilestones = selectedOption === 1 ? dualRoadmaps.option1.milestones : dualRoadmaps.option2.milestones;
+        
+        const fullRoadmap = convertToUserRoadmap(finalMilestones, localCareer, assessFeedback, localSkills);
+        localStorage.setItem('skill_compass_roadmap', JSON.stringify(fullRoadmap));
+        
         setMilestones(finalMilestones);
         navigate('/roadmap');
     };
 
+    const handleBack = () => {
+        if (step > 1) {
+            if (step === 5) {
+                setSwipeIndex(0);
+            }
+            setStep(prev => prev - 1);
+        }
+    };
+
     return (
         <div className="h-screen flex flex-col relative overflow-hidden bg-[#f8fafc]">
-            {/* Header / Nav */}
-            <header className="bg-white border-b border-slate-200 px-6 py-4 shrink-0 flex justify-between items-center z-10 relative shadow-sm">
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-md">
-                        <i className="fa-solid fa-map-location-dot"></i>
-                    </div>
-                    <h1 className="font-bold text-lg text-slate-800 tracking-tight">SkillPath <span className="text-indigo-600">AI</span></h1>
-                </div>
-                
-                <div className="hidden lg:flex items-center gap-1 text-[10px] font-medium text-slate-400">
-                    <span className={step >= 1 ? "text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full font-bold" : "px-2 py-1"}>1. Kỹ năng</span><i className="fa-solid fa-chevron-right text-[8px]"></i>
-                    <span className={step >= 2 ? "text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full font-bold" : "px-2 py-1"}>2. Test</span><i className="fa-solid fa-chevron-right text-[8px]"></i>
-                    <span className={step >= 3 ? "text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full font-bold" : "px-2 py-1"}>3. Ikigai</span><i className="fa-solid fa-chevron-right text-[8px]"></i>
-                    <span className={step >= 4 ? "text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full font-bold" : "px-2 py-1"}>4. RIASEC</span><i className="fa-solid fa-chevron-right text-[8px]"></i>
-                    <span className={step >= 6 ? "text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full font-bold" : "px-2 py-1"}>5. Mục tiêu</span><i className="fa-solid fa-chevron-right text-[8px]"></i>
-                    <span className={step >= 7 ? "text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full font-bold" : "px-2 py-1"}>6. Ngữ cảnh</span><i className="fa-solid fa-chevron-right text-[8px]"></i>
-                    <span className={step >= 8 ? "text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full font-bold" : "px-2 py-1"}>7. Lộ trình</span>
-                </div>
-
-                <div className="relative">
-                    <button 
-                        onClick={() => setShowApiConfig(!showApiConfig)}
-                        className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors flex items-center gap-2"
-                        title="Cấu hình AI"
-                    >
-                        <i className="fa-solid fa-gear"></i>
-                        <span className="text-sm font-medium hidden sm:inline">AI Config</span>
-                    </button>
-
-                    {showApiConfig && (
-                        <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-50">
-                            <h3 className="text-sm font-bold text-slate-800 mb-3">Cấu hình Gemini API</h3>
-                            
-                            <div className="space-y-4">
-                                {/* Step 1: Input & Test Key */}
-                                <div>
-                                    <label className="block text-xs font-medium text-slate-500 mb-1">API Key</label>
-                                    <div className="flex gap-2">
-                                        <input 
-                                            type="password" 
-                                            value={tempApiKey}
-                                            onChange={(e) => {
-                                                setTempApiKey(e.target.value);
-                                                setIsKeyValid(false);
-                                                setKeyTestResult(null);
-                                            }}
-                                            placeholder="AIzaSy..." 
-                                            className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                                        />
-                                        <button 
-                                            onClick={handleVerifyKey}
-                                            disabled={isTestingKey || !tempApiKey}
-                                            className="px-3 bg-slate-900 text-white text-xs font-medium rounded-lg hover:bg-slate-800 disabled:opacity-50 whitespace-nowrap"
-                                        >
-                                            {isTestingKey ? <i className="fa-solid fa-spinner fa-spin"></i> : "Test Key"}
-                                        </button>
-                                    </div>
-                                    {keyTestResult && (
-                                        <div className={`mt-2 text-[11px] p-2 rounded-md ${keyTestResult.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-                                            <i className={`fa-solid ${keyTestResult.success ? 'fa-check-circle' : 'fa-triangle-exclamation'} mr-1`}></i>
-                                            {keyTestResult.message}
-                                        </div>
-                                    )}
-                                </div>
-                                
-                                {/* Step 2: Select Model & Test Message (Only visible if Key is valid) */}
-                                {isKeyValid && (
-                                    <div className="border-t border-slate-100 pt-3 space-y-3">
-                                        <div>
-                                            <label className="block text-xs font-medium text-slate-500 mb-1">Chọn Model</label>
-                                            <select 
-                                                value={tempModel}
-                                                onChange={(e) => {
-                                                    setTempModel(e.target.value);
-                                                    updateAIConfig(tempApiKey, e.target.value);
-                                                }}
-                                                className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                                            >
-                                                {availableModels.length > 0 ? (
-                                                    availableModels.map(m => (
-                                                        <option key={m} value={m}>{m}</option>
-                                                    ))
-                                                ) : (
-                                                    <option value={tempModel}>{tempModel}</option>
-                                                )}
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-xs font-medium text-slate-500 mb-1">Tin nhắn test Model</label>
-                                            <textarea 
-                                                value={testMessage}
-                                                onChange={(e) => setTestMessage(e.target.value)}
-                                                className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none h-16"
-                                                placeholder="Nhập tin nhắn bất kỳ..."
-                                            />
-                                        </div>
-
-                                        <button 
-                                            onClick={handleSendMessage}
-                                            disabled={isSendingMessage || !testMessage}
-                                            className="w-full bg-indigo-600 text-white text-sm font-medium py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
-                                        >
-                                            {isSendingMessage ? <i className="fa-solid fa-spinner fa-spin"></i> : <i className="fa-solid fa-paper-plane"></i>}
-                                            Gửi Tin Nhắn Test
-                                        </button>
-                                        
-                                        {aiReply && (
-                                            <div className="text-xs p-3 rounded-md bg-indigo-50 border border-indigo-100 text-slate-700 max-h-40 overflow-y-auto whitespace-pre-wrap">
-                                                <strong className="text-indigo-700 block mb-1"><i className="fa-solid fa-robot mr-1"></i> AI Trả lời:</strong>
-                                                {aiReply}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+            {/* Steps Progress Portal to TopNavbar */}
+            {document.getElementById('onboarding-step-portal-target') && createPortal(
+                <div className="flex items-center mx-4">
+                    {step > 1 && (
+                        <button 
+                            onClick={handleBack} 
+                            className="mr-3 flex items-center justify-center w-8 h-8 rounded-full bg-white text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm border border-slate-200"
+                            title="Quay lại bước trước"
+                        >
+                            <i className="fa-solid fa-arrow-left"></i>
+                        </button>
                     )}
-                </div>
-            </header>
+                    <div className="hidden lg:flex items-center gap-1 text-[11.5px] font-semibold text-slate-500 bg-white/80 backdrop-blur-sm px-4 py-1.5 rounded-full shadow-sm border border-slate-100">
+                        <span className={step >= 1 ? "text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full font-bold" : "px-2.5 py-1"}>1. Kỹ năng</span><i className="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
+                        <span className={step >= 2 ? "text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full font-bold" : "px-2.5 py-1"}>2. Test</span><i className="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
+                        <span className={step >= 3 ? "text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full font-bold" : "px-2.5 py-1"}>3. Ikigai</span><i className="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
+                        <span className={step >= 4 ? "text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full font-bold" : "px-2.5 py-1"}>4. RIASEC</span><i className="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
+                        <span className={step >= 6 ? "text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full font-bold" : "px-2.5 py-1"}>5. Mục tiêu</span><i className="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
+                        <span className={step >= 7 ? "text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full font-bold" : "px-2.5 py-1"}>6. Ngữ cảnh</span><i className="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
+                        <span className={step >= 8 ? "text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full font-bold" : "px-2.5 py-1"}>7. Lộ trình</span>
+                    </div>
+                </div>,
+                document.getElementById('onboarding-step-portal-target')!
+            )}
+
 
             {/* STEP 1: CHỌN KỸ NĂNG */}
             {step === 1 && (
                 <div className="absolute inset-0 top-[73px] w-full max-w-3xl mx-auto p-4 sm:p-6 flex flex-col justify-center step-enter">
                     <div className="text-center mb-8">
-                        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-3">Bạn đang mang gì trong "Balo" của mình?</h2>
-                        <p className="text-slate-500 text-sm sm:text-base">Hãy chọn hoặc nhập các kỹ năng bạn ĐÃ CÓ. AI sẽ dùng nó làm nền tảng kiểm tra.</p>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-3">Hành trang Kỹ năng</h2>
+                        <p className="text-slate-500 text-sm sm:text-base">Chọn hoặc nhập các kỹ năng bạn đang có.</p>
                     </div>
 
                     <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 sm:p-8 overflow-y-auto hide-scrollbar max-h-[65vh]">
@@ -443,15 +303,25 @@ export default function Onboarding() {
             {step === 2 && (
                 <div className="absolute inset-0 top-[73px] w-full max-w-2xl mx-auto p-4 sm:p-6 flex flex-col justify-center step-enter">
                     <div className="text-center mb-6">
-                        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Đánh giá Năng lực Nhanh</h2>
-                        <p className="text-slate-500 text-sm">AI cần xác thực trình độ thực tế của bạn để xây dựng lộ trình chuẩn xác nhất.</p>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Đánh giá Năng lực</h2>
+                        <p className="text-slate-500 text-sm">Kiểm tra thực chiến để định vị trình độ của bạn.</p>
                     </div>
 
                     <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 relative overflow-y-auto hide-scrollbar max-h-[75vh]">
                         <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
-                            <h3 className="font-bold text-xl text-indigo-700">{localSkills[currentTestIndex]}</h3>
-                            <span className="bg-indigo-50 text-indigo-600 border border-indigo-100 text-xs font-bold px-3 py-1.5 rounded-full">Kỹ năng {currentTestIndex + 1}/{localSkills.length}</span>
+                            <h3 className="font-bold text-xl text-indigo-700">Kiểm tra thực chiến</h3>
+                            <span className="bg-indigo-50 text-indigo-600 border border-indigo-100 text-xs font-bold px-3 py-1.5 rounded-full">{localSkills.length} kỹ năng</span>
                         </div>
+
+                        {marketEvaluation && (
+                            <div className="mb-6 bg-blue-50 border border-blue-200 rounded-xl p-4 flex gap-3 items-start">
+                                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5"><i className="fa-solid fa-chart-pie"></i></div>
+                                <div>
+                                    <h4 className="font-bold text-blue-800 text-sm">Nhận xét sơ bộ từ thị trường:</h4>
+                                    <p className="text-sm text-blue-700 mt-1 whitespace-pre-wrap">{marketEvaluation}</p>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="mb-5">
                             <p className="text-slate-700 font-medium leading-relaxed bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 text-sm">
@@ -469,7 +339,7 @@ export default function Onboarding() {
                                 <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5"><i className="fa-solid fa-check"></i></div>
                                 <div>
                                     <h4 className="font-bold text-emerald-800 text-sm">Nhận xét từ AI:</h4>
-                                    <p className="text-sm text-emerald-700 mt-1">{assessFeedback}</p>
+                                    <p className="text-sm text-emerald-700 mt-1 whitespace-pre-wrap">{assessFeedback}</p>
                                 </div>
                             </div>
                         )}
@@ -481,7 +351,7 @@ export default function Onboarding() {
                                 </button>
                             ) : (
                                 <button onClick={nextAssessment} className="w-full sm:w-auto bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2 shadow-md animate-bounce">
-                                    {currentTestIndex === localSkills.length - 1 ? 'Hoàn tất & Tiếp tục' : 'Kỹ năng tiếp theo'} <i className="fa-solid fa-arrow-right"></i>
+                                    Hoàn tất & Tiếp tục <i className="fa-solid fa-arrow-right"></i>
                                 </button>
                             )}
                         </div>
@@ -492,18 +362,11 @@ export default function Onboarding() {
             {/* STEP 3: IKIGAI QUESTIONS (LOVE & MONEY) */}
             {step === 3 && (
                 <div className="absolute inset-0 top-[73px] w-full max-w-2xl mx-auto p-4 sm:p-6 flex flex-col justify-center step-enter">
-                    {isGeneratingIkigaiQuestions ? (
-                        <div className="flex flex-col items-center justify-center h-full space-y-6 text-center px-4">
-                            <i className="fa-solid fa-circle-notch fa-spin text-5xl text-indigo-500 mb-4"></i>
-                            <h2 className="text-xl sm:text-2xl font-bold text-slate-800">AI đang thiết kế câu hỏi cá nhân hóa cho bạn...</h2>
-                            <p className="text-slate-500">Dựa trên triết lý Ikigai và các kỹ năng bạn vừa chọn</p>
+                    <>
+                        <div className="text-center mb-6">
+                            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Đi tìm Ikigai</h2>
+                            <p className="text-slate-500 text-sm">Trả lời 2 câu hỏi để AI hiểu Đam mê & Kỳ vọng thu nhập của bạn.</p>
                         </div>
-                    ) : (
-                        <>
-                            <div className="text-center mb-6">
-                                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Đi tìm Ikigai của bạn</h2>
-                                <p className="text-slate-500 text-sm">AI đã phân tích kỹ năng của bạn. Hãy trả lời thêm 2 câu hỏi sau để chúng tôi hiểu Đam mê và Kỳ vọng thu nhập của bạn.</p>
-                            </div>
 
                             <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 relative overflow-y-auto hide-scrollbar max-h-[75vh]">
                                 <div className="space-y-6">
@@ -535,7 +398,6 @@ export default function Onboarding() {
                                 </div>
                             </div>
                         </>
-                    )}
                 </div>
             )}
 
@@ -552,7 +414,7 @@ export default function Onboarding() {
                         <>
                             <div className="text-center mb-8">
                                 <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-3">Khám phá Tính cách (RIASEC)</h2>
-                                <p className="text-slate-500">Vuốt <b className="text-emerald-500">Phải (Có)</b> hoặc <b className="text-red-500">Trái (Không)</b>. AI đang phân tích 6 khía cạnh tâm lý của bạn.</p>
+                                <p className="text-slate-500 text-sm">Vuốt để chọn tính cách phù hợp.</p>
                             </div>
 
                             {swipeIndex < dynamicRiasecCards.length && (
@@ -604,8 +466,8 @@ export default function Onboarding() {
             {step === 5 && (
                 <div className="absolute inset-0 top-[73px] w-full max-w-2xl mx-auto p-4 sm:p-6 flex flex-col justify-center step-enter">
                     <div className="text-center mb-6">
-                        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Chia sẻ tự do (Tuỳ chọn)</h2>
-                        <p className="text-slate-500 text-sm">Bạn có muốn bổ sung thêm định hướng nghề nghiệp, hay còn điều gì trăn trở muốn AI phân tích không?</p>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Bổ sung định hướng (Tuỳ chọn)</h2>
+                        <p className="text-slate-500 text-sm">Chia sẻ thêm để AI phân tích tốt hơn.</p>
                     </div>
 
                     <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 relative">
@@ -669,29 +531,13 @@ export default function Onboarding() {
                                 ))}
                             </div>
                             
-                            <div className="pt-6 mt-6 border-t border-slate-200 bg-slate-50 p-6 rounded-2xl flex flex-col gap-5">
-                                <div>
-                                    <h4 className="font-bold text-slate-700 mb-1">Không thích các gợi ý trên?</h4>
-                                    <p className="text-xs text-slate-500">Cung cấp thêm thông tin để AI gợi ý lại, hoặc tự định hướng mục tiêu cụ thể của bạn.</p>
-                                </div>
-                                
-                                <div className="flex flex-col sm:flex-row gap-4 w-full">
-                                    <div className="flex-1 flex flex-col gap-2">
-                                        <span className="text-xs font-bold text-indigo-600">Cách 1: Yêu cầu AI gợi ý hướng khác</span>
-                                        <div className="flex gap-2">
-                                            <input type="text" placeholder="VD: Tôi muốn làm các mảng liên quan đến Data hơn..." className="flex-1 bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-indigo-500 transition-all shadow-inner" value={suggestionFeedback} onChange={(e) => setSuggestionFeedback(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && refineSuggestions()} />
-                                            <button onClick={refineSuggestions} className="bg-indigo-100 text-indigo-700 px-5 py-2.5 rounded-xl font-bold hover:bg-indigo-600 hover:text-white transition-colors shadow-sm whitespace-nowrap"><i className="fa-solid fa-arrows-rotate mr-2"></i>Gợi ý lại</button>
-                                        </div>
-                                    </div>
-
-                                    <div className="hidden sm:block w-px bg-slate-200"></div>
-
-                                    <div className="flex-1 flex flex-col gap-2">
-                                        <span className="text-xs font-bold text-emerald-600">Cách 2: Tự nhập mục tiêu bạn đã chốt</span>
-                                        <div className="flex gap-2">
-                                            <input type="text" placeholder="VD: Data Analyst..." className="flex-1 bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-emerald-500 transition-all shadow-inner" value={localCareer} onChange={(e) => setLocalCareer(e.target.value)} />
-                                            <button onClick={() => selectCareer(localCareer)} className="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-md whitespace-nowrap">Chọn</button>
-                                        </div>
+                            <div className="pt-6 mt-6 border-t border-slate-200">
+                                <h4 className="font-bold text-slate-700 mb-3 text-sm"><i className="fa-solid fa-wand-magic-sparkles text-indigo-500 mr-2"></i>Không ưng ý? Tự điều hướng AI:</h4>
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                    <input type="text" placeholder="Nhập mục tiêu cụ thể, hoặc yêu cầu AI đổi hướng (VD: Data Analyst)..." className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-indigo-500 transition-all shadow-inner" value={suggestionFeedback} onChange={(e) => { setSuggestionFeedback(e.target.value); setLocalCareer(e.target.value); }} onKeyDown={(e) => e.key === 'Enter' && refineSuggestions()} />
+                                    <div className="flex gap-2">
+                                        <button onClick={refineSuggestions} className="flex-1 sm:flex-none bg-indigo-100 text-indigo-700 px-4 py-2.5 rounded-xl font-bold hover:bg-indigo-600 hover:text-white transition-colors shadow-sm text-sm whitespace-nowrap"><i className="fa-solid fa-arrows-rotate mr-2"></i>AI Gợi ý lại</button>
+                                        <button onClick={() => selectCareer(localCareer)} className="flex-1 sm:flex-none bg-slate-900 text-white px-4 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-md text-sm whitespace-nowrap">Chốt mục tiêu</button>
                                     </div>
                                 </div>
                             </div>
@@ -703,44 +549,48 @@ export default function Onboarding() {
             {/* STEP 7: CONTEXT TRIANGLE FORM */}
             {step === 7 && (
                 <div className="absolute inset-0 top-[73px] w-full max-w-2xl mx-auto p-4 sm:p-6 flex flex-col justify-center step-enter">
-                    <div className="text-center mb-6">
-                        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Tam Giác Ngữ Cảnh</h2>
-                        <p className="text-slate-500 text-sm">Cung cấp 3 thông tin thực tế này để AI xây dựng Lộ trình khả thi nhất cho bạn đối với mục tiêu: <b>{localCareer}</b></p>
+                    <div className="text-center mb-6 relative">
+                        <button onClick={handleBack} className="absolute left-0 top-0 sm:-left-4 text-slate-400 hover:text-indigo-600 w-10 h-10 flex items-center justify-center rounded-xl hover:bg-slate-100 transition-all">
+                             <i className="fa-solid fa-arrow-left text-xl"></i>
+                        </button>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Cung cấp Ngữ cảnh</h2>
+                        <p className="text-slate-500 text-sm">Cung cấp 3 thông tin để thiết kế lộ trình cho mục tiêu: <b>{localCareer}</b></p>
                     </div>
 
                     <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 relative space-y-6">
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2"><i className="fa-regular fa-clock text-indigo-500 mr-2"></i>Quỹ thời gian (Time Commitment)</label>
-                            <select className="w-full border border-slate-300 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition-all bg-slate-50"
-                                value={contextTriangle.time} onChange={(e) => setContextTriangle({...contextTriangle, time: e.target.value})}>
-                                <option value="">-- Chọn thời gian bạn có thể dành ra --</option>
-                                <option value="Rảnh rỗi, có thể học toàn thời gian (40h/tuần)">Học toàn thời gian (40h/tuần)</option>
-                                <option value="Chỉ rảnh buổi tối và cuối tuần (15-20h/tuần)">Rảnh buổi tối & cuối tuần (15-20h/tuần)</option>
-                                <option value="Khá bận rộn, chỉ học được rất ít (5-10h/tuần)">Khá bận rộn (5-10h/tuần)</option>
-                            </select>
+                            <label className="block text-sm font-bold text-slate-700 mb-3"><i className="fa-regular fa-clock text-indigo-500 mr-2"></i>Quỹ thời gian</label>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                {['Toàn thời gian (40h/tuần)', 'Rảnh tối & cuối tuần (15-20h/t)', 'Bận rộn (5-10h/tuần)'].map(opt => (
+                                    <button key={opt} onClick={() => setContextTriangle({...contextTriangle, time: opt})}
+                                        className={`px-3 py-2.5 rounded-xl border text-xs font-bold transition-all text-left ${contextTriangle.time === opt ? 'bg-indigo-600 text-white border-indigo-500 shadow-md' : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-indigo-400 hover:bg-white'}`}>
+                                        {opt}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                        
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2"><i className="fa-solid fa-graduation-cap text-indigo-500 mr-2"></i>Trạng thái học vấn (Academic Status)</label>
-                            <select className="w-full border border-slate-300 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition-all bg-slate-50"
-                                value={contextTriangle.academic} onChange={(e) => setContextTriangle({...contextTriangle, academic: e.target.value})}>
-                                <option value="">-- Chọn tình trạng hiện tại --</option>
-                                <option value="Sinh viên năm 1-2 đúng chuyên ngành IT">Sinh viên năm 1-2 đúng ngành IT</option>
-                                <option value="Sinh viên năm 3-4 chuẩn bị thực tập">Sinh viên năm 3-4 chuẩn bị thực tập/ra trường</option>
-                                <option value="Người làm trái ngành muốn chuyển hướng sang IT">Trái ngành muốn chuyển sang IT</option>
-                                <option value="Đã đi làm IT muốn nâng cao tay nghề">Đã đi làm IT, muốn nâng cao năng lực</option>
-                            </select>
+                            <label className="block text-sm font-bold text-slate-700 mb-3"><i className="fa-solid fa-graduation-cap text-indigo-500 mr-2"></i>Trạng thái học vấn</label>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {['Năm 1-2 đúng ngành IT', 'Năm 3-4 chuẩn bị thực tập', 'Trái ngành chuyển sang IT', 'Đã đi làm IT, muốn nâng cấp'].map(opt => (
+                                    <button key={opt} onClick={() => setContextTriangle({...contextTriangle, academic: opt})}
+                                        className={`px-3 py-2.5 rounded-xl border text-xs font-bold transition-all text-left ${contextTriangle.academic === opt ? 'bg-indigo-600 text-white border-indigo-500 shadow-md' : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-indigo-400 hover:bg-white'}`}>
+                                        {opt}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2"><i className="fa-solid fa-wallet text-indigo-500 mr-2"></i>Nguồn lực / Tài chính (Budget)</label>
-                            <select className="w-full border border-slate-300 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition-all bg-slate-50"
-                                value={contextTriangle.budget} onChange={(e) => setContextTriangle({...contextTriangle, budget: e.target.value})}>
-                                <option value="">-- Chọn khả năng đầu tư --</option>
-                                <option value="Muốn học hoàn toàn miễn phí (Tự học qua Youtube, Docs)">Hoàn toàn miễn phí (Youtube, Docs...)</option>
-                                <option value="Có thể mua các khóa học online giá rẻ (Udemy, Coursera)">Đầu tư khóa học online (Udemy, Coursera...)</option>
-                                <option value="Sẵn sàng chi trả cho chứng chỉ quốc tế và bootcamp đắt tiền">Sẵn sàng chi cho Bootcamp & Chứng chỉ quốc tế đắt tiền</option>
-                            </select>
+                            <label className="block text-sm font-bold text-slate-700 mb-3"><i className="fa-solid fa-wallet text-indigo-500 mr-2"></i>Ngân sách học tập</label>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                {['Hoàn toàn miễn phí (Tự học)', 'Sẵn sàng mua khóa học rẻ', 'Đầu tư mạnh để học nhanh'].map(opt => (
+                                    <button key={opt} onClick={() => setContextTriangle({...contextTriangle, budget: opt})}
+                                        className={`px-3 py-2.5 rounded-xl border text-xs font-bold transition-all text-left ${contextTriangle.budget === opt ? 'bg-indigo-600 text-white border-indigo-500 shadow-md' : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-indigo-400 hover:bg-white'}`}>
+                                        {opt}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
 
                         <div className="flex justify-end gap-3 mt-4 pt-6 border-t border-slate-100">
@@ -772,8 +622,8 @@ export default function Onboarding() {
                             
                             <div className="bg-white p-4 sm:p-5 flex flex-col sm:flex-row justify-between items-center border-b border-slate-200 shrink-0 shadow-sm z-10">
                                 <div>
-                                    <h2 className="text-xl font-extrabold text-slate-800">Chọn 1 trong 2 Lộ trình</h2>
-                                    <p className="text-xs text-slate-500 mt-1">AI đã thiết kế 2 hướng đi dựa trên Hồ sơ cá nhân của bạn</p>
+                                    <h2 className="text-xl font-extrabold text-slate-800">2 Lộ trình cho bạn</h2>
+                                    <p className="text-xs text-slate-500 mt-1">Chọn một hướng đi phù hợp nhất</p>
                                 </div>
                                 <button onClick={finalizeAndGoToRoadmap} className="mt-3 sm:mt-0 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-md">
                                     Chốt Lộ trình {selectedOption} & Bắt đầu <i className="fa-solid fa-play"></i>

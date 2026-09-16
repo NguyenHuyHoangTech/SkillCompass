@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
-import Onboarding from './pages/Onboarding';
 import Roadmap from './pages/Roadmap';
 
 function App() {
@@ -8,8 +7,7 @@ function App() {
     <AppProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Onboarding />} />
-          <Route path="/roadmap" element={<Roadmap />} />
+          <Route path="/" element={<Roadmap />} />
         </Routes>
       </BrowserRouter>
     </AppProvider>

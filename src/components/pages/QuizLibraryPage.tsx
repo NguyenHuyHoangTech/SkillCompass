@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { Milestone, Skill, SubTopic, QuizEvaluationResponse } from '../../types/roadmap';
 import { ApiService } from '../../services/apiService';
 import { ExerciseAIChatbox } from '../ai/ExerciseAIChatbox';
+import { useAppContext } from '../../context/AppContext';
 import {
   BookOpenCheck,
   Bot,
@@ -21,6 +22,7 @@ interface QuizLibraryPageProps {
 }
 
 export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) => {
+  const { t } = useAppContext();
   const [activeExercise, setActiveExercise] = useState<{
     milestone: Milestone;
     skill: Skill;
@@ -66,31 +68,28 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
       {/* 1. Page Header Banner */}
       <div className="page-header-banner glass-panel">
         <div className="page-title-group">
-          <BookOpenCheck size={30} className="page-title-icon" style={{ color: '#0284c7' }} />
+          <BookOpenCheck size={30} className="page-title-icon" style={{ color: 'var(--primary)' }} />
           <div>
-            <h2>🤖 Trung Tâm Bài Tập Thực Tế & AI Coach Hướng Dẫn</h2>
-            <p>
-              Không gian thực hành tình huống dự án thực tế. Có chatbox AI riêng đồng hành hướng dẫn từng bước, sửa lỗi code và chấm điểm bài làm của bạn.
-            </p>
+            <h2>{t('exerciseTitle')}</h2>
+            <p>{t('exerciseSubtitle')}</p>
           </div>
         </div>
 
         <div className="ai-guidance-feature-pills" style={{ display: 'flex', gap: '12px', marginTop: '14px', flexWrap: 'wrap' }}>
-          <div style={{ padding: '6px 12px', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #bae6fd', fontSize: '0.78rem', color: '#0369a1', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Lightbulb size={14} /> 1. Đề Bài Dự Án Tình Huống Thực Tế
+          <div style={{ padding: '6px 12px', background: 'var(--bg-tertiary)', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.78rem', color: 'var(--primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Lightbulb size={14} /> {t('step1Scenario')}
           </div>
-          <div style={{ padding: '6px 12px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #a7f3d0', fontSize: '0.78rem', color: '#047857', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Bot size={14} /> 2. Chatbox AI Riêng Hướng Dẫn Trực Tiếp
+          <div style={{ padding: '6px 12px', background: 'var(--bg-tertiary)', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.78rem', color: 'var(--ocean)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Bot size={14} /> {t('step2Coach')}
           </div>
-          <div style={{ padding: '6px 12px', background: '#faf5ff', borderRadius: '8px', border: '1px solid #e9d5ff', fontSize: '0.78rem', color: '#7e22ce', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Sparkles size={14} /> 3. Chấm Điểm & Đánh Giá Tư Duy
+          <div style={{ padding: '6px 12px', background: 'var(--bg-tertiary)', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.78rem', color: 'var(--purple)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Sparkles size={14} /> {t('step3Grading')}
           </div>
         </div>
       </div>
 
-      {/* 2. MODE SWITCH: Active Studio Mode vs. Exercise Catalog Catalog Mode */}
+      {/* 2. MODE SWITCH */}
       {activeExercise ? (
-        /* INTERACTIVE PRACTICAL STUDIO (Workspace + Dedicated AI Chatbox) */
         <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Top Control Bar */}
           <div className="glass-panel" style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderRadius: '14px' }}>
@@ -102,78 +101,74 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                 gap: '8px',
                 padding: '8px 14px',
                 borderRadius: '10px',
-                border: '1px solid #cbd5e1',
-                background: '#ffffff',
-                color: '#334155',
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-secondary)',
+                color: 'var(--text-primary)',
                 fontWeight: 700,
                 fontSize: '0.84rem',
                 cursor: 'pointer',
               }}
             >
-              <ArrowLeft size={16} /> Quay Lại Danh Sách Bài Tập
+              <ArrowLeft size={16} /> {t('backToCatalog')}
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span className="page-indicator-small-badge">{activeExercise.milestone.badge}</span>
-              <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0f172a' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                 {activeExercise.skill.name} • {activeExercise.subTopic.title}
               </span>
             </div>
           </div>
 
-          {/* Split Screen Workspace: Left Exercise Editor (60%), Right Dedicated AI Chatbox (40%) */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', alignItems: 'start' }}>
-            {/* LEFT: Practical Problem Scenario & Solution Form */}
+            {/* LEFT: Scenario & Form */}
             <div className="category-card glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              {/* Problem Title & Scenario Card */}
-              <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#0284c7', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase' }}>
-                  <Code size={16} /> Đề Bài Dự Án Tình Huống Thực Tế
+              <div style={{ padding: '16px', background: 'var(--bg-tertiary)', borderRadius: '14px', border: '1px solid var(--border-color)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary)', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase' }}>
+                  <Code size={16} /> {t('step1Scenario')}
                 </div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', margin: '6px 0' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: '6px 0' }}>
                   {activeExercise.subTopic.title}
                 </h3>
-                <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
                   {activeExercise.subTopic.description || `Xây dựng giải pháp thực tế cho hạng mục ${activeExercise.subTopic.title} tuân thủ tiêu chuẩn ngành công nghệ.`}
                 </p>
 
-                {/* Practical Requirements checklist */}
-                <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px dashed #cbd5e1' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#334155', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <CheckSquare size={14} color="#059669" /> Tiêu Chí Yêu Cầu Cần Đạt:
+                <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px dashed var(--border-color)' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <CheckSquare size={14} color="var(--primary)" /> {t('criteriaNeeded')}
                   </span>
-                  <ul style={{ margin: '6px 0 0 0', paddingLeft: '20px', fontSize: '0.82rem', color: '#475569', lineHeight: 1.6 }}>
-                    <li>Áp dụng đúng cú pháp và nguyên tắc phân cấp cấu trúc.</li>
-                    <li>Đảm bảo tối ưu hóa trên thiết bị di động (Responsive).</li>
-                    <li>Tuân thủ chuẩn SEO & Accessibility (WCAG A11y).</li>
+                  <ul style={{ margin: '6px 0 0 0', paddingLeft: '20px', fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                    <li>{t('criteriaItem1')}</li>
+                    <li>{t('criteriaItem2')}</li>
+                    <li>{t('criteriaItem3')}</li>
                   </ul>
                 </div>
               </div>
 
-              {/* Evaluation Result View if graded */}
               {evaluationResult ? (
-                <div className="evaluation-result-view" style={{ padding: '16px', background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                  <div className={`score-banner ${evaluationResult.isPassed ? 'passed' : 'needs-work'}`} style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px', borderRadius: '12px', background: evaluationResult.isPassed ? '#f0fdf4' : '#fffbeb', border: `1px solid ${evaluationResult.isPassed ? '#a7f3d0' : '#fde68a'}` }}>
+                <div className="evaluation-result-view" style={{ padding: '16px', background: 'var(--bg-secondary)', borderRadius: '14px', border: '1px solid var(--border-color)' }}>
+                  <div className={`score-banner ${evaluationResult.isPassed ? 'passed' : 'needs-work'}`} style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px', borderRadius: '12px', background: 'var(--bg-tertiary)', border: `1px solid var(--border-color)` }}>
                     <div style={{ textAlign: 'center', minWidth: '70px' }}>
                       <span style={{ fontSize: '1.8rem', fontWeight: 900, color: evaluationResult.isPassed ? '#059669' : '#d97706' }}>{evaluationResult.score}%</span>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b' }}>AI Score</div>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-tertiary)' }}>AI Score</div>
                     </div>
                     <div>
                       <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: evaluationResult.isPassed ? '#047857' : '#b45309' }}>
-                        {evaluationResult.isPassed ? '🎉 Đạt Chuẩn Thực Tế!' : '⚠️ Cần Tối Ưu Thêm'}
+                        {evaluationResult.isPassed ? t('passed') : t('needsWork')}
                       </h4>
-                      <p style={{ margin: '4px 0 0 0', fontSize: '0.84rem', color: '#334155', lineHeight: 1.4 }}>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
                         {evaluationResult.feedback}
                       </p>
                     </div>
                   </div>
 
                   <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.84rem' }}>
-                    <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '10px', borderLeft: '3px solid #059669' }}>
-                      <strong style={{ color: '#047857' }}>💪 Điểm mạnh:</strong> {evaluationResult.strengths}
+                    <div style={{ padding: '10px 12px', background: 'var(--bg-tertiary)', borderRadius: '10px', borderLeft: '3px solid #059669', color: 'var(--text-primary)' }}>
+                      <strong style={{ color: '#047857' }}>{t('strengths')}</strong> {evaluationResult.strengths}
                     </div>
-                    <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '10px', borderLeft: '3px solid #0284c7' }}>
-                      <strong style={{ color: '#0369a1' }}>💡 Gợi ý nâng cấp:</strong> {evaluationResult.improvements}
+                    <div style={{ padding: '10px 12px', background: 'var(--bg-tertiary)', borderRadius: '10px', borderLeft: '3px solid #0284c7', color: 'var(--text-primary)' }}>
+                      <strong style={{ color: '#0369a1' }}>{t('improvements')}</strong> {evaluationResult.improvements}
                     </div>
                   </div>
 
@@ -187,26 +182,25 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                       padding: '10px',
                       width: '100%',
                       borderRadius: '10px',
-                      border: '1px solid #cbd5e1',
-                      background: '#ffffff',
-                      color: '#0f172a',
+                      border: '1px solid var(--border-color)',
+                      background: 'var(--bg-secondary)',
+                      color: 'var(--text-primary)',
                       fontWeight: 700,
                       fontSize: '0.86rem',
                       cursor: 'pointer',
                     }}
                   >
-                    🔄 Thử Nhập Lời Giải Khác
+                    {t('tryAnotherSolution')}
                   </button>
                 </div>
               ) : (
-                /* Solution Textarea Form */
                 <form onSubmit={handleSubmitSolution} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <label style={{ fontSize: '0.86rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    💻 Nhập Mã Code / Lời Giải Bài Tập Thực Tế Của Bạn:
+                  <label style={{ fontSize: '0.86rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {t('enterYourSolution')}
                   </label>
                   <textarea
                     rows={8}
-                    placeholder="Viết đoạn mã code HTML/CSS/JS hoặc giải trình tư duy kiến trúc của bạn ở đây... (Hoặc hỏi AI Coach ở khung chat bên phải để lấy gợi ý)"
+                    placeholder={t('solutionPlaceholder')}
                     value={userSolution}
                     onChange={(e) => setUserSolution(e.target.value)}
                     disabled={evaluating}
@@ -214,11 +208,11 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                       width: '100%',
                       padding: '14px',
                       borderRadius: '12px',
-                      border: '1px solid #cbd5e1',
-                      background: '#f8fafc',
+                      border: '1px solid var(--border-color)',
+                      background: 'var(--bg-tertiary)',
                       fontSize: '0.88rem',
                       fontFamily: 'monospace',
-                      color: '#0f172a',
+                      color: 'var(--text-primary)',
                       outline: 'none',
                       lineHeight: 1.5,
                       resize: 'vertical',
@@ -247,11 +241,11 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                   >
                     {evaluating ? (
                       <>
-                        <Loader2 size={18} className="spin-icon" /> AI Coach Đang Chấm Điểm Bài Làm...
+                        <Loader2 size={18} className="spin-icon" /> {t('submittingGrading')}
                       </>
                     ) : (
                       <>
-                        <Award size={18} /> 🏆 Nộp Bài Để AI Coach Chấm Điểm
+                        <Award size={18} /> {t('submitForGrading')}
                       </>
                     )}
                   </button>
@@ -259,7 +253,7 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
               )}
             </div>
 
-            {/* RIGHT: Dedicated Interactive AI Coach Chatbox (Fixed Frame, Internal Scrollable Messages) */}
+            {/* RIGHT: AI Coach Chatbox */}
             <div style={{ position: 'sticky', top: '80px', height: 'calc(100vh - 110px)', minHeight: '520px', maxHeight: '720px' }}>
               <ExerciseAIChatbox
                 subTopicTitle={activeExercise.subTopic.title}
@@ -272,13 +266,12 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
           </div>
         </div>
       ) : (
-        /* PRACTICAL EXERCISES CATALOG MODE */
         <div className="quiz-library-grid" style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {milestones.map((ms) => (
             <div key={ms.id} className="category-card glass-panel" style={{ padding: '24px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid #e2e8f0' }}>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Sparkles size={20} color="#0284c7" /> {ms.title}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid var(--border-color)' }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Sparkles size={20} color="var(--primary)" /> {ms.title}
                 </h3>
                 <span className="page-indicator-small-badge">{ms.badge}</span>
               </div>
@@ -287,7 +280,7 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                 {ms.categories.flatMap((c) => c.skills).map((sk) => (
                   <div key={sk.id} className="skill-item-card">
                     <div className="skill-card-top">
-                      <span className="skill-name" style={{ fontWeight: 800, color: '#0f172a', fontSize: '1.02rem' }}>{sk.name}</span>
+                      <span className="skill-name" style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: '1.02rem' }}>{sk.name}</span>
                       <span className="skill-level-num">{sk.levelPercentage}%</span>
                     </div>
 
@@ -295,7 +288,7 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                       {sk.subTopics.map((sub) => (
                         <div key={sub.id} className="subtopic-item">
                           <div className="subtopic-left">
-                            <HelpCircle size={18} color="#0284c7" />
+                            <HelpCircle size={18} color="var(--primary)" />
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                               <span className="subtopic-title">{sub.title}</span>
                               {sub.description && <span className="subtopic-desc">{sub.description}</span>}
@@ -311,10 +304,10 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                             <button
                               className="ai-quiz-trigger-btn"
                               onClick={() => handleSelectExercise(ms, sk, sub)}
-                              title="Bắt đầu thực hành bài tập thực tế & mở chatbox AI hướng dẫn"
+                              title={t('startPracticeAi')}
                             >
                               <Bot size={16} />
-                              <span>🚀 Bắt Đầu Thực Hành & Chat AI</span>
+                              <span>{t('startPracticeAi')}</span>
                             </button>
                           </div>
                         </div>
