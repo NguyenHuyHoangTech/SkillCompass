@@ -11,7 +11,9 @@ import { AIQuizModal } from '../components/ai/AIQuizModal';
 import { AICareerChatbot } from '../components/ai/AICareerChatbot';
 import { EditMilestoneModal } from '../components/roadmap/EditMilestoneModal';
 import { AIRoadmapRecommendModal } from '../components/roadmap/AIRoadmapRecommendModal';
+import { AISkillGeneratorModal } from '../components/roadmap/AISkillGeneratorModal';
 import { AddSkillModal } from '../components/roadmap/AddSkillModal';
+import type { ChatGeneratedSkill } from '../services/ai';
 import type { ManualSkillData } from '../components/roadmap/AddSkillModal';
 import { AnalyticsPage } from '../components/pages/AnalyticsPage';
 import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
@@ -49,6 +51,7 @@ export default function Roadmap() {
   const [milestoneToEdit, setMilestoneToEdit] = useState<any>(null);
   const [isAIRecoModalOpen, setIsAIRecoModalOpen] = useState(false);
   const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
+  const [isAiSkillGeneratorOpen, setIsAiSkillGeneratorOpen] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -243,93 +246,57 @@ export default function Roadmap() {
       setActiveMilestoneId(newMilestones[newMilestones.length - 1].id);
     }
   };  const handleAIReplaceSkills = async () => {
+    setIsAiSkillGeneratorOpen(true);
+  };
+
+  const handleConfirmGeneratedSkills = (skills: ChatGeneratedSkill[], replaceUnlearned: boolean) => {
     if (!roadmap) return;
     const activeMs = roadmap.milestones.find((m) => m.id === activeMilestoneId);
     if (!activeMs) return;
 
-    // Define rich mock skills to replace/add
-    const aiMockSkills = [
-      {
-        title: 'Advanced System Architecture',
-        description: 'Design highly scalable, fault-tolerant systems using modern architectural patterns.',
-        icon: 'fa-server'
-      },
-      {
-        title: 'Cloud Native & Kubernetes',
-        description: 'Deploy and manage containerized applications using Docker and Kubernetes.',
-        icon: 'fa-cloud'
-      },
-      {
-        title: 'Performance Optimization',
-        description: 'Identify bottlenecks and optimize frontend/backend performance at scale.',
-        icon: 'fa-bolt'
-      },
-      {
-        title: 'AI Integration & MLOps',
-        description: 'Integrate LLMs and machine learning models into production systems.',
-        icon: 'fa-microchip'
-      },
-    ];
-
     let newMilestones = [...roadmap.milestones];
     const msIndex = newMilestones.findIndex(m => m.id === activeMilestoneId);
     let currentMs = { ...newMilestones[msIndex] };
-    
-    // Check if there are 0% skills to replace
-    let has0PercentSkills = false;
-    currentMs.categories.forEach(cat => {
-      if (cat.skills.some(s => s.levelPercentage === 0)) has0PercentSkills = true;
-    });
 
-    let mockIndex = 0;
+    // Format new skills
+    const newSkillsFormatted = skills.map((sk, index) => ({
+      id: `sk-ai-${Date.now()}-${index}`,
+      name: sk.title,
+      icon: sk.icon || 'fa-star',
+      levelPercentage: 0,
+      subTopics: sk.subTopics.map((sub, sIdx) => ({
+        id: `sub-ai-${Date.now()}-${index}-${sIdx}`,
+        title: sub.title,
+        isCompleted: false
+      }))
+    }));
 
     currentMs.categories = currentMs.categories.map(cat => {
       let newSkills = [...cat.skills];
-      if (has0PercentSkills) {
-        newSkills = newSkills.map(skill => {
-          if (skill.levelPercentage === 0) {
-            const mock = aiMockSkills[mockIndex % aiMockSkills.length];
-            mockIndex++;
-            return {
-              ...skill,
-              name: mock.title,
-              icon: mock.icon,
-              subTopics: [
-                { id: `sub-${Date.now()}-1`, title: `Core Concepts of ${mock.title}`, isCompleted: false },
-                { id: `sub-${Date.now()}-2`, title: `Advanced Patterns & Best Practices`, isCompleted: false },
-                { id: `sub-${Date.now()}-3`, title: `Real-world Implementation Project`, isCompleted: false },
-                { id: `sub-${Date.now()}-4`, title: `Debugging and Troubleshooting`, isCompleted: false }
-              ]
-            };
-          }
-          return skill;
-        });
-      } else {
-        // If no 0% skills, just add a new one to the first category
-        if (mockIndex === 0) {
-          const mock = aiMockSkills[0];
-          newSkills.push({
-            id: `sk-${Date.now()}`,
-            name: mock.title,
-            icon: mock.icon,
-            levelPercentage: 0,
-            subTopics: [
-                { id: `sub-${Date.now()}-1`, title: `Core Concepts of ${mock.title}`, isCompleted: false },
-                { id: `sub-${Date.now()}-2`, title: `Advanced Patterns & Best Practices`, isCompleted: false },
-                { id: `sub-${Date.now()}-3`, title: `Real-world Implementation Project`, isCompleted: false }
-            ]
-          });
-          mockIndex++;
-        }
+      if (replaceUnlearned) {
+        newSkills = newSkills.filter(skill => skill.levelPercentage > 0);
       }
       return { ...cat, skills: newSkills };
     });
+
+    // Add new skills to the first category (or create an "AI Generated" category if none)
+    if (currentMs.categories.length > 0 && newSkillsFormatted.length > 0) {
+      currentMs.categories[0].skills.push(...newSkillsFormatted);
+    } else if (newSkillsFormatted.length > 0) {
+      currentMs.categories.push({
+        id: `cat-ai-${Date.now()}`,
+        name: 'AI Generated Skills',
+        skills: newSkillsFormatted
+      });
+    }
 
     newMilestones[msIndex] = currentMs;
     const updatedRoadmap = { ...roadmap, milestones: newMilestones };
     setRoadmap(updatedRoadmap);
     localStorage.setItem('skill_compass_roadmap', JSON.stringify(updatedRoadmap));
+    setIsAiSkillGeneratorOpen(false);
   };
+
 
   const handleManualAddSkill = async (data: ManualSkillData) => {
     if (!roadmap) return;
@@ -398,8 +365,14 @@ export default function Roadmap() {
     );
   }
 
-  const activeMilestone =
-    roadmap.milestones.find((m) => m.id === activeMilestoneId) || roadmap.milestones[0];
+  const activeMilestone = roadmap?.milestones.find(m => m.id === activeMilestoneId);
+  const unlearnedSkills = activeMilestone 
+    ? activeMilestone.categories.flatMap(c => c.skills).filter(s => s.levelPercentage === 0)
+    : [];
+
+  if (!roadmap || !activeMilestone) {
+    return <div className="p-8 text-center" style={{ color: 'var(--text-secondary)' }}>Loading or no roadmap available...</div>;
+  }
 
   return (
     <div className="app-main-outer-shell h-screen flex flex-col overflow-hidden bg-slate-50">
@@ -544,6 +517,14 @@ export default function Roadmap() {
             onClose={() => setIsAddSkillModalOpen(false)}
             onSave={handleManualAddSkill}
             existingCategories={roadmap?.milestones.find(m => m.id === activeMilestoneId)?.categories.map(c => c.name) || []}
+          />
+
+          <AISkillGeneratorModal
+            isOpen={isAiSkillGeneratorOpen}
+            onClose={() => setIsAiSkillGeneratorOpen(false)}
+            milestoneTitle={activeMilestone.title}
+            unlearnedSkills={unlearnedSkills}
+            onConfirm={handleConfirmGeneratedSkills}
           />
         </div>
       </div>

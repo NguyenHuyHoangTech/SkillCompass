@@ -991,3 +991,96 @@ Based on the feedback, update the content of these goals (e.g., change the roadm
         ];
     }
 };
+
+export interface ChatGeneratedSkill {
+    title: string;
+    description: string;
+    icon: string;
+    subTopics: { title: string }[];
+}
+
+export interface ChatGenerateSkillsResponse {
+    chat_response: string;
+    proposed_skills: ChatGeneratedSkill[];
+}
+
+export const generateAndChatSkills = async (
+    milestoneTitle: string,
+    unlearnedSkillsContext: any[],
+    userMessage: string,
+    chatHistory: { sender: string; text: string }[]
+): Promise<ChatGenerateSkillsResponse | null> => {
+    const prompt = `Bạn là một Chuyên gia Đào tạo (L&D Expert).
+Bối cảnh: Người dùng đang ở giai đoạn (milestone) "${milestoneTitle}" và có một số kỹ năng chưa học (hoặc cần được bổ sung).
+Dữ liệu các kỹ năng chưa học (hoặc cần thay thế) hiện tại: ${JSON.stringify(unlearnedSkillsContext)}
+Lịch sử chat gần đây: ${JSON.stringify(chatHistory)}
+Tin nhắn hiện tại của người dùng: "${userMessage}"
+
+NHIỆM VỤ:
+1. Trả lời người dùng dưới vai trò một chuyên gia đào tạo, tư vấn về những kỹ năng họ nên bổ sung hoặc thay thế trong giai đoạn này.
+2. Dựa trên lịch sử trò chuyện và yêu cầu hiện tại, đề xuất một danh sách các kỹ năng mới. Hãy đảm bảo mỗi kỹ năng đều có ít nhất 3 mục nhỏ (subTopics). Dùng icon FontAwesome phù hợp (VD: fa-server, fa-code).
+
+TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc:
+{
+    "chat_response": "Câu trả lời gửi cho người dùng...",
+    "proposed_skills": [
+        {
+            "title": "Tên kỹ năng",
+            "description": "Mô tả ngắn gọn",
+            "icon": "fa-star",
+            "subTopics": [
+                { "title": "Mục nhỏ 1" },
+                { "title": "Mục nhỏ 2" }
+            ]
+        }
+    ]
+}`;
+
+    try {
+        const responseText = await executeWithFallback(prompt);
+        let rawText = responseText;
+        const match = rawText.match(/\{.*\}/s);
+        if (match) rawText = match[0];
+        rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+        return JSON.parse(rawText) as ChatGenerateSkillsResponse;
+    } catch (error) {
+        console.error("AI Error:", error);
+        
+        // Mock fallback response
+        let mockResponse = "Tôi đã cập nhật danh sách kỹ năng dựa trên yêu cầu của bạn!";
+        if (!userMessage) {
+            mockResponse = "Chào bạn! Dựa vào giai đoạn hiện tại, tôi đề xuất một vài kỹ năng quan trọng dưới đây. Bạn có muốn điều chỉnh hay thêm bớt gì không?";
+        } else if (userMessage.toLowerCase().includes("thêm")) {
+            mockResponse = "Đồng ý, tôi đã bổ sung thêm kỹ năng theo ý bạn.";
+        } else if (userMessage.toLowerCase().includes("xóa") || userMessage.toLowerCase().includes("bỏ")) {
+            mockResponse = "Tôi đã loại bỏ kỹ năng không cần thiết theo yêu cầu.";
+        }
+
+        return {
+            chat_response: mockResponse,
+            proposed_skills: [
+                {
+                    title: "Advanced System Architecture",
+                    description: "Design highly scalable, fault-tolerant systems using modern architectural patterns.",
+                    icon: "fa-server",
+                    subTopics: [
+                        { title: "Core Concepts of Advanced System Architecture" },
+                        { title: "Advanced Patterns & Best Practices" },
+                        { title: "Real-world Implementation Project" },
+                        { title: "Debugging and Troubleshooting" }
+                    ]
+                },
+                {
+                    title: "Performance Optimization",
+                    description: "Identify bottlenecks and optimize frontend/backend performance at scale.",
+                    icon: "fa-bolt",
+                    subTopics: [
+                        { title: "Core Concepts of Performance Optimization" },
+                        { title: "Advanced Patterns & Best Practices" },
+                        { title: "Real-world Implementation Project" }
+                    ]
+                }
+            ]
+        };
+    }
+};
