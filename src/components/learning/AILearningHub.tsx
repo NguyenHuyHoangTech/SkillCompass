@@ -58,7 +58,7 @@ export const AILearningHub: React.FC<AILearningHubProps> = ({ skill, onSelectCou
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 relative overflow-hidden">
+    <div className="flex w-full h-full bg-slate-50 relative overflow-hidden">
       
       {/* Left Area: Courses Content */}
       <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-2/3 xl:w-3/4">

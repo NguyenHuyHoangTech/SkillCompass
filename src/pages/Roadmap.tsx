@@ -467,32 +467,7 @@ export default function Roadmap() {
             <Onboarding onFinish={() => setActivePage('page-roadmap')} />
           )}
           
-          {activePage === 'page-roadmap' && (() => {
-            if (activeLearningPage === 'hub' && learningSkill) {
-              return (
-                <AILearningHub 
-                  skill={learningSkill}
-                  onSelectCourse={(course) => {
-                    setSelectedCourse(course);
-                    setActiveLearningPage('dashboard');
-                  }}
-                  onBack={() => setActiveLearningPage('none')}
-                />
-              );
-            }
-
-            if (activeLearningPage === 'dashboard' && learningSkill && selectedCourse) {
-              return (
-                <CourseDashboard 
-                  skill={learningSkill}
-                  course={selectedCourse}
-                  onBack={() => setActiveLearningPage('hub')}
-                  onApplyChecklist={handleApplyChecklist}
-                />
-              );
-            }
-
-            return (
+          {activePage === 'page-roadmap' && (
               <div className="roadmap-page-view flex flex-col sm:flex-row h-full overflow-hidden bg-slate-50">
                 <div className="w-full sm:w-[380px] bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl h-full overflow-hidden">
                   <div className="p-6 flex-1 flex flex-col h-full overflow-hidden">
@@ -536,8 +511,7 @@ export default function Roadmap() {
                   </div>
                 </div>
               </div>
-            );
-          })()}
+          )}
 
           {activePage === 'page-analytics' && (
             <AnalyticsPage milestone={activeMilestone} />
@@ -636,6 +610,36 @@ export default function Roadmap() {
             skill={learningSkill}
             onAnalysisComplete={handleAnalysisComplete}
           />
+
+          {/* AI Learning Hub Modal */}
+          {activePage === 'page-roadmap' && activeLearningPage === 'hub' && learningSkill && (
+             <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 md:p-8 bg-slate-900/80 backdrop-blur-md">
+               <div className="w-full max-w-7xl h-full max-h-[90vh] bg-slate-50 relative overflow-hidden rounded-3xl shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-300">
+                 <AILearningHub 
+                   skill={learningSkill}
+                   onSelectCourse={(course) => {
+                     setSelectedCourse(course);
+                     setActiveLearningPage('dashboard');
+                   }}
+                   onBack={() => setActiveLearningPage('none')}
+                 />
+               </div>
+             </div>
+          )}
+
+          {/* AI Course Dashboard Modal */}
+          {activePage === 'page-roadmap' && activeLearningPage === 'dashboard' && learningSkill && selectedCourse && (
+             <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 md:p-8 bg-slate-900/80 backdrop-blur-md">
+               <div className="w-full max-w-7xl h-full max-h-[90vh] bg-slate-900 text-slate-300 relative overflow-hidden rounded-3xl shadow-2xl border border-slate-700 flex flex-col animate-in fade-in zoom-in-95 duration-300">
+                 <CourseDashboard 
+                   skill={learningSkill}
+                   course={selectedCourse}
+                   onBack={() => setActiveLearningPage('hub')}
+                   onApplyChecklist={handleApplyChecklist}
+                 />
+               </div>
+             </div>
+          )}
         </div>
       </div>
     </div>

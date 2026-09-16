@@ -66,7 +66,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
   };
 
   return (
-    <div className="flex h-screen bg-slate-900 text-slate-300 relative overflow-hidden font-sans">
+    <div className="flex w-full h-full bg-slate-900 text-slate-300 relative overflow-hidden font-sans">
       
       {/* Left Area: Video Player & Course Info */}
       <div className="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar">
