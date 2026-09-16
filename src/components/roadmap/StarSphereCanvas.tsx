@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { Milestone, Skill } from '../../types/roadmap';
-import { RotateCcw, Play, Pause, Eye } from 'lucide-react';
+import { Play, Pause, RotateCcw, Eye, X } from 'lucide-react';
 
 export interface StarNodeData {
   id: string;
@@ -32,7 +32,12 @@ interface StarSphereCanvasProps {
   selectedCategoryName: string;
   isAutoRotate: boolean;
   onToggleAutoRotate: () => void;
-  onStarClick: (data: { skill: Skill; categoryName: string; milestoneTitle: string }) => void;
+  onClose?: () => void;
+  onStarClick: (data: {
+    skill: Skill;
+    categoryName: string;
+    milestoneTitle: string;
+  }) => void;
 }
 
 export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
@@ -41,6 +46,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
   selectedCategoryName,
   isAutoRotate,
   onToggleAutoRotate,
+  onClose,
   onStarClick,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -491,22 +497,33 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
       {/* Minimal Floating HUD Controls */}
       <div className="sphere-hud-controls">
         <button
-          className="hud-btn"
+          className="hud-btn reset-btn"
           onClick={handleResetView}
           title="Reset 3D View"
         >
-          <RotateCcw size={15} />
-          <span>Reset View</span>
+          <RotateCcw size={18} />
+          <span>Reset</span>
         </button>
 
         <button
-          className={`hud-btn ${isAutoRotate ? 'active' : ''}`}
+          className={`hud-btn rotate-btn ${isAutoRotate ? 'active' : ''}`}
           onClick={onToggleAutoRotate}
           title={isAutoRotate ? 'Pause auto-rotate' : 'Enable 3D auto-rotate'}
         >
-          {isAutoRotate ? <Pause size={15} /> : <Play size={15} />}
-          <span>{isAutoRotate ? 'Rotating' : 'Paused'}</span>
+          {isAutoRotate ? <Pause size={18} className="text-amber-400" /> : <Play size={18} className="text-emerald-400" />}
+          <span>{isAutoRotate ? 'Dừng Xoay' : 'Tiếp tục Xoay'}</span>
         </button>
+
+        {onClose && (
+            <button
+                className="hud-btn close-btn"
+                onClick={onClose}
+                title="Đóng Vũ Trụ"
+            >
+                <X size={18} className="text-rose-400" />
+                <span>Đóng Vũ Trụ</span>
+            </button>
+        )}
       </div>
 
       {/* Hover Tooltip Overlay Card */}

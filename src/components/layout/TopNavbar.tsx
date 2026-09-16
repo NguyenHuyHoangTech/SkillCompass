@@ -10,6 +10,7 @@ interface TopNavbarProps {
   onSelectPage?: (pageId: string) => void;
   onToggleSidebar?: () => void;
   onOpenGalaxy?: () => void;
+  onOpenGlobalAnalytics?: () => void;
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
@@ -19,6 +20,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   onSelectSubTab,
   onToggleSidebar,
   onOpenGalaxy,
+  onOpenGlobalAnalytics,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -90,6 +92,17 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
         {/* Right: User Dropdown Menu & Galaxy Button */}
         <div className="top-nav-auth-actions" ref={dropdownRef}>
+          {onOpenGlobalAnalytics && (
+            <button 
+              onClick={onOpenGlobalAnalytics}
+              className="hidden md:flex items-center gap-2 px-3 py-1.5 mr-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-all shadow-sm border border-indigo-200 group"
+              title="Xem Thống kê Tổng thể"
+            >
+              <PieChart size={14} className="group-hover:scale-110 transition-transform" />
+              <span className="text-xs font-semibold tracking-wide">Thống kê Tổng thể</span>
+            </button>
+          )}
+
           {onOpenGalaxy && (
             <button 
               onClick={onOpenGalaxy}

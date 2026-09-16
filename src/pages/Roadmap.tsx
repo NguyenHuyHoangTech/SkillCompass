@@ -22,6 +22,7 @@ import type { ManualSkillData } from '../components/roadmap/AddSkillModal';
 import { AnalyticsPage } from '../components/pages/AnalyticsPage';
 import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
 import { AllSkillsPage } from '../components/pages/AllSkillsPage';
+import { GlobalAnalyticsModal } from '../components/pages/GlobalAnalyticsModal';
 import { SettingsPage } from '../components/pages/SettingsPage';
 import { CoursesPage } from './CoursesPage';
 import { Onboarding } from './Onboarding';
@@ -57,6 +58,7 @@ export default function Roadmap() {
   const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
   const [isAiSkillGeneratorOpen, setIsAiSkillGeneratorOpen] = useState(false);
   const [isGalaxyModalOpen, setIsGalaxyModalOpen] = useState(false);
+  const [isGlobalAnalyticsOpen, setIsGlobalAnalyticsOpen] = useState(false);
 
   // Learning Hub States
   const [learningSkill, setLearningSkill] = useState<Skill | null>(null);
@@ -445,6 +447,7 @@ export default function Roadmap() {
         onSelectPage={setActivePage}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         onOpenGalaxy={() => setIsGalaxyModalOpen(true)}
+        onOpenGlobalAnalytics={() => setIsGlobalAnalyticsOpen(true)}
       />
 
       <div className="app-layout-wrapper flex-1 flex overflow-hidden relative">
@@ -617,6 +620,15 @@ export default function Roadmap() {
                 onLearnSkill={handleStartLearning}
               />
             </div>
+          )}
+
+          {/* Global Analytics Modal Overlay */}
+          {roadmap && (
+            <GlobalAnalyticsModal 
+              isOpen={isGlobalAnalyticsOpen}
+              onClose={() => setIsGlobalAnalyticsOpen(false)}
+              milestones={roadmap.milestones}
+            />
           )}
 
           <AICourseAnalysisModal 
