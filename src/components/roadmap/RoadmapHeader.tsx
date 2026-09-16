@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import type { Milestone } from '../../types/roadmap';
-import { Award, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 
 interface RoadmapHeaderProps {
   milestones: Milestone[];
   activeMilestoneId: string;
   onSelectMilestone: (id: string) => void;
   onOpenCareerChat?: () => void;
+  onEditMilestone?: (milestone: Milestone) => void;
+  onDeleteMilestone?: (id: string) => void;
+  onAddMilestone?: () => void;
+  onForceCompleteMilestone?: (id: string) => void;
 }
 
 export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
@@ -14,186 +17,165 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
   activeMilestoneId,
   onSelectMilestone,
   onOpenCareerChat,
+  onEditMilestone,
+  onDeleteMilestone,
+  onAddMilestone,
+  onForceCompleteMilestone
 }) => {
-  const currentMilestone = milestones.find((m) => m.id === activeMilestoneId) || milestones[0];
-
-  // Mỗi trang hiển thị chính xác 4 mốc
-  const ITEMS_PER_PAGE = 4;
-  const maxPage = Math.max(0, Math.ceil(milestones.length / ITEMS_PER_PAGE) - 1);
-  const [currentPage, setCurrentPage] = useState(0);
-
-  // Tự động chuyển trang nếu mốc active đang nằm ở trang khác
-  useEffect(() => {
-    const activeIndex = milestones.findIndex((m) => m.id === activeMilestoneId);
-    if (activeIndex !== -1) {
-      const pageForActive = Math.floor(activeIndex / ITEMS_PER_PAGE);
-      if (pageForActive !== currentPage) {
-        setCurrentPage(pageForActive);
-      }
-    }
-  }, [activeMilestoneId, milestones]);
-
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => Math.max(0, prev - 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(maxPage, prev + 1));
-  };
-
-  // Cắt danh sách 4 mốc tương ứng cho trang hiện tại
-  const startIndex = currentPage * ITEMS_PER_PAGE;
-  const visibleMilestones = milestones.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-  // Hàm ngắn gọn hóa tên mốc theo từ khóa và chỉ hiển thị 1 lần duy nhất
-  const getAbbreviatedTitle = (fullTitle: string, index: number) => {
-    let clean = fullTitle.replace(/^(Giai\s*Đoạn|Mốc|Stage|Phase)\s*\d+\s*[:\-]?\s*/i, '').trim();
-
-    if (/nền\s*tảng/i.test(clean)) clean = 'Nền tảng';
-    else if (/kỹ\s*thuật/i.test(clean)) clean = 'Kỹ thuật';
-    else if (/tối\s*ưu/i.test(clean)) clean = 'Tối ưu';
-    else if (/nâng\s*cao|kiến\s*trúc/i.test(clean)) clean = 'Nâng cao';
-    else if (/chuyên\s*sâu/i.test(clean)) clean = 'Chuyên sâu';
-    else if (/triển\s*khai/i.test(clean)) clean = 'Triển khai';
-    else {
-      const noBrackets = clean.replace(/\(.*?\)/g, '').trim();
-      const words = noBrackets.split(/\s+/);
-      clean = words.length > 2 ? words.slice(0, 2).join(' ') : noBrackets || clean;
-    }
-
-    return `Mốc ${index + 1}: ${clean}`;
+  const getMockDateRange = (idx: number, categoriesCount: number) => {
+    const start = new Date(2026, 8, 1); // 1st Sep 2026 base
+    start.setDate(start.getDate() + idx * 30);
+    const end = new Date(start);
+    end.setDate(start.getDate() + Math.max(1, categoriesCount) * 14);
+    
+    const format = (d: Date) => d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return `${format(start)} - ${format(end)}`;
   };
 
   return (
-    <header className="roadmap-header-container glass-panel">
-      {/* 1. Active Milestone Banner */}
-      <div className="milestone-banner">
-        <div className="banner-left">
-          <div className="role-chip">
-            <Award size={15} /> Mốc Hiện Tại: {currentMilestone.roleName}
-          </div>
-          <h2 className="banner-heading">{currentMilestone.title}</h2>
-          <p className="banner-desc">{currentMilestone.description}</p>
-        </div>
+    <div className="pt-6 px-6 md:pt-8 md:px-8 bg-white pb-2">
+        <div className="overflow-x-auto pb-4 custom-scrollbar relative">
+            <div className="flex items-stretch gap-4 min-w-max px-2 py-2">
+                {milestones.map((ms, idx) => {
+                    const firstUncompletedIndex = milestones.findIndex(m => m.overallProgress < 100 && !m.isForceCompleted);
+                    const isSelected = ms.id === activeMilestoneId;
+                    const isCompleted = ms.overallProgress === 100 || ms.isForceCompleted;
+                    const isRunning = idx === (firstUncompletedIndex === -1 ? milestones.length - 1 : firstUncompletedIndex);
+                    const isFuture = !isCompleted && !isRunning;
+                    const progress = isFuture ? 0 : ms.overallProgress;
+                    
+                    let statusColors = '';
+                    let iconClass = '';
+                    let statusText = '';
+                    
+                    if(isCompleted) {
+                        statusColors = 'bg-emerald-50 text-emerald-800 border-emerald-200';
+                        iconClass = 'fa-solid fa-circle-check text-emerald-500';
+                        statusText = `Complete (${progress}%)`;
+                    } else if(isRunning) {
+                        statusColors = 'bg-blue-50 text-slate-800 border-blue-200 shadow-md shadow-blue-100';
+                        iconClass = 'fa-solid fa-person-running text-blue-500 animate-pulse';
+                        statusText = `${progress}%`;
+                    } else {
+                        statusColors = 'bg-white border-slate-200 text-slate-400 opacity-80';
+                        iconClass = 'fa-regular fa-calendar-check text-slate-300';
+                        statusText = '0%';
+                    }
 
-        <div className="banner-right-progress">
-          <div className="circular-progress-wrap">
-            <div className="progress-value-text">
-              <span className="percent-num">{currentMilestone.overallProgress}%</span>
-              <span className="percent-label">Hoàn Thành</span>
-            </div>
-            <svg className="circular-svg" viewBox="0 0 100 100">
-              <circle className="circle-bg" cx="50" cy="50" r="42" />
-              <circle
-                className="circle-fill"
-                cx="50"
-                cy="50"
-                r="42"
-                style={{
-                  strokeDasharray: 264,
-                  strokeDashoffset: 264 - (264 * currentMilestone.overallProgress) / 100,
-                }}
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
+                    const ringClass = isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : '';
+                    
+                    // Clean title from existing Stage/Milestone prefixes if any
+                    const cleanTitle = ms.title.replace(/^(Stage|Giai đoạn|Mốc|Milestone)\s*\d+[:\-]?\s*/i, '');
+                    
+                    return (
+                        <div 
+                            key={ms.id}
+                            onClick={() => onSelectMilestone(ms.id)}
+                            className={`shrink-0 w-64 rounded-xl border p-4 cursor-pointer transition-all hover:-translate-y-1 relative group flex flex-col ${statusColors} ${ringClass}`}
+                        >
+                            {/* Action Buttons Overlay */}
+                            <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                {(isRunning && onForceCompleteMilestone) && (
+                                    <button 
+                                      onClick={(e) => { e.stopPropagation(); onForceCompleteMilestone(ms.id); }}
+                                      className="w-7 h-7 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center text-emerald-600 border border-emerald-100 transition-colors"
+                                      title="Đánh dấu hoàn thành mốc này"
+                                    >
+                                      <i className="fa-solid fa-check-double text-[10px]"></i>
+                                    </button>
+                                )}
+                                {(!isCompleted && onEditMilestone) && (
+                                    <button 
+                                      onClick={(e) => { e.stopPropagation(); onEditMilestone(ms); }}
+                                      className="w-7 h-7 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center text-blue-600 border border-blue-100 transition-colors"
+                                      title="Sửa chặng"
+                                    >
+                                      <i className="fa-solid fa-pen text-[10px]"></i>
+                                    </button>
+                                )}
+                                {(isFuture && onDeleteMilestone) && (
+                                    <button 
+                                      onClick={(e) => { e.stopPropagation(); onDeleteMilestone(ms.id); }}
+                                      className="w-7 h-7 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center text-red-500 border border-red-100 transition-colors"
+                                      title="Xóa chặng"
+                                    >
+                                      <i className="fa-solid fa-trash text-[10px]"></i>
+                                    </button>
+                                )}
+                            </div>
 
-      {/* 2. Milestone Navigation Row: Single clean milestone label per tab */}
-      <div className="milestone-nav-row">
-        {/* Nút Thêm Mốc Cố Định */}
-        {onOpenCareerChat && (
-          <button
-            className="milestone-tab-btn add-future-milestone-btn fixed-add-btn"
-            onClick={onOpenCareerChat}
-            title="Tư vấn AI để đưa ra thêm mốc lộ trình tương lai"
-          >
-            <span className="tab-step-num add-icon-num">+</span>
-            <div className="tab-text-content">
-              <span className="tab-badge-title">🤖 AI Career</span>
-              <span className="tab-title">+ Thêm Mốc</span>
-            </div>
-          </button>
-        )}
+                            <div className="flex justify-between items-start mb-3">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm bg-white shadow-sm`}>
+                                    <i className={iconClass}></i>
+                                </div>
+                                <span className={`text-xs font-bold px-2 py-1 rounded-md bg-white shadow-sm ${isCompleted ? 'text-emerald-600' : 'text-slate-600'}`}>
+                                    {statusText}
+                                </span>
+                            </div>
+                            
+                            <h3 className="font-bold text-sm mb-1 line-clamp-2 leading-snug pr-8" title={ms.title}>
+                                Stage {idx + 1}: {cleanTitle}
+                            </h3>
+                            
+                            <p className={`text-[11px] mb-3 line-clamp-2 ${isCompleted || isRunning ? 'opacity-90' : 'text-slate-400'}`} title={ms.description}>
+                                {ms.description}
+                            </p>
+                            
+                            <div className={`mt-auto text-[10px] font-medium pt-3 border-t ${statusColors.includes('bg-white') ? 'border-slate-100' : 'border-slate-200'}`}>
+                                <i className="fa-regular fa-calendar mr-1"></i> 
+                                {(ms.startDate && ms.endDate) 
+                                    ? `${new Date(ms.startDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })} - ${new Date(ms.endDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}` 
+                                    : getMockDateRange(idx, ms.categories.length)}
+                            </div>
+                            
+                            {/* Connect line to next card */}
+                            {idx < milestones.length - 1 && (
+                                <div className={`absolute -right-4 top-1/2 -translate-y-1/2 w-4 h-[2px] ${isCompleted ? 'bg-emerald-300' : isRunning ? 'bg-blue-300' : 'bg-slate-200'}`}></div>
+                            )}
+                        </div>
+                    );
+                })}
 
-        {/* Mũi tên TRÁI */}
-        <button
-          className={`milestone-nav-arrow-btn ${currentPage === 0 ? 'disabled' : ''}`}
-          onClick={handlePrevPage}
-          disabled={currentPage === 0}
-          title="Trang 4 mốc trước"
-        >
-          <ChevronLeft size={16} />
-        </button>
-
-        {/* Khung 4 mốc thoáng đãng */}
-        <div className="milestone-tabs-4col-wrapper">
-          <div className="milestone-tabs-4col-grid">
-            {visibleMilestones.map((ms, vIdx) => {
-              const actualIndex = startIndex + vIdx;
-              const isActive = ms.id === activeMilestoneId;
-              const isCompleted = ms.overallProgress === 100;
-              const shortTitle = getAbbreviatedTitle(ms.title, actualIndex);
-
-              return (
-                <div key={ms.id} className="milestone-tab-item-wrap">
-                  <button
-                    className={`milestone-tab-btn full-tab ${isActive ? 'active' : 'minimal-tab'}`}
-                    onClick={() => onSelectMilestone(ms.id)}
-                  >
-                    <div className="tab-single-main-row">
-                      <span className="tab-short-title">{shortTitle}</span>
-                      <div className="tab-meta-right">
-                        {isCompleted ? (
-                          <CheckCircle2 size={13} className="ms-status-icon completed" />
-                        ) : isActive ? (
-                          <span className="ms-status-dot active" />
-                        ) : (
-                          <span className="ms-status-dot standard" />
+                {/* AI Add Milestone Button */}
+                {onOpenCareerChat && (
+                    <div className="relative h-full flex">
+                        {milestones.length > 0 && (
+                             <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-4 h-[2px] bg-slate-200"></div>
                         )}
-                        <span className="tab-percent-badge">{ms.overallProgress}%</span>
-                      </div>
+                        <div 
+                            onClick={onOpenCareerChat}
+                            className="shrink-0 w-64 flex-1 rounded-xl border-2 border-dashed border-indigo-200 bg-indigo-50/50 p-4 cursor-pointer transition-all hover:-translate-y-1 hover:border-indigo-400 flex flex-col justify-center items-center group min-h-[140px]"
+                            title="Consult AI to propose future roadmap milestones"
+                        >
+                            <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-500 flex items-center justify-center text-lg mb-2 transition-transform group-hover:scale-110">
+                                <i className="fa-solid fa-wand-magic-sparkles"></i>
+                            </div>
+                            <h3 className="font-bold text-sm text-indigo-700 mb-1">Gợi ý AI</h3>
+                            <p className="text-[11px] text-indigo-500/80 text-center px-4">Đánh giá và tối ưu lại lộ trình tương lai</p>
+                        </div>
                     </div>
-
-                    <div className="tab-progress-indicator">
-                      <div
-                        className="tab-progress-fill"
-                        style={{ width: `${ms.overallProgress}%` }}
-                      />
+                )}
+                
+                {/* Manual Add Button */}
+                {onAddMilestone && (
+                    <div className="relative h-full flex">
+                        {(milestones.length > 0 || onOpenCareerChat) && (
+                             <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-4 h-[2px] bg-slate-200"></div>
+                        )}
+                        <div 
+                            onClick={onAddMilestone}
+                            className="shrink-0 w-32 flex-1 rounded-xl border border-dashed border-slate-300 bg-white p-4 cursor-pointer transition-all hover:-translate-y-1 hover:border-blue-400 hover:bg-blue-50/30 flex flex-col justify-center items-center group min-h-[140px]"
+                            title="Thêm chặng thủ công"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-slate-100 group-hover:bg-blue-100 group-hover:text-blue-500 text-slate-400 flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
+                                <i className="fa-solid fa-plus"></i>
+                            </div>
+                            <h3 className="font-bold text-[11px] text-slate-500 group-hover:text-blue-600">Thêm thủ công</h3>
+                        </div>
                     </div>
-                  </button>
-
-                  {/* Tooltip nổi đầy đủ thông tin khi Hover */}
-                  <div className="milestone-hover-tooltip">
-                    <div className="tooltip-title">{ms.title}</div>
-                    <div className="tooltip-role">{ms.badge} • {ms.roleName}</div>
-                    <div className="tooltip-desc">{ms.description}</div>
-                    <div className="tooltip-progress">Tiến độ mốc: <strong>{ms.overallProgress}%</strong></div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                )}
+            </div>
         </div>
-
-        {/* Mũi tên PHẢI */}
-        <button
-          className={`milestone-nav-arrow-btn ${currentPage >= maxPage ? 'disabled' : ''}`}
-          onClick={handleNextPage}
-          disabled={currentPage >= maxPage}
-          title="Trang 4 mốc tiếp theo"
-        >
-          <ChevronRight size={16} />
-        </button>
-      </div>
-
-      {/* 3. Chỉ số trang */}
-      <div className="milestone-sub-page-row">
-        <span className="page-indicator-small-badge" title={`Trang ${currentPage + 1} / ${maxPage + 1}`}>
-          Trang {currentPage + 1}/{maxPage + 1}
-        </span>
-      </div>
-    </header>
+    </div>
   );
 };
-

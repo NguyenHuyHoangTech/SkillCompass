@@ -13,6 +13,7 @@ export interface Skill {
   name: string;
   icon?: string;
   levelPercentage: number; // 0 - 100
+  requirements?: string[];
   subTopics: SubTopic[];
 }
 
@@ -43,6 +44,9 @@ export interface Milestone {
   categories: SkillCategory[];
   overallAiEvaluation?: OverallAiEvaluation;
   isOptimizedByAi?: boolean;
+  isForceCompleted?: boolean;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface UserRoadmap {

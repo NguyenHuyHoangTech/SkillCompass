@@ -24,10 +24,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const roadmapSubTabs = [
-    { id: 'view-all', label: 'Tổng Quan Đầy Đủ', icon: Layers },
-    { id: 'view-checklist', label: 'Checklist Kỹ Năng', icon: CheckSquare },
-    { id: 'view-radar', label: 'Biểu Đồ Radar Năng Lực', icon: PieChart },
-    { id: 'view-optimizer', label: 'AI Đánh Giá Giai Đoạn', icon: Sparkles },
+    { id: 'view-all', label: 'Full Overview', icon: Layers },
+    { id: 'view-checklist', label: 'Skill Checklist', icon: CheckSquare },
+    { id: 'view-radar', label: 'Radar Chart', icon: PieChart },
+    { id: 'view-optimizer', label: 'AI Phase Evaluation', icon: Sparkles },
   ];
 
   // Close dropdown when clicking outside
@@ -49,7 +49,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <button
             className="top-brand-unified-btn"
             onClick={onToggleSidebar}
-            title="Mở menu quản lý & điều hướng"
+            title="Open management & navigation menu"
           >
             <div className="top-nav-logo-unified glowing-brand-logo">
               <Compass size={24} className="logo-compass-icon" />
@@ -60,7 +60,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           </button>
         </div>
 
-        {/* Center: Horizontal Sub-Tabs inside Header for Section Navigation within Page (Giữ Nguyên Như Cũ) */}
+        {/* Center: Horizontal Sub-Tabs inside Header for Section Navigation within Page */}
         {activePage === 'page-roadmap' && onSelectSubTab && (
           <nav className="top-nav-center-subtabs">
             {roadmapSubTabs.map((tab) => {
@@ -71,7 +71,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   key={tab.id}
                   className={`top-header-subtab-btn ${isActive ? 'active' : ''}`}
                   onClick={() => onSelectSubTab(tab.id)}
-                  title={`Nhảy đến mục: ${tab.label}`}
+                  title={`Jump to: ${tab.label}`}
                 >
                   <Icon size={15} />
                   <span>{tab.label}</span>
@@ -87,7 +87,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             <button
               className="top-header-ai-featured-btn"
               onClick={onOpenCareerChat}
-              title="Mở AI Advisor Tư Vấn Tương Lai"
+              title="Open Future Career AI Advisor"
             >
               <Sparkles size={15} className="ai-btn-spark" />
               <span>AI Advisor</span>
@@ -113,7 +113,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 />
               </button>
 
-              {/* Sổ ra Dropdown Menu */}
+              {/* Dropdown Menu */}
               {isDropdownOpen && (
                 <div className="user-profile-dropdown-menu glass-panel">
                   <div className="dropdown-user-header">
@@ -130,7 +130,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     }}
                   >
                     <LogIn size={16} />
-                    <span>Đăng Nhập Tài Khoản Phụ</span>
+                    <span>Log in with Another Account</span>
                   </button>
 
                   <button
@@ -141,7 +141,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     }}
                   >
                     <UserPlus size={16} />
-                    <span>Đăng Ký Tài Khoản Mới</span>
+                    <span>Register New Account</span>
                   </button>
 
                   <div className="dropdown-divider" />
@@ -154,7 +154,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                     }}
                   >
                     <LogOut size={16} />
-                    <span>Đăng Xuất</span>
+                    <span>Log Out</span>
                   </button>
                 </div>
               )}
@@ -166,14 +166,14 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                 onClick={() => setIsLoggedIn(true)}
               >
                 <LogIn size={15} />
-                <span>Đăng Nhập</span>
+                <span>Log In</span>
               </button>
               <button
                 className="btn-auth-register"
                 onClick={() => setIsLoggedIn(true)}
               >
                 <UserPlus size={15} />
-                <span>Đăng Ký</span>
+                <span>Register</span>
               </button>
             </div>
           )}

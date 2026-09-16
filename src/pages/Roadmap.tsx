@@ -6,13 +6,15 @@ import { SidebarNav } from '../components/layout/SidebarNav';
 import { RoadmapHeader } from '../components/roadmap/RoadmapHeader';
 import { SpiderChart } from '../components/roadmap/SpiderChart';
 import { SkillCategoryList } from '../components/roadmap/SkillCategoryList';
-import { AIMilestoneEvaluator } from '../components/ai/AIMilestoneEvaluator';
 import { AIQuizModal } from '../components/ai/AIQuizModal';
 import { AICareerChatbot } from '../components/ai/AICareerChatbot';
+import { EditMilestoneModal } from '../components/roadmap/EditMilestoneModal';
+import { AIRoadmapRecommendModal } from '../components/roadmap/AIRoadmapRecommendModal';
 import { AnalyticsPage } from '../components/pages/AnalyticsPage';
 import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
 import { AllSkillsPage } from '../components/pages/AllSkillsPage';
 import { SettingsPage } from '../components/pages/SettingsPage';
+import { CoursesPage } from './CoursesPage';
 import '../App.css';
 
 export default function Roadmap() {
@@ -35,6 +37,9 @@ export default function Roadmap() {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const [selectedSubTopic, setSelectedSubTopic] = useState<SubTopic | null>(null);
   const [isCareerChatOpen, setIsCareerChatOpen] = useState(false);
+  const [isEditMilestoneModalOpen, setIsEditMilestoneModalOpen] = useState(false);
+  const [milestoneToEdit, setMilestoneToEdit] = useState<any>(null);
+  const [isAIRecoModalOpen, setIsAIRecoModalOpen] = useState(false);
 
   useEffect(() => {
     loadRoadmap();
@@ -112,6 +117,105 @@ export default function Roadmap() {
     }
   };
 
+  const handleOpenAddMilestone = () => {
+    setMilestoneToEdit(null);
+    setIsEditMilestoneModalOpen(true);
+  };
+
+  const handleOpenEditMilestone = (ms: Milestone) => {
+    setMilestoneToEdit({ id: ms.id, title: ms.title, description: ms.description, categoriesCount: ms.categories.length });
+    setIsEditMilestoneModalOpen(true);
+  };
+
+  const handleDeleteMilestone = (id: string) => {
+    if (!roadmap) return;
+    const newMilestones = roadmap.milestones.filter((m: Milestone) => m.id !== id);
+    setRoadmap({ ...roadmap, milestones: newMilestones });
+    if (activeMilestoneId === id) {
+      setActiveMilestoneId(newMilestones.length > 0 ? newMilestones[0].id : '');
+    }
+  };
+
+  const handleForceCompleteMilestone = async (id: string) => {
+    if (!roadmap) return;
+    try {
+      const updatedRoadmap = await ApiService.updateMilestone(id, { isForceCompleted: true });
+      setRoadmap(updatedRoadmap);
+    } catch (err) {
+      console.error('Failed to force complete milestone:', err);
+      // Fallback local update if API completely fails (though ApiService handles fallback already)
+      const newMilestones = roadmap.milestones.map((m: Milestone) => {
+        if (m.id === id) {
+          return { ...m, isForceCompleted: true };
+        }
+        return m;
+      });
+      setRoadmap({ ...roadmap, milestones: newMilestones });
+    }
+  };
+
+  const handleSaveMilestone = (data: any) => {
+    if (!roadmap) return;
+    if (data.id) {
+      const newMilestones = roadmap.milestones.map((m: Milestone) => {
+        if (m.id === data.id) {
+          return { ...m, title: data.title, description: data.description, startDate: data.startDate, endDate: data.endDate };
+        }
+        return m;
+      });
+      setRoadmap({ ...roadmap, milestones: newMilestones });
+    } else {
+      const newMs: Milestone = {
+        id: `m-custom-${Date.now()}`,
+        title: data.title,
+        roleName: data.title,
+        badge: '🆕 Custom',
+        description: data.description,
+        startDate: data.startDate,
+        endDate: data.endDate,
+        overallProgress: 0,
+        categories: Array.from({ length: 2 }).map((_, i) => ({
+          id: `c-${Date.now()}-${i}`,
+          name: `Category ${i + 1}`,
+          skills: []
+        }))
+      };
+      setRoadmap({ ...roadmap, milestones: [...roadmap.milestones, newMs] });
+      setActiveMilestoneId(newMs.id);
+    }
+  };
+
+  const handleApplyAIReco = (newMilestonesData: any[]) => {
+    if (!roadmap) return;
+    const startIdx = roadmap.milestones.findIndex((m: Milestone) => m.overallProgress < 100);
+    const keepIdx = startIdx === -1 ? roadmap.milestones.length : startIdx;
+
+    // Keep only completed milestones
+    const keptMilestones = roadmap.milestones.slice(0, keepIdx);
+
+    const mapped = newMilestonesData.map((d, i) => ({
+      id: `m-ai-${Date.now()}-${i}`,
+      title: d.title,
+      roleName: d.title,
+      badge: '🤖 AI Generated',
+      description: d.description,
+      overallProgress: 0,
+      categories: Array.from({ length: d.categoriesCount }).map((_, ci) => ({
+        id: `c-ai-${Date.now()}-${i}-${ci}`,
+        name: `AI Sub-topic ${ci + 1}`,
+        skills: []
+      }))
+    }));
+
+    const newMilestones = [...keptMilestones, ...mapped];
+    setRoadmap({ ...roadmap, milestones: newMilestones });
+    if (mapped.length > 0) {
+      setActiveMilestoneId(mapped[0].id);
+    } else if (newMilestones.length > 0) {
+      setActiveMilestoneId(newMilestones[newMilestones.length - 1].id);
+    }
+  };
+
 
 
 
@@ -119,7 +223,7 @@ export default function Roadmap() {
     return (
       <div className="app-loading-screen">
         <div className="spin-icon" style={{ fontSize: '2.5rem', marginBottom: '16px' }}>💫</div>
-        <h2>Skill Compass AI - Đang tải dữ liệu hệ thống...</h2>
+        <h2>Skill Compass AI - Loading system data...</h2>
       </div>
     );
   }
@@ -128,8 +232,8 @@ export default function Roadmap() {
     roadmap.milestones.find((m) => m.id === activeMilestoneId) || roadmap.milestones[0];
 
   return (
-    <div className="app-main-outer-shell">
-      {/* 1. Sticky Top Navbar với các Tab chuyển trang chính (Lộ Trình, Tất Cả Kỹ Năng, Bài Tập & Test) */}
+    <div className="app-main-outer-shell h-screen flex flex-col overflow-hidden bg-slate-50">
+      {/* 1. Sticky Top Navbar with Main Page Tabs (Roadmap, All Skills, Exercises & Tests) */}
       <TopNavbar
         userName={roadmap.userName}
         activePage={activePage}
@@ -140,8 +244,8 @@ export default function Roadmap() {
         onOpenCareerChat={() => setIsCareerChatOpen(true)}
       />
 
-      <div className="app-layout-wrapper">
-        {/* 2. Thanh Tab Dọc Đẩy Ra Dạng Drawer */}
+      <div className="app-layout-wrapper flex-1 flex overflow-hidden relative">
+        {/* 2. Vertical Drawer Sidebar Tab */}
         <SidebarNav
           userName={roadmap.userName}
           activePage={activePage}
@@ -152,38 +256,42 @@ export default function Roadmap() {
         />
 
         {/* 3. Main Viewport Container */}
-        <div className="main-viewport">
+        <div className="main-viewport flex-1 h-full overflow-hidden relative">
           {activePage === 'page-roadmap' && (
-            <div className="roadmap-page-view">
-              {/* Horizontal Milestone Tabs */}
-              <RoadmapHeader
-                milestones={roadmap.milestones}
-                activeMilestoneId={activeMilestoneId}
-                onSelectMilestone={handleSelectMilestone}
-                onOpenCareerChat={() => setIsCareerChatOpen(true)}
-              />
+            <div className="roadmap-page-view flex flex-col sm:flex-row h-full overflow-hidden bg-slate-50">
+              <div className="w-full sm:w-[380px] bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl h-full overflow-hidden">
+                <div className="p-6 flex-1 flex flex-col h-full overflow-hidden">
 
-              {/* Tất cả các thành phần luôn được hiển thị trọn vẹn trên 1 TRANG duy nhất */}
-              <div className="roadmap-single-page-wrapper">
-                {/* Row 1: AI Đánh Giá Tổng Thể & Biểu Đồ Mạng Nhện nằm CHUNG 1 DÒNG */}
-                <div className="top-eval-radar-row">
-                  <div className="evaluator-col" id="sec-optimizer">
-                    <AIMilestoneEvaluator
-                      milestone={activeMilestone}
-                      onRefreshRoadmap={loadRoadmap}
-                      onOpenCareerChat={() => setIsCareerChatOpen(true)}
-                    />
-                  </div>
-                  <div className="radar-col" id="sec-radar">
+                  {/* Spider Chart */}
+                  <div className="flex-1 flex flex-col h-full overflow-hidden" id="sec-radar">
+                    <div className="flex justify-between items-end mb-3 shrink-0">
+                      <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wider">Skill Gap Analysis</h2>
+                      <span className="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-md">{roadmap.targetRole || 'Frontend Dev'}</span>
+                    </div>
                     <SpiderChart
                       categories={activeMilestone.categories}
                       milestoneTitle={activeMilestone.title}
                     />
                   </div>
                 </div>
+              </div>
 
-                {/* Row 2: Danh Sách Kỹ Năng / Checklist rộng 100% bên dưới */}
-                <div className="checklist-full-row" id="sec-checklist" style={{ marginTop: '14px' }}>
+              {/* Right Main Content */}
+              <div className="flex-1 flex flex-col h-full relative overflow-hidden bg-slate-50/50">
+                <div className="shrink-0 bg-white border-b border-slate-200 z-10 shadow-sm">
+                  <RoadmapHeader
+                    milestones={roadmap.milestones}
+                    activeMilestoneId={activeMilestoneId}
+                    onSelectMilestone={handleSelectMilestone}
+                    onOpenCareerChat={() => setIsAIRecoModalOpen(true)}
+                    onEditMilestone={handleOpenEditMilestone}
+                    onDeleteMilestone={handleDeleteMilestone}
+                    onAddMilestone={handleOpenAddMilestone}
+                    onForceCompleteMilestone={handleForceCompleteMilestone}
+                  />
+                </div>
+
+                <div className="flex-1 overflow-y-auto hide-scrollbar p-4 sm:p-8" id="sec-checklist">
                   <SkillCategoryList
                     categories={activeMilestone.categories}
                     onOpenQuiz={handleOpenQuiz}
@@ -191,9 +299,6 @@ export default function Roadmap() {
                   />
                 </div>
               </div>
-
-
-
             </div>
           )}
 
@@ -220,6 +325,10 @@ export default function Roadmap() {
             <SettingsPage userName={roadmap.userName} />
           )}
 
+          {activePage === 'page-courses' && (
+            <CoursesPage />
+          )}
+
           {/* AI Quiz Modal */}
           <AIQuizModal
             isOpen={isQuizModalOpen}
@@ -231,7 +340,7 @@ export default function Roadmap() {
             onSuccessEvaluation={handleSuccessEvaluation}
           />
 
-          {/* Floating AI Career Advisor Chatbot với chức năng Thêm Mốc Lộ Trình Tương Lai do AI Đề Xuất */}
+          {/* Floating AI Career Advisor Chatbot */}
           <AICareerChatbot
             milestoneId={activeMilestoneId}
             milestoneTitle={activeMilestone.title}
@@ -240,9 +349,22 @@ export default function Roadmap() {
             onAddMilestone={handleAddMilestone}
             isSidebarOpen={isSidebarOpen}
           />
+
+          {/* New Modals */}
+          <EditMilestoneModal
+            isOpen={isEditMilestoneModalOpen}
+            onClose={() => setIsEditMilestoneModalOpen(false)}
+            milestoneToEdit={milestoneToEdit}
+            onSave={handleSaveMilestone}
+          />
+
+          <AIRoadmapRecommendModal
+            isOpen={isAIRecoModalOpen}
+            onClose={() => setIsAIRecoModalOpen(false)}
+            onApply={handleApplyAIReco}
+          />
         </div>
       </div>
     </div>
   );
 }
-

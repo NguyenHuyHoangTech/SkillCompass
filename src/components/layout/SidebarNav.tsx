@@ -11,6 +11,7 @@ import {
   LogIn,
   UserPlus,
   LogOut,
+  GraduationCap,
 } from 'lucide-react';
 
 interface SidebarNavProps {
@@ -34,7 +35,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
   return (
     <>
-      {/* 1. Backdrop Overlay làm mờ & làm tối phần bên dưới khi menu đẩy ra */}
+      {/* 1. Backdrop Overlay */}
       <div
         className={`sidebar-backdrop-overlay ${isOpen ? 'active' : ''}`}
         onClick={() => {
@@ -43,9 +44,9 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         }}
       />
 
-      {/* 2. Thanh Tab Dọc Đẩy Ra (Overlay Drawer) */}
+      {/* 2. Overlay Drawer */}
       <aside className={`app-sidebar-nav-drawer ${isOpen ? 'open' : ''}`}>
-        {/* Header Drawer: Ghi tên trang web "Skill Compass AI" nổi bật */}
+        {/* Header Drawer */}
         <div className="sidebar-drawer-header">
           <div className="drawer-title-group">
             <div className="drawer-logo-badge glowing-brand-logo">
@@ -55,12 +56,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               <span className="drawer-menu-title brand-title-glowing">Skill Compass AI</span>
             </div>
           </div>
-          <button className="drawer-close-btn" onClick={onClose} title="Đóng menu">
+          <button className="drawer-close-btn" onClick={onClose} title="Close menu">
             <X size={20} />
           </button>
         </div>
 
-        {/* Navigation List: Các mục Lộ Trình, Tất Cả Kỹ Năng, Bài Tập */}
+        {/* Navigation List */}
         <nav className="sidebar-menu-list">
           <button
             className={`sidebar-menu-btn ${activePage === 'page-roadmap' ? 'active' : ''}`}
@@ -70,8 +71,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             }}
           >
             <Map size={20} className="menu-btn-icon" />
-            <span className="menu-btn-label">Lộ Trình Career</span>
-            <span className="menu-btn-badge">Chính</span>
+            <span className="menu-btn-label">Career Roadmap</span>
+            <span className="menu-btn-badge">Main</span>
           </button>
 
           <button
@@ -82,7 +83,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             }}
           >
             <Layers size={20} className="menu-btn-icon" />
-            <span className="menu-btn-label">Tất Cả Kỹ Năng</span>
+            <span className="menu-btn-label">All Skills</span>
           </button>
 
           <button
@@ -93,13 +94,25 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             }}
           >
             <BookOpenCheck size={20} className="menu-btn-icon" />
-            <span className="menu-btn-label">Bài Tập & Test AI</span>
+            <span className="menu-btn-label">Exercises & AI Quizzes</span>
+          </button>
+
+          <button
+            className={`sidebar-menu-btn ${activePage === 'page-courses' ? 'active' : ''}`}
+            onClick={() => {
+              onSelectPage('page-courses');
+              onClose();
+            }}
+          >
+            <GraduationCap size={20} className="menu-btn-icon" />
+            <span className="menu-btn-label">Course Library</span>
+            <span className="menu-btn-badge" style={{ background: '#3b82f6', color: 'white' }}>New</span>
           </button>
         </nav>
 
         {/* Lower Section & Sidebar Footer User Card */}
         <div className="sidebar-footer-container">
-          {/* Nút AI Advisor Tương Lai */}
+          {/* AI Advisor Button */}
           <button
             className="sidebar-menu-btn career-ai-btn sidebar-lower-ai-btn featured-ai-btn"
             onClick={() => {
@@ -108,52 +121,52 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             }}
           >
             <Sparkles size={20} className="menu-btn-icon spark" />
-            <span className="menu-btn-label">AI Advisor Tương Lai</span>
+            <span className="menu-btn-label">Future AI Advisor</span>
           </button>
 
-          {/* Account Action Popup Menu khi bấm vào icon Cài Đặt */}
+          {/* Account Action Popup Menu */}
           {isAccountMenuOpen && (
             <div className="sidebar-account-dropdown glass-panel">
               <div className="acc-dropdown-header">
                 <span className="acc-user-name">{userName}</span>
-                <span className="acc-user-status">🟢 Đang Hoạt Động</span>
+                <span className="acc-user-status">🟢 Online</span>
               </div>
               <div className="dropdown-divider" />
               <button
                 className="dropdown-menu-item"
                 onClick={() => {
-                  alert('Chức năng thay đổi thông tin tài khoản');
+                  alert('Change account information feature');
                   setIsAccountMenuOpen(false);
                 }}
               >
                 <UserPlus size={16} />
-                <span>Thay Đổi Tài Khoản / Hồ Sơ</span>
+                <span>Change Account / Profile</span>
               </button>
               <button
                 className="dropdown-menu-item"
                 onClick={() => {
-                  alert('Đăng nhập tài khoản mới');
+                  alert('Log in with another account');
                   setIsAccountMenuOpen(false);
                 }}
               >
                 <LogIn size={16} />
-                <span>Đăng Nhập Tài Khoản Phụ</span>
+                <span>Log in with Another Account</span>
               </button>
               <div className="dropdown-divider" />
               <button
                 className="dropdown-menu-item logout"
                 onClick={() => {
-                  alert('Đã đăng xuất tài khoản');
+                  alert('Logged out successfully');
                   setIsAccountMenuOpen(false);
                 }}
               >
                 <LogOut size={16} />
-                <span>Đăng Xuất</span>
+                <span>Log Out</span>
               </button>
             </div>
           )}
 
-          {/* User Card ở dưới cùng với Icon Setting ⚙️ */}
+          {/* User Card */}
           <div className="sidebar-user-card">
             <div className="user-card-left">
               <div className="sidebar-user-avatar">
@@ -165,7 +178,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             <button
               className={`sidebar-settings-btn ${isAccountMenuOpen ? 'active' : ''}`}
               onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
-              title="Cài đặt tài khoản & Đăng nhập / Đăng xuất"
+              title="Account Settings & Login / Logout"
             >
               <Settings size={18} />
             </button>

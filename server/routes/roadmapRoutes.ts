@@ -78,13 +78,18 @@ router.put('/subtopic', (req: Request, res: Response) => {
     }
     if (aiFeedback) targetSubTopic.aiFeedback = aiFeedback;
 
-    // Recalculate Skill level percentage
+    // Recalculate Skill level percentage (capped at 99% until certificate feature)
     if (targetSkill) {
       const completedList = targetSkill.subTopics.filter((s: any) => s.isCompleted);
-      const avgScore = completedList.length > 0
-        ? Math.round(completedList.reduce((acc: number, s: any) => acc + (s.assessmentScore || 80), 0) / completedList.length)
-        : 0;
-      targetSkill.levelPercentage = Math.round((completedList.length / targetSkill.subTopics.length) * avgScore);
+      if (targetSkill.subTopics.length > 0) {
+        let pct = Math.round((completedList.length / targetSkill.subTopics.length) * 100);
+        if (pct === 100) {
+           pct = 99; // Cap at 99% until certificate is implemented
+        }
+        targetSkill.levelPercentage = pct;
+      } else {
+        targetSkill.levelPercentage = 0;
+      }
     }
 
     // Recalculate Milestone overall progress
@@ -116,6 +121,28 @@ router.post('/milestone', (req: Request, res: Response) => {
     res.json({ success: true, data });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to add milestone' });
+  }
+});
+
+// PUT /api/roadmap/milestone - Update a milestone (e.g. force complete)
+router.put('/milestone', (req: Request, res: Response) => {
+  try {
+    const { milestoneId, isForceCompleted } = req.body;
+    const data = readRoadmapData();
+
+    const milestone = data.milestones.find((m) => m.id === milestoneId);
+    if (!milestone) {
+      return res.status(404).json({ success: false, message: 'Milestone not found' });
+    }
+
+    if (typeof isForceCompleted === 'boolean') {
+      milestone.isForceCompleted = isForceCompleted;
+    }
+
+    saveRoadmapData(data);
+    res.json({ success: true, data, updatedMilestone: milestone });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to update milestone' });
   }
 });
 

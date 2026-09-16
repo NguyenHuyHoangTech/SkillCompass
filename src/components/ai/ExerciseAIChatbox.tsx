@@ -34,7 +34,7 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
       {
         id: 'msg-init-1',
         sender: 'ai',
-        text: `👋 Chào bạn! Tôi là AI Coach hướng dẫn bài tập thực tế.\n\nTôi sẽ đồng hành cùng bạn thực hiện bài tập "${subTopicTitle}" thuộc kỹ năng ${skillName} (${milestoneTitle}).\n\n💡 Bạn có thể hỏi tôi cách giải quyết, lấy gợi ý từng bước, nhờ tôi review đoạn mã code của bạn, hoặc bấm các nút hỏi nhanh bên dưới nhé!`,
+        text: `👋 Hello! I am your AI Coach for practical exercises.\n\nI will accompany you through the exercise "${subTopicTitle}" under the skill ${skillName} (${milestoneTitle}).\n\n💡 You can ask me for solutions, step-by-step hints, ask me to review your code snippet, or click the quick prompt buttons below!`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       },
     ];
@@ -65,20 +65,20 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
       let aiReply = '';
       const lower = msg.toLowerCase();
 
-      if (lower.includes('gợi ý') || lower.includes('bước 1') || lower.includes('bắt đầu')) {
-        aiReply = `💡 Gợi Ý Hướng Dẫn Thực Hành Bài "${subTopicTitle}":\n\n1. Bước 1: Phân tích cấu trúc: Xác định các thành phần chính của bài tập.\n2. Bước 2: Sử dụng Tag Chuẩn: Sử dụng đúng thẻ semantic ngữ nghĩa (<header>, <nav>, <main>, <article>, <footer>).\n3. Bước 3: Tối ưu Accessibility: Bổ sung các thuộc tính alt, aria-label và tiêu đề h1-h3 rõ ràng.\n\nBạn có muốn tôi làm mẫu một đoạn code HTML chuẩn không?`;
-      } else if (lower.includes('kiểm tra') || lower.includes('code') || lower.includes('review')) {
+      if (lower.includes('hint') || lower.includes('step 1') || lower.includes('start')) {
+        aiReply = `💡 Practical Guidance Hint for "${subTopicTitle}":\n\n1. Step 1: Analyze structure: Identify the main components of the exercise.\n2. Step 2: Use Standard Tags: Use correct semantic tags (<header>, <nav>, <main>, <article>, <footer>).\n3. Step 3: Optimize Accessibility: Add alt attributes, aria-labels, and clear h1-h3 headings.\n\nWould you like me to show a sample of standard HTML code?`;
+      } else if (lower.includes('check') || lower.includes('code') || lower.includes('review')) {
         if (userAnswerCode.trim().length > 0) {
-          aiReply = `🔍 AI Review Bài Làm Của Bạn:\n\nĐoạn bài làm của bạn:\n${userAnswerCode.slice(0, 150)}...\n\n✅ Đánh giá sơ bộ: Cấu trúc của bạn đi đúng hướng! Thể hiện được tư duy tổ chức dữ liệu hợp lý.\n\n📌 Khuyên dùng: Đảm bảo phân cấp thẻ tiêu đề không bị nhảy cấp và kiểm tra độ tương phản màu sắc khi hiển thị trên mobile.`;
+          aiReply = `🔍 AI Review Of Your Work:\n\nYour submitted snippet:\n${userAnswerCode.slice(0, 150)}...\n\n✅ Preliminary assessment: Your structure is on the right track! It shows a logical data organization mindset.\n\n📌 Recommendation: Ensure heading tag hierarchy is not skipped and check color contrast for mobile display.`;
         } else {
-          aiReply = `🔍 Bạn hãy nhập giải pháp hoặc mã code của bạn vào khung bài làm bên trái, sau đó nhắn cho tôi "Kiểm tra code" để tôi đánh giá chi tiết nhé!`;
+          aiReply = `🔍 Please enter your solution or code snippet into the workspace on the left, then message me "Review code" so I can evaluate it in detail!`;
         }
       } else if (lower.includes('seo') || lower.includes('accessibility') || lower.includes('a11y')) {
-        aiReply = `⚡ Mẹo Chuẩn SEO & Accessibility:\n- Chỉ sử dụng duy nhất 1 thẻ <h1> trên mỗi trang.\n- Thêm thuộc tính lang="vi" ở thẻ <html> và alt mô tả ý nghĩa cho mọi hình ảnh.\n- Dùng thẻ <button> cho hành động bấm thay vì <div onClick>.`;
-      } else if (lower.includes('chấm điểm') || lower.includes('nộp')) {
-        aiReply = `🏆 Bạn nhấn nút "🏆 Nộp Bài Chấm Điểm" ở góc bên trái bài làm để hệ thống AI tính điểm phần trăm và lưu kết quả vào Lộ Trình của bạn nhé!`;
+        aiReply = `⚡ SEO & Accessibility Tips:\n- Only use one <h1> tag per page.\n- Add lang="en" attribute to <html> tag and descriptive alt text for all images.\n- Use <button> tags for clickable actions instead of <div onClick>.`;
+      } else if (lower.includes('grade') || lower.includes('submit')) {
+        aiReply = `🏆 Click the "🏆 Submit for AI Coach to Grade" button at the bottom left to have the AI system calculate your percentage score and save the result to your Roadmap!`;
       } else {
-        aiReply = `🤖 Đối với bài tập thực tế "${subTopicTitle}":\n\nBạn cần tập trung vào việc áp dụng đúng nguyên lý thiết kế thực tiễn. ${scenarioText ? `Đặc biệt lưu ý tình huống dự án: ${scenarioText.slice(0, 90)}...` : ''}\n\nBạn cần tôi giải thích thêm về phần nào không?`;
+        aiReply = `🤖 Regarding the practical exercise "${subTopicTitle}":\n\nYou need to focus on applying practical design principles. ${scenarioText ? `Pay special attention to the project scenario: ${scenarioText.slice(0, 90)}...` : ''}\n\nDo you need me to explain any part in more detail?`;
       }
 
       const aiMsg: Message = {
@@ -94,10 +94,10 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
   };
 
   const quickPrompts = [
-    { label: '💡 Gợi ý bước giải', action: 'Cho tôi xin gợi ý các bước giải quyết bài tập này' },
-    { label: '🔍 Review đoạn bài làm', action: 'Hãy kiểm tra đoạn bài làm thực tế của tôi' },
-    { label: '⚡ Chuẩn SEO & A11y', action: 'Hướng dẫn tối ưu chuẩn SEO và Accessibility cho bài này' },
-    { label: '🏆 Cách chấm điểm', action: 'Cách thức AI chấm điểm bài làm như thế nào?' },
+    { label: '💡 Solution hints', action: 'Please give me hints on the steps to solve this exercise' },
+    { label: '🔍 Review my work snippet', action: 'Please review my actual practical work snippet' },
+    { label: '⚡ SEO & A11y Standards', action: 'Guide me on optimizing SEO and Accessibility for this' },
+    { label: '🏆 How grading works', action: 'How does the AI grade the work?' },
   ];
 
   return (
@@ -110,10 +110,10 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
           </div>
           <div>
             <h4 style={{ margin: 0, fontSize: '0.94rem', fontWeight: 800, color: '#ffffff' }}>
-              AI Coach Hướng Dẫn Bài Thực Tế
+              Practical AI Coach
             </h4>
             <span style={{ fontSize: '0.74rem', color: '#e0f2fe', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80' }} /> 🟢 Trợ lý Hướng Dẫn Trực Tiếp
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80' }} /> 🟢 Direct Guidance Assistant
             </span>
           </div>
         </div>
@@ -158,7 +158,7 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
 
         {isTyping && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0284c7', fontSize: '0.8rem', fontStyle: 'italic', padding: '8px' }}>
-            <Bot size={16} className="spin-icon" /> AI Coach đang soạn phản hồi hướng dẫn...
+            <Bot size={16} className="spin-icon" /> AI Coach is typing a response...
           </div>
         )}
         <div ref={messagesEndRef} />
@@ -198,7 +198,7 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
       >
         <input
           type="text"
-          placeholder="Hỏi AI Coach hướng dẫn bài làm thực tế..."
+          placeholder="Ask AI Coach for practical guidance..."
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           style={{
@@ -231,7 +231,7 @@ export const ExerciseAIChatbox: React.FC<ExerciseAIChatboxProps> = ({
           }}
         >
           <Send size={15} />
-          <span>Gửi</span>
+          <span>Send</span>
         </button>
       </form>
     </div>

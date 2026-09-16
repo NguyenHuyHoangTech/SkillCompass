@@ -15,13 +15,13 @@ interface CountryMarket {
   benchmarks: number[];
 }
 
-export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneTitle }) => {
+export const SpiderChart: React.FC<SpiderChartProps> = ({ categories }) => {
   const [selectedMarketId, setSelectedMarketId] = useState<string>('market-vn');
 
   const countryMarkets: CountryMarket[] = [
     {
       id: 'market-vn',
-      name: 'Việt Nam',
+      name: 'Vietnam',
       flag: '🇻🇳',
       color: '#10b981',
       benchmarks: [75, 85, 80, 70, 65],
@@ -35,14 +35,14 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
     },
     {
       id: 'market-us',
-      name: 'Mỹ',
+      name: 'USA',
       flag: '🇺🇸',
       color: '#f59e0b',
       benchmarks: [90, 92, 90, 85, 90],
     },
     {
       id: 'market-jp',
-      name: 'Nhật Bản',
+      name: 'Japan',
       flag: '🇯🇵',
       color: '#ec4899',
       benchmarks: [75, 85, 80, 75, 90],
@@ -60,30 +60,33 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
     }))
   );
 
-  // Standardize display skills to exactly 5 axes with short & concise names
-  const displaySkills = [...skillsList];
-  const standardLabels = [
-    'Tư Duy UX',
-    'Layout & CSS',
-    'React & Tailwind',
-    'Animation & Micro',
-    'Tối Ưu & A11y',
-  ];
+  // Map all skills directly from the milestone
+  const displaySkills = skillsList.map((skill, idx) => {
+     let cleaned = skill.name;
+     if (cleaned.length > 20) {
+        const parts = cleaned.split('&');
+        if (parts.length > 1) {
+           cleaned = parts[0].trim() + '\n& ' + parts[1].trim();
+        } else {
+           const words = cleaned.split(' ');
+           const mid = Math.ceil(words.length / 2);
+           cleaned = words.slice(0, mid).join(' ') + '\n' + words.slice(mid).join(' ');
+        }
+     }
+     return {
+        id: skill.id,
+        name: cleaned,
+        value: Math.min(skill.value, currentMarket.benchmarks[idx % currentMarket.benchmarks.length] || 100)
+     };
+  });
 
-  while (displaySkills.length < 5) {
-    const idx = displaySkills.length;
-    displaySkills.push({
-      id: `sk-std-${idx}`,
-      name: standardLabels[idx] || `Kỹ năng ${idx + 1}`,
-      value: 0,
-    });
-  }
+  const chartSkills = displaySkills.length > 0 
+    ? displaySkills 
+    : [{ id: 'empty', name: 'No skills', value: 0 }];
 
-  const finalSkills = displaySkills.slice(0, 5);
-
-  const numAxes = 5;
+  const numAxes = chartSkills.length;
   const center = 185;
-  const radius = 92; // Enlarged radar chart grid area with generous padding
+  const radius = 92;
   const levels = [0.2, 0.4, 0.6, 0.8, 1.0];
 
   const getCoordinates = (index: number, valPercent: number) => {
@@ -94,243 +97,223 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
     return { x, y, angle };
   };
 
-  // Helper to map long skill names into short & concise titles
   const formatLabelLines = (name: string): string[] => {
-    const shortNameMap: Record<string, string> = {
-      'Nguyên Tắc UX & Trực Quan': 'Tư Duy UX',
-      'Visual Hierarchy & Layout Balance': 'Layout & CSS',
-      'Flexbox, CSS Grid & SASS': 'CSS Grid & Flex',
-      'Tailwind CSS & React Components': 'React & Tailwind',
-      'Micro-interactions & Fonts/WebP': 'Animation & Micro',
-      'Mobile-First & Performance Tuning': 'Tối Ưu & Mobile',
-      'Cross-Browser & Web Accessibility': 'Tối Ưu & A11y',
-      'Module Federation & GraphQL': 'GraphQL & Federation',
-    };
-
-    const cleaned = shortNameMap[name] || name;
-    if (cleaned.length <= 13) return [cleaned];
-    const words = cleaned.split(' ');
-    if (words.length >= 2) {
-      const mid = Math.ceil(words.length / 2);
-      return [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
-    }
-    return [cleaned];
+    return name ? name.split('\n') : [];
   };
 
-  const userPolygonPoints = finalSkills
+  const userPolygonPoints = chartSkills
     .map((sk, i) => {
       const { x, y } = getCoordinates(i, sk.value);
       return `${x},${y}`;
     })
     .join(' ');
 
-  const marketPolygonPoints = finalSkills
+  const marketPolygonPoints = chartSkills
     .map((_, i) => {
-      const benchVal = currentMarket.benchmarks[i] || 75;
+      const benchVal = currentMarket.benchmarks[i % currentMarket.benchmarks.length] || 80;
       const { x, y } = getCoordinates(i, benchVal);
       return `${x},${y}`;
     })
     .join(' ');
 
   const avgUserScore = Math.round(
-    finalSkills.reduce((acc, s) => acc + s.value, 0) / finalSkills.length
+    displaySkills.length > 0 ? displaySkills.reduce((acc, s) => acc + s.value, 0) / displaySkills.length : 0
   );
   const avgMarketBench = Math.round(
-    currentMarket.benchmarks.reduce((acc, b) => acc + b, 0) / currentMarket.benchmarks.length
+    displaySkills.length > 0 ? displaySkills.reduce((acc, _, i) => acc + (currentMarket.benchmarks[i % currentMarket.benchmarks.length] || 80), 0) / displaySkills.length : 100
   );
-  const marketMatchPercent = Math.min(100, Math.round((avgUserScore / avgMarketBench) * 100));
+  const marketMatchPercent = avgMarketBench === 0 ? 0 : Math.min(100, Math.round((avgUserScore / avgMarketBench) * 100));
 
   return (
-    <div className="spider-chart-card glass-panel flex-card-full-height compact-view">
-      {/* Chart Header */}
-      <div className="chart-header compact-header">
-        <div className="chart-header-top-row">
-          <div className="chart-title-group">
-            <h3>Biểu Đồ Mạng Nhện Năng Lực</h3>
-          </div>
+    <div className="flex flex-col w-full h-full overflow-hidden">
+        {/* SVG Radar Chart Wrapper (Fixed Height) */}
+        <div className="mb-6 h-64 shrink-0 relative w-full flex items-center justify-center bg-slate-50/50 rounded-2xl border border-slate-100 p-2">
+           <svg viewBox="0 0 370 370" className="w-full h-full max-w-[280px]">
+             <defs>
+               <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
+                 <stop offset="0%" stopColor="rgba(59, 130, 246, 0.45)" />
+                 <stop offset="70%" stopColor="rgba(59, 130, 246, 0.25)" />
+                 <stop offset="100%" stopColor="rgba(59, 130, 246, 0.05)" />
+               </radialGradient>
+               <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                 <feGaussianBlur stdDeviation="2" result="blur" />
+                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
+               </filter>
+             </defs>
 
-          <div className="country-market-selector-wrap">
-            <Globe size={13} className="selector-globe-icon" />
-            <select
-              className="country-market-select"
-              value={selectedMarketId}
-              onChange={(e) => setSelectedMarketId(e.target.value)}
-              title="Chọn thị trường quốc gia"
-            >
-              {countryMarkets.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.flag} {m.name}
-                </option>
-              ))}
-            </select>
-          </div>
+             {/* Grid Polygons */}
+             {levels.map((level, lvlIdx) => {
+               const gridPoints = chartSkills
+                 .map((_, i) => {
+                   const { x, y } = getCoordinates(i, level * 100);
+                   return `${x},${y}`;
+                 })
+                 .join(' ');
+               return (
+                 <polygon
+                   key={`grid-${lvlIdx}`}
+                   points={gridPoints}
+                   fill="none"
+                   stroke="#e2e8f0"
+                   strokeWidth="1.5"
+                   strokeDasharray={lvlIdx === levels.length - 1 ? 'none' : '4,4'}
+                 />
+               );
+             })}
+
+             {/* Grid Axes Lines */}
+             {chartSkills.map((_, i) => {
+               const { x, y } = getCoordinates(i, 100);
+               return (
+                 <line
+                   key={`axis-${i}`}
+                   x1={center}
+                   y1={center}
+                   x2={x}
+                   y2={y}
+                   stroke="#e2e8f0"
+                   strokeWidth="1.5"
+                 />
+               );
+             })}
+
+             {/* Market Target Polygon */}
+             <polygon
+               points={marketPolygonPoints}
+               fill="none"
+               stroke={currentMarket.color}
+               strokeWidth="2"
+               strokeDasharray="4,4"
+             />
+
+             {/* Market Vertices */}
+             {chartSkills.map((_, idx) => {
+               const benchVal = currentMarket.benchmarks[idx % currentMarket.benchmarks.length] || 80;
+               const { x, y } = getCoordinates(idx, benchVal);
+               return (
+                 <circle
+                   key={`market-point-${idx}`}
+                   cx={x}
+                   cy={y}
+                   r={3.5}
+                   fill={currentMarket.color}
+                 />
+               );
+             })}
+
+             {/* User Actual Skill Polygon */}
+             <polygon
+               points={userPolygonPoints}
+               fill="url(#radarGrad)"
+               stroke="#3b82f6"
+               strokeWidth="2.5"
+               filter="url(#glow)"
+             />
+
+             {/* User Vertices */}
+             {chartSkills.map((sk, i) => {
+               const { x, y } = getCoordinates(i, sk.value);
+               return (
+                 <circle key={`u-vertex-${i}`} cx={x} cy={y} r="4" fill="#3b82f6" />
+               );
+             })}
+
+             {/* Sleek Skill Labels */}
+             {chartSkills.map((sk, i) => {
+               const angle = (Math.PI * 2 * i) / numAxes - Math.PI / 2;
+               const labelRadius = radius + 22;
+               const lx = Math.round(center + labelRadius * Math.cos(angle));
+               const ly = Math.round(center + labelRadius * Math.sin(angle));
+               const textAnchor = Math.abs(lx - center) < 15 ? 'middle' : lx > center ? 'start' : 'end';
+               const lines = formatLabelLines(sk.name);
+
+               return (
+                 <text
+                   key={`label-${i}`}
+                   x={lx}
+                   y={ly}
+                   textAnchor={textAnchor}
+                   dominantBaseline="central"
+                   className="fill-slate-500 font-bold text-[11px]"
+                   style={{ fontFamily: "'Inter', sans-serif" }}
+                 >
+                   {lines.map((line, lIdx) => (
+                     <tspan key={lIdx} x={lx} dy={lIdx === 0 ? 0 : 12}>
+                       {line}
+                     </tspan>
+                   ))}
+                 </text>
+               );
+             })}
+           </svg>
         </div>
 
-        <p className="chart-subtitle compact-sub">
-          So sánh kỹ năng thuộc {milestoneTitle} với tiêu chuẩn <strong>{currentMarket.name}</strong>
-        </p>
-
-        <div className="radar-legend-bar compact-legend">
-          <div className="legend-item user-legend">
-            <span className="legend-dot user-dot" />
-            <span className="legend-text">Bạn ({avgUserScore}%)</span>
-          </div>
-          <div className="legend-item market-legend">
-            <span className="legend-dot market-dot" style={{ background: currentMarket.color }} />
-            <span className="legend-text">Thị Trường {currentMarket.flag} ({avgMarketBench}%)</span>
-          </div>
-        </div>
-      </div>
-
-      {/* SVG Radar Chart (Enlarged canvas 370x370 for spacious label padding) */}
-      <div className="chart-container-flex compact-flex">
-        <svg viewBox="0 0 370 370" className="spider-svg compact-svg">
-          <defs>
-            <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="rgba(2, 132, 199, 0.45)" />
-              <stop offset="70%" stopColor="rgba(37, 99, 235, 0.25)" />
-              <stop offset="100%" stopColor="rgba(2, 132, 199, 0.05)" />
-            </radialGradient>
-            <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0284c7" />
-              <stop offset="50%" stopColor="#2563eb" />
-              <stop offset="100%" stopColor="#38bdf8" />
-            </linearGradient>
-            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-          </defs>
-
-          {/* Grid Polygons */}
-          {levels.map((level, lvlIdx) => {
-            const gridPoints = finalSkills
-              .map((_, i) => {
-                const { x, y } = getCoordinates(i, level * 100);
-                return `${x},${y}`;
-              })
-              .join(' ');
-            return (
-              <polygon
-                key={`level-${lvlIdx}`}
-                points={gridPoints}
-                className="radar-grid-poly"
-              />
-            );
-          })}
-
-          {/* Axes lines */}
-          {finalSkills.map((_, i) => {
-            const { x, y } = getCoordinates(i, 100);
-            return (
-              <line
-                key={`axis-${i}`}
-                x1={center}
-                y1={center}
-                x2={x}
-                y2={y}
-                className="radar-axis-line"
-              />
-            );
-          })}
-
-          {/* LAYER 1: Market Country Benchmark */}
-          <polygon
-            points={marketPolygonPoints}
-            fill={`${currentMarket.color}15`}
-            stroke={currentMarket.color}
-            strokeWidth="1.8"
-            strokeDasharray="4,4"
-            className="radar-market-poly"
-          />
-
-          {/* Market Vertices */}
-          {finalSkills.map((_, i) => {
-            const benchVal = currentMarket.benchmarks[i] || 75;
-            const { x, y } = getCoordinates(i, benchVal);
-            return (
-              <circle
-                key={`m-vertex-${i}`}
-                cx={x}
-                cy={y}
-                r="3.5"
-                fill={currentMarket.color}
-                stroke="#ffffff"
-                strokeWidth="1"
-              />
-            );
-          })}
-
-          {/* LAYER 2: User Actual Skill Polygon */}
-          <polygon
-            points={userPolygonPoints}
-            fill="url(#radarGrad)"
-            stroke="url(#strokeGrad)"
-            strokeWidth="2.5"
-            filter="url(#glow)"
-            className="radar-data-poly"
-          />
-
-          {/* User Vertices */}
-          {finalSkills.map((sk, i) => {
-            const { x, y } = getCoordinates(i, sk.value);
-            return (
-              <g key={`vertex-${i}`} className="radar-vertex-group">
-                <circle cx={x} cy={y} r="4.5" className="radar-vertex-dot" />
-                <circle cx={x} cy={y} r="8" className="radar-vertex-halo" />
-              </g>
-            );
-          })}
-
-          {/* Sleek Skill Labels with ample padding */}
-          {finalSkills.map((sk, i) => {
-            const angle = (Math.PI * 2 * i) / numAxes - Math.PI / 2;
-            const labelRadius = radius + 22;
-            const lx = Math.round(center + labelRadius * Math.cos(angle));
-            const ly = Math.round(center + labelRadius * Math.sin(angle));
-            const textAnchor = Math.abs(lx - center) < 15 ? 'middle' : lx > center ? 'start' : 'end';
-            const lines = formatLabelLines(sk.name);
-
-            return (
-              <g key={`label-${i}`}>
-                <text
-                  x={lx}
-                  y={ly}
-                  textAnchor={textAnchor}
-                  dominantBaseline="central"
-                  className="radar-label-text"
+        {/* Legend & Country Selector Row */}
+        <div className="flex items-center justify-between gap-4 mb-6 relative shrink-0">
+            <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+                    <span className="text-[11px] font-bold text-slate-600">You ({avgUserScore}%)</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: currentMarket.color }}></div>
+                    <span className="text-[11px] font-bold text-slate-600">Market ({avgMarketBench}%)</span>
+                </div>
+            </div>
+            
+            <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-2 py-1 rounded-md cursor-pointer hover:bg-slate-100 transition-colors">
+                <Globe size={12} className="text-slate-500" />
+                <select
+                  className="bg-transparent text-[11px] font-bold text-slate-700 outline-none cursor-pointer"
+                  value={selectedMarketId}
+                  onChange={(e) => setSelectedMarketId(e.target.value)}
                 >
-                  {lines.map((line, lIdx) => (
-                    <tspan key={lIdx} x={lx} dy={lIdx === 0 ? 0 : 11}>
-                      {line}
-                    </tspan>
+                  {countryMarkets.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.flag} {m.name}
+                    </option>
                   ))}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
-      </div>
+                </select>
+            </div>
+        </div>
 
-      {/* Compact Footer Stats - Text & Numbers on 1 Single Row */}
-      <div className="chart-footer-stats compact-footer">
-        <div className="stat-pill">
-          <span className="stat-label">TB Bạn:</span>
-          <span className="stat-val highlight">{avgUserScore}%</span>
+        {/* Data List */}
+        <div className="space-y-3 mb-6 w-full pr-1 overflow-y-auto flex-1 hide-scrollbar">
+            {displaySkills.map((sk, idx) => {
+                const benchVal = currentMarket.benchmarks[idx % currentMarket.benchmarks.length] || 80;
+                return (
+                    <div key={sk.id} className="flex items-center justify-between group">
+                        <span className="text-[11px] font-bold text-slate-600 group-hover:text-blue-600 transition-colors w-[45%] truncate pr-2" title={sk.name}>
+                            {sk.name}
+                        </span>
+                        <div className="w-[55%] h-1.5 bg-slate-100 rounded-full overflow-hidden relative">
+                            <div className="absolute top-0 left-0 h-full opacity-30" style={{ width: `${benchVal}%`, backgroundColor: currentMarket.color }}></div>
+                            <div className="absolute top-0 left-0 h-full bg-blue-500 rounded-full" style={{ width: `${sk.value}%` }}></div>
+                        </div>
+                    </div>
+                );
+            })}
         </div>
-        <div className="stat-pill">
-          <span className="stat-label">Thị Trường:</span>
-          <span className="stat-val" style={{ color: currentMarket.color, fontWeight: 800 }}>
-            {avgMarketBench}%
-          </span>
+
+        {/* Market Match Overview */}
+        <div className="bg-blue-50/50 rounded-xl p-4 flex items-center justify-between border border-blue-100 w-full mt-auto shrink-0">
+            <div className="text-center flex-1">
+                <span className="block text-[10px] font-bold text-slate-500 uppercase">Your Avg</span>
+                <span className="text-[15px] font-black text-blue-700">{avgUserScore}%</span>
+            </div>
+            <div className="w-px h-8 bg-blue-200/60"></div>
+            <div className="text-center flex-1">
+                <span className="block text-[10px] font-bold text-slate-500 uppercase">Market</span>
+                <span className="text-[15px] font-black" style={{ color: currentMarket.color }}>{avgMarketBench}%</span>
+            </div>
+            <div className="w-px h-8 bg-blue-200/60"></div>
+            <div className="text-center flex-1">
+                <span className="block text-[10px] font-bold text-slate-500 uppercase">Match</span>
+                <span className="text-[15px] font-black text-emerald-600 flex items-center justify-center gap-1">
+                    <ShieldCheck size={14} /> {marketMatchPercent}%
+                </span>
+            </div>
         </div>
-        <div className="stat-pill match-pill">
-          <span className="stat-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-            <ShieldCheck size={11} color="#059669" /> Khớp:
-          </span>
-          <span className="stat-val match-val">{marketMatchPercent}%</span>
-        </div>
-      </div>
     </div>
   );
 };

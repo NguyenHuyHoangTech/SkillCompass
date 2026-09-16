@@ -352,7 +352,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
             ctx.font = '10px Inter, sans-serif';
             ctx.fillStyle = '#38bdf8';
             ctx.fillText(
-              `✨ ${star.completedCount}/${star.totalCount} bài tập`,
+              `✨ ${star.completedCount}/${star.totalCount} exercises`,
               star.screenX,
               textY - 14
             );
@@ -506,19 +506,19 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
         <button
           className="hud-btn"
           onClick={handleResetView}
-          title="Đặt lại góc nhìn 3D"
+          title="Reset 3D View"
         >
           <RotateCcw size={15} />
-          <span>Đặt lại góc nhìn</span>
+          <span>Reset View</span>
         </button>
 
         <button
           className={`hud-btn ${isAutoRotate ? 'active' : ''}`}
           onClick={onToggleAutoRotate}
-          title={isAutoRotate ? 'Tạm dừng xoay tự động' : 'Bật xoay tự động 3D'}
+          title={isAutoRotate ? 'Pause auto-rotate' : 'Enable 3D auto-rotate'}
         >
           {isAutoRotate ? <Pause size={15} /> : <Play size={15} />}
-          <span>{isAutoRotate ? 'Đang xoay' : 'Tạm dừng'}</span>
+          <span>{isAutoRotate ? 'Rotating' : 'Paused'}</span>
         </button>
       </div>
 
@@ -534,8 +534,8 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
           </div>
           <div className="star-hover-card-body">
             <div className="star-hover-stat">
-              <span>Đã làm: <strong>{hoveredStar.completedCount}/{hoveredStar.totalCount} bài</strong></span>
-              <span className="star-hover-pct">{hoveredStar.skill.levelPercentage}% Thành Thạo</span>
+              <span>Completed: <strong>{hoveredStar.completedCount}/{hoveredStar.totalCount} tasks</strong></span>
+              <span className="star-hover-pct">{hoveredStar.skill.levelPercentage}% Mastery</span>
             </div>
             <button
               className="star-hover-action-btn"
@@ -546,7 +546,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
               })}
             >
               <Eye size={15} />
-              <span>Đúp chuột để xem bài tập</span>
+              <span>Double-click to view exercises</span>
             </button>
           </div>
         </div>

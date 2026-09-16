@@ -10,7 +10,7 @@ import { initialMockRoadmap } from '../data/mockRoadmapData';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 function getLocalMockRoadmap(): UserRoadmap {
-  const cached = localStorage.getItem('skill_compass_roadmap');
+  const cached = localStorage.getItem('skill_compass_roadmap_v3');
   if (cached) {
     try {
       const parsed: UserRoadmap = JSON.parse(cached);
@@ -23,7 +23,7 @@ function getLocalMockRoadmap(): UserRoadmap {
           }
         }
         if (updated) {
-          localStorage.setItem('skill_compass_roadmap', JSON.stringify(parsed));
+          localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(parsed));
         }
         return parsed;
       }
@@ -31,13 +31,13 @@ function getLocalMockRoadmap(): UserRoadmap {
       // ignore
     }
   }
-  localStorage.setItem('skill_compass_roadmap', JSON.stringify(initialMockRoadmap));
+  localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(initialMockRoadmap));
   return initialMockRoadmap;
 }
 
 function saveLocalMockRoadmap(data: UserRoadmap): void {
   data.updatedAt = new Date().toISOString();
-  localStorage.setItem('skill_compass_roadmap', JSON.stringify(data));
+  localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(data));
 }
 
 export class ApiService {
@@ -46,9 +46,10 @@ export class ApiService {
       const res = await fetch(`${API_BASE_URL}/roadmap`);
       if (!res.ok) throw new Error('API server unavailable');
       const result = await res.json();
-      localStorage.setItem('skill_compass_roadmap', JSON.stringify(result.data));
+      localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(result.data));
       return result.data;
-    } catch {
+    } catch (err) {
+      console.warn('Backend not available, using local mock data');
       return getLocalMockRoadmap();
     }
   }
@@ -69,7 +70,7 @@ export class ApiService {
       });
       if (!res.ok) throw new Error('API error');
       const result = await res.json();
-      localStorage.setItem('skill_compass_roadmap', JSON.stringify(result.data));
+      localStorage.setItem('skill_compass_roadmap_v2', JSON.stringify(result.data));
       return result.data;
     } catch {
       const data = getLocalMockRoadmap();
@@ -84,10 +85,13 @@ export class ApiService {
               if (payload.aiFeedback) sub.aiFeedback = payload.aiFeedback;
 
               const completedList = sk.subTopics.filter((s) => s.isCompleted);
-              const avgScore = completedList.length > 0
-                ? Math.round(completedList.reduce((acc, s) => acc + (s.assessmentScore || 80), 0) / completedList.length)
-                : 0;
-              sk.levelPercentage = Math.round((completedList.length / sk.subTopics.length) * avgScore);
+              if (sk.subTopics.length > 0) {
+                let pct = Math.round((completedList.length / sk.subTopics.length) * 100);
+                if (pct === 100) pct = 99;
+                sk.levelPercentage = pct;
+              } else {
+                sk.levelPercentage = 0;
+              }
               break;
             }
           }
@@ -126,6 +130,29 @@ export class ApiService {
   }
 
 
+  public static async updateMilestone(milestoneId: string, data: { isForceCompleted?: boolean }): Promise<UserRoadmap> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/roadmap/milestone`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ milestoneId, ...data }),
+      });
+      if (!res.ok) throw new Error('API error');
+      const result = await res.json();
+      localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(result.data));
+      return result.data;
+    } catch {
+      const localData = getLocalMockRoadmap();
+      const milestone = localData.milestones.find((m) => m.id === milestoneId);
+      if (milestone) {
+        if (data.isForceCompleted !== undefined) {
+          milestone.isForceCompleted = data.isForceCompleted;
+        }
+        saveLocalMockRoadmap(localData);
+      }
+      return localData;
+    }
+  }
   public static async getQuizQuestion(
     milestoneTitle: string,
     skillName: string,
@@ -146,8 +173,8 @@ export class ApiService {
         subTopicId: "sub-mock",
         subTopicTitle,
         skillName,
-        question: `Hãy phân tích bản chất, ưu điểm và ứng dụng thực tế của "${subTopicTitle}" thuộc kỹ năng ${skillName}?`,
-        hint: `Gợi ý: Phân tích định nghĩa, nguyên lý hoạt động và ví dụ áp dụng thực tế.`,
+        question: `Please analyze the nature, advantages, and practical applications of "${subTopicTitle}" under the skill ${skillName}?`,
+        hint: `Hint: Analyze its definition, principles, and real-world application examples.`,
         keyConcepts: [skillName, subTopicTitle, "UI/UX Best Practices"]
       };
     }
@@ -181,10 +208,10 @@ export class ApiService {
         score,
         isPassed: score >= 70,
         feedback: score >= 70
-          ? `Tốt lắm! Bạn đã thể hiện hiểu biết vững chắc về ${payload.subTopicTitle}.`
-          : `Cần bổ sung thêm ví dụ và thuật ngữ chuyên sâu cho ${payload.subTopicTitle}.`,
-        strengths: "Giải thích đúng trọng tâm câu hỏi và thể hiện tư duy logic.",
-        improvements: "Nên bổ sung thêm ví dụ đoạn mã (code snippet) và các trường hợp biên (edge cases).",
+          ? `Well done! You have demonstrated a solid understanding of ${payload.subTopicTitle}.`
+          : `You need to add more practical examples and technical terminology for ${payload.subTopicTitle}.`,
+        strengths: "Addresses the core of the question and shows logical thinking.",
+        improvements: "Consider adding code snippets and handling edge cases.",
         updatedSkillLevel: score,
       };
 
@@ -219,31 +246,31 @@ export class ApiService {
       const completed = allSub.filter((st) => st.isCompleted);
       const tested = completed.filter((st) => (st.assessmentScore || 0) > 0);
 
-      // 2. AI Đánh giá năng lực tổng hợp dựa trên kết quả các bài kiểm tra test
+      // AI synthesizes capability score based on test results
       const avgQuizScore = tested.length > 0
         ? Math.round(tested.reduce((acc, st) => acc + (st.assessmentScore || 0), 0) / tested.length)
         : 0;
 
       const evalResult: OverallAiEvaluation = {
         score: avgQuizScore,
-        readinessLabel: `${avgQuizScore}% AI Đánh Giá Năng Lực ${milestone.roleName}`,
+        readinessLabel: `${avgQuizScore}% AI Evaluated Readiness for ${milestone.roleName}`,
         summary: tested.length > 0
-          ? `AI đã tổng hợp kết quả các bài kiểm tra test: Điểm năng lực thực tế đạt ${avgQuizScore}% (đã tích xong ${completed.length}/${allSub.length} mục bài học trong mốc).`
-          : `Mốc mới được khởi tạo! Bạn chưa thực hiện bài kiểm tra test nào. Hãy bắt đầu học và làm AI Quiz để nâng cao điểm đánh giá năng lực!`,
+          ? `AI has synthesized test results: Actual capability score is ${avgQuizScore}% (completed ${completed.length}/${allSub.length} topics in this phase).`
+          : `New milestone initiated! You haven't taken any AI tests yet. Start learning and taking AI Quizzes to improve your capability score!`,
         strengths: tested.length > 0 ? [
-          "Thấu hiểu tư duy UI/UX trực quan và nguyên tắc phân cấp thị giác",
-          "Có khả năng áp dụng các công cụ hiện đại và chuẩn hóa trải nghiệm người dùng"
+          "Understands intuitive UI/UX mindset and visual hierarchy principles",
+          "Capable of applying modern tools and standardizing user experience"
         ] : [
-          "Sẵn sàng tiếp thu kiến thức và kỹ năng mới thuộc giai đoạn này",
-          "Đã thiết lập mục tiêu lộ trình chi tiết cùng AI Coach"
+          "Ready to absorb new knowledge and skills in this phase",
+          "Has established detailed roadmap goals with the AI Coach"
         ],
         weaknesses: [
-          `Cần hoàn thiện thêm các hạng mục thực hành chưa hoàn thành (${completed.length}/${allSub.length} mục)`
+          `Needs to complete remaining practical topics (${completed.length}/${allSub.length} topics completed)`
         ],
         actionItems: [
-          "Luyện tập bài test AI Quiz cho các mục bài học trong mốc",
-          "Áp dụng kiến thức vào bài tập thực hành thực tế",
-          "Hoàn thành toàn bộ checklist để sẵn sàng ứng tuyển"
+          "Practice AI Quizzes for topics in this phase",
+          "Apply knowledge to real-world exercises",
+          "Complete all checklists to be ready for job applications"
         ],
         evaluatedAt: new Date().toISOString()
       };
@@ -275,19 +302,19 @@ export class ApiService {
       const msg = userMessage.toLowerCase();
 
       // Check if user is asking for a new future milestone / next step
-      if (msg.includes("giai đoạn 4") || msg.includes("ai native") || msg.includes("cloud") || (msg.includes("mốc") && msg.includes("ai"))) {
+      if (msg.includes("phase 4") || msg.includes("ai native") || msg.includes("cloud") || (msg.includes("milestone") && msg.includes("ai"))) {
         const proposedMilestone: Milestone = {
           id: `ms-future-ai-${Date.now()}`,
-          title: "Giai Đoạn 4: Fullstack AI Native & Cloud Architect",
+          title: "Stage 4: Fullstack AI Native & Cloud Architect",
           roleName: "AI Native Fullstack Lead",
-          description: "Mốc tương lai do AI đề xuất: Tích hợp mô hình AI LLM Engine (Gemini/OpenAI), Vector Database, RAG Systems và Điện toán Đám mây AWS Serverless/Docker Container.",
+          description: "AI-proposed future milestone: Integrating AI LLM Engines (Gemini/OpenAI), Vector Databases, RAG Systems, and AWS Serverless/Docker Cloud Computing.",
           badge: "🤖 AI Cloud Master",
           overallProgress: 0,
           categories: [
             {
               id: "cat-ai-integration",
-              name: "4.1. Tích Hợp Mô Hình AI & Vector Database",
-              description: "Xây dựng các sản phẩm AI Native thông minh",
+              name: "4.1. AI Model Integration & Vector Databases",
+              description: "Building smart AI Native products",
               skills: [
                 {
                   id: "sk-ai-llm-api",
@@ -297,15 +324,15 @@ export class ApiService {
                   subTopics: [
                     {
                       id: "sub-ai-prompting",
-                      title: "Kỹ Thuật Prompt Engineering & Structured Outputs",
-                      description: "Thiết kế prompt tối ưu cho Gemini AI trả về định dạng JSON chuẩn",
+                      title: "Prompt Engineering & Structured Outputs",
+                      description: "Designing optimal prompts for Gemini AI to return standard JSON formats",
                       isCompleted: false,
                       assessmentScore: 0
                     },
                     {
                       id: "sub-vector-db",
                       title: "Vector Database & RAG System (Chroma / Pinecone)",
-                      description: "Xây dựng hệ thống tìm kiếm ngữ nghĩa RAG cho tài liệu doanh nghiệp",
+                      description: "Building Semantic RAG Search for enterprise documents",
                       isCompleted: false,
                       assessmentScore: 0
                     }
@@ -316,7 +343,7 @@ export class ApiService {
             {
               id: "cat-cloud-devops",
               name: "4.2. Cloud Serverless & CI/CD DevOps",
-              description: "Triển khai tự động hóa hạ tầng đám mây",
+              description: "Automating cloud infrastructure deployment",
               skills: [
                 {
                   id: "sk-aws-docker",
@@ -327,7 +354,7 @@ export class ApiService {
                     {
                       id: "sub-docker-compose",
                       title: "Dockerizing React & Node.js Express",
-                      description: "Đóng gói ứng dụng Fullstack vào Docker Container hoàn chỉnh",
+                      description: "Packaging Fullstack applications into complete Docker Containers",
                       isCompleted: false,
                       assessmentScore: 0
                     }
@@ -339,24 +366,24 @@ export class ApiService {
         };
 
         return {
-          text: `Dựa trên phân tích xu hướng tuyển dụng IT hiện tại và tiến độ mốc hiện tại của bạn, tôi đề xuất bạn mở rộng sang **Giai Đoạn 4: Fullstack AI Native & Cloud Architect** (gồm các kỹ năng Tích hợp Gemini AI, Vector Database và Docker/AWS Cloud). \n\nBạn có muốn tự động thêm mốc này vào Lộ Trình của bạn ngay bây giờ không? 👇`,
+          text: `Based on current IT hiring trends and your current progress, I suggest you expand into **Stage 4: Fullstack AI Native & Cloud Architect** (including Gemini AI Integration, Vector Databases, and Docker/AWS Cloud). \n\nWould you like to automatically add this milestone to your Roadmap right now? 👇`,
           proposedMilestone
         };
       }
 
-      if (msg.includes("giai đoạn 5") || msg.includes("design system") || msg.includes("micro-frontend")) {
+      if (msg.includes("phase 5") || msg.includes("design system") || msg.includes("micro-frontend")) {
         const proposedMilestone: Milestone = {
           id: `ms-future-ds-${Date.now()}`,
-          title: "Giai Đoạn 5: Design System Architect & Micro-frontends",
+          title: "Stage 5: Design System Architect & Micro-frontends",
           roleName: "Design System & Micro-frontend Lead",
-          description: "Mốc tương lai do AI đề xuất: Chuẩn hóa hệ thống UI Tokens, Storybook Design System doanh nghiệp và kiến trúc Micro-frontends Module Federation.",
+          description: "AI-proposed future milestone: Standardizing UI Tokens, Storybook Enterprise Design Systems, and Module Federation Micro-frontends architecture.",
           badge: "🎨 Design System Lead",
           overallProgress: 0,
           categories: [
             {
               id: "cat-design-system",
               name: "5.1. Enterprise Design System & Tokens",
-              description: "Xây dựng thư viện UI tái sử dụng quy mô lớn",
+              description: "Building a large-scale reusable UI library",
               skills: [
                 {
                   id: "sk-storybook-tokens",
@@ -367,7 +394,7 @@ export class ApiService {
                     {
                       id: "sub-ui-tokens",
                       title: "Design Tokens (Colors, Typography, Spacing Scale)",
-                      description: "Đồng bộ design token giữa Figma và codebase React",
+                      description: "Synchronizing design tokens between Figma and React codebase",
                       isCompleted: false,
                       assessmentScore: 0
                     }
@@ -378,24 +405,24 @@ export class ApiService {
           ]
         };
         return {
-          text: `Tôi xin đề xuất mốc **Giai Đoạn 5: Design System Architect & Micro-frontends**! \n\nBạn nhấn nút bên dưới để thêm mốc này vào Lộ Trình của bạn nhé! 👇`,
+          text: `I would like to propose the milestone **Stage 5: Design System Architect & Micro-frontends**! \n\nClick the button below to add this milestone to your Roadmap! 👇`,
           proposedMilestone
         };
       }
 
-      if (msg.includes("thêm mốc") || msg.includes("mốc mới") || msg.includes("tương lai") || msg.includes("đề xuất mốc")) {
+      if (msg.includes("add milestone") || msg.includes("new milestone") || msg.includes("future") || msg.includes("suggest milestone")) {
         const proposedMilestone: Milestone = {
           id: `ms-future-ai-${Date.now()}`,
-          title: "Giai Đoạn 4: Fullstack AI Native & Cloud Architect",
+          title: "Stage 4: Fullstack AI Native & Cloud Architect",
           roleName: "AI Native Fullstack Lead",
-          description: "Mốc tương lai do AI đề xuất: Tích hợp mô hình AI LLM Engine (Gemini/OpenAI), Vector Database, RAG Systems và Điện toán Đám mây AWS Serverless/Docker Container.",
+          description: "AI-proposed future milestone: Integrating AI LLM Engines (Gemini/OpenAI), Vector Databases, RAG Systems, and AWS Serverless/Docker Cloud Computing.",
           badge: "🤖 AI Cloud Master",
           overallProgress: 0,
           categories: [
             {
               id: "cat-ai-integration",
-              name: "4.1. Tích Hợp Mô Hình AI & Vector Database",
-              description: "Xây dựng các sản phẩm AI Native thông minh",
+              name: "4.1. AI Model Integration & Vector Databases",
+              description: "Building smart AI Native products",
               skills: [
                 {
                   id: "sk-ai-llm-api",
@@ -405,15 +432,15 @@ export class ApiService {
                   subTopics: [
                     {
                       id: "sub-ai-prompting",
-                      title: "Kỹ Thuật Prompt Engineering & Structured Outputs",
-                      description: "Thiết kế prompt tối ưu cho Gemini AI trả về định dạng JSON chuẩn",
+                      title: "Prompt Engineering & Structured Outputs",
+                      description: "Designing optimal prompts for Gemini AI to return standard JSON formats",
                       isCompleted: false,
                       assessmentScore: 0
                     },
                     {
                       id: "sub-vector-db",
                       title: "Vector Database & RAG System (Chroma / Pinecone)",
-                      description: "Xây dựng hệ thống tìm kiếm ngữ nghĩa RAG cho tài liệu doanh nghiệp",
+                      description: "Building Semantic RAG Search for enterprise documents",
                       isCompleted: false,
                       assessmentScore: 0
                     }
@@ -425,27 +452,26 @@ export class ApiService {
         };
 
         return {
-          text: `Dựa trên phân tích xu hướng tuyển dụng IT hiện tại, tôi xin đề xuất mốc tương lai tiếp theo: **Giai Đoạn 4: Fullstack AI Native & Cloud Architect**! \n\nBạn bấm nút bên dưới để tự động thêm mốc mới này vào thanh Tab mốc của Lộ Trình nhé! 👇`,
+          text: `Based on an analysis of current IT hiring trends, I propose the following future milestone: **Stage 4: Fullstack AI Native & Cloud Architect**! \n\nClick the button below to automatically add this new milestone to your Roadmap tab! 👇`,
           proposedMilestone
         };
       }
 
-      if (msg.includes("bao lâu") || msg.includes("thời gian")) {
+      if (msg.includes("how long") || msg.includes("time")) {
         return {
-          text: `Dựa trên tiến độ hiện tại của bạn (Đạt khoảng 70% các mục kỹ năng), nếu bạn học 2 giờ mỗi ngày, bạn dự kiến sẵn sàng chuyển tiếp sang mốc tương lai tiếp theo sau **3 đến 5 tuần** nữa! 🚀`
+          text: `Based on your current progress (approximately 70% of skill goals achieved), if you study for 2 hours a day, you are expected to be ready to transition to the next future milestone in **3 to 5 weeks**! 🚀`
         };
       }
 
-      if (msg.includes("lương") || msg.includes("thu nhập")) {
+      if (msg.includes("salary") || msg.includes("income")) {
         return {
-          text: `Mức lương kỳ vọng ở mốc này trên thị trường IT Việt Nam hiện dao động từ **15 - 28 triệu VNĐ / tháng**. Khi hoàn thành các bài test AI Quiz với điểm số cao, bạn hoàn toàn tự tin đàm phán mức thu nhập tối ưu! 💰`
+          text: `The expected salary at this milestone in the IT market typically ranges from **$2,500 - $4,500 / month**. Upon completing the AI Quiz tests with high scores, you can confidently negotiate for optimal compensation! 💰`
         };
       }
 
       return {
-        text: `Tôi là AI Career Advisor! Tôi có thể giúp bạn định hướng nghề nghiệp, giải đáp thắc mắc về kỹ năng và **Đề Xuất Các Mốc Lộ Trình Tương Lai Mới** (Ví dụ: Giai đoạn 4 AI Native Lead, Giai đoạn 5 Design System Master...). Bạn muốn tôi đề xuất mốc mới không? 😊`
+        text: `I am your AI Career Advisor! I can help you with career orientation, answer skill-related questions, and **Propose New Future Roadmaps** (e.g., Stage 4 AI Native Lead, Stage 5 Design System Master...). Would you like me to propose a new milestone? 😊`
       };
     }
   }
 }
-

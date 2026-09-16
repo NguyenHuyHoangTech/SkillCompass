@@ -49,7 +49,7 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
         skillId: activeExercise.skill.id,
         subTopicId: activeExercise.subTopic.id,
         subTopicTitle: activeExercise.subTopic.title,
-        question: `Hãy đưa ra mã code / lời giải thực tế chuẩn hóa cho bài tập "${activeExercise.subTopic.title}" thuộc kỹ năng ${activeExercise.skill.name}?`,
+        question: `Please provide a standardized code/solution for the exercise "${activeExercise.subTopic.title}" under the skill ${activeExercise.skill.name}?`,
         userAnswer: userSolution,
       });
 
@@ -68,22 +68,22 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
         <div className="page-title-group">
           <BookOpenCheck size={30} className="page-title-icon" style={{ color: '#0284c7' }} />
           <div>
-            <h2>🤖 Trung Tâm Bài Tập Thực Tế & AI Coach Hướng Dẫn</h2>
+            <h2>🤖 Practical Exercise Center & AI Coach Guidance</h2>
             <p>
-              Không gian thực hành tình huống dự án thực tế. Có chatbox AI riêng đồng hành hướng dẫn từng bước, sửa lỗi code và chấm điểm bài làm của bạn.
+              A space to practice real-world project scenarios. Includes a dedicated AI chatbox to guide you step-by-step, debug code, and grade your work.
             </p>
           </div>
         </div>
 
         <div className="ai-guidance-feature-pills" style={{ display: 'flex', gap: '12px', marginTop: '14px', flexWrap: 'wrap' }}>
           <div style={{ padding: '6px 12px', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #bae6fd', fontSize: '0.78rem', color: '#0369a1', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Lightbulb size={14} /> 1. Đề Bài Dự Án Tình Huống Thực Tế
+            <Lightbulb size={14} /> 1. Real-world Project Scenario Task
           </div>
           <div style={{ padding: '6px 12px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #a7f3d0', fontSize: '0.78rem', color: '#047857', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Bot size={14} /> 2. Chatbox AI Riêng Hướng Dẫn Trực Tiếp
+            <Bot size={14} /> 2. Dedicated AI Chatbox Direct Guidance
           </div>
           <div style={{ padding: '6px 12px', background: '#faf5ff', borderRadius: '8px', border: '1px solid #e9d5ff', fontSize: '0.78rem', color: '#7e22ce', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Sparkles size={14} /> 3. Chấm Điểm & Đánh Giá Tư Duy
+            <Sparkles size={14} /> 3. Scoring & Mindset Evaluation
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                 cursor: 'pointer',
               }}
             >
-              <ArrowLeft size={16} /> Quay Lại Danh Sách Bài Tập
+              <ArrowLeft size={16} /> Back to Exercise List
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -128,24 +128,24 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
               {/* Problem Title & Scenario Card */}
               <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#0284c7', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase' }}>
-                  <Code size={16} /> Đề Bài Dự Án Tình Huống Thực Tế
+                  <Code size={16} /> Real-world Project Scenario Task
                 </div>
                 <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', margin: '6px 0' }}>
                   {activeExercise.subTopic.title}
                 </h3>
                 <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
-                  {activeExercise.subTopic.description || `Xây dựng giải pháp thực tế cho hạng mục ${activeExercise.subTopic.title} tuân thủ tiêu chuẩn ngành công nghệ.`}
+                  {activeExercise.subTopic.description || `Build a practical solution for the ${activeExercise.subTopic.title} item following technology industry standards.`}
                 </p>
 
                 {/* Practical Requirements checklist */}
                 <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px dashed #cbd5e1' }}>
                   <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#334155', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <CheckSquare size={14} color="#059669" /> Tiêu Chí Yêu Cầu Cần Đạt:
+                    <CheckSquare size={14} color="#059669" /> Required Criteria to Achieve:
                   </span>
                   <ul style={{ margin: '6px 0 0 0', paddingLeft: '20px', fontSize: '0.82rem', color: '#475569', lineHeight: 1.6 }}>
-                    <li>Áp dụng đúng cú pháp và nguyên tắc phân cấp cấu trúc.</li>
-                    <li>Đảm bảo tối ưu hóa trên thiết bị di động (Responsive).</li>
-                    <li>Tuân thủ chuẩn SEO & Accessibility (WCAG A11y).</li>
+                    <li>Apply correct syntax and structural hierarchy principles.</li>
+                    <li>Ensure mobile optimization (Responsive).</li>
+                    <li>Comply with SEO & Accessibility standards (WCAG A11y).</li>
                   </ul>
                 </div>
               </div>
@@ -160,7 +160,7 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                     </div>
                     <div>
                       <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: evaluationResult.isPassed ? '#047857' : '#b45309' }}>
-                        {evaluationResult.isPassed ? '🎉 Đạt Chuẩn Thực Tế!' : '⚠️ Cần Tối Ưu Thêm'}
+                        {evaluationResult.isPassed ? '🎉 Meets Practical Standards!' : '⚠️ Needs Further Optimization'}
                       </h4>
                       <p style={{ margin: '4px 0 0 0', fontSize: '0.84rem', color: '#334155', lineHeight: 1.4 }}>
                         {evaluationResult.feedback}
@@ -170,10 +170,10 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
 
                   <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.84rem' }}>
                     <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '10px', borderLeft: '3px solid #059669' }}>
-                      <strong style={{ color: '#047857' }}>💪 Điểm mạnh:</strong> {evaluationResult.strengths}
+                      <strong style={{ color: '#047857' }}>💪 Strengths:</strong> {evaluationResult.strengths}
                     </div>
                     <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '10px', borderLeft: '3px solid #0284c7' }}>
-                      <strong style={{ color: '#0369a1' }}>💡 Gợi ý nâng cấp:</strong> {evaluationResult.improvements}
+                      <strong style={{ color: '#0369a1' }}>💡 Suggestions for upgrade:</strong> {evaluationResult.improvements}
                     </div>
                   </div>
 
@@ -195,18 +195,18 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                       cursor: 'pointer',
                     }}
                   >
-                    🔄 Thử Nhập Lời Giải Khác
+                    🔄 Try Entering a Different Solution
                   </button>
                 </div>
               ) : (
                 /* Solution Textarea Form */
                 <form onSubmit={handleSubmitSolution} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <label style={{ fontSize: '0.86rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    💻 Nhập Mã Code / Lời Giải Bài Tập Thực Tế Của Bạn:
+                    💻 Enter Your Code / Practical Solution:
                   </label>
                   <textarea
                     rows={8}
-                    placeholder="Viết đoạn mã code HTML/CSS/JS hoặc giải trình tư duy kiến trúc của bạn ở đây... (Hoặc hỏi AI Coach ở khung chat bên phải để lấy gợi ý)"
+                    placeholder="Write a snippet of HTML/CSS/JS code or explain your architectural mindset here... (Or ask AI Coach in the chatbox on the right for hints)"
                     value={userSolution}
                     onChange={(e) => setUserSolution(e.target.value)}
                     disabled={evaluating}
@@ -247,11 +247,11 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                   >
                     {evaluating ? (
                       <>
-                        <Loader2 size={18} className="spin-icon" /> AI Coach Đang Chấm Điểm Bài Làm...
+                        <Loader2 size={18} className="spin-icon" /> AI Coach is Grading your Work...
                       </>
                     ) : (
                       <>
-                        <Award size={18} /> 🏆 Nộp Bài Để AI Coach Chấm Điểm
+                        <Award size={18} /> 🏆 Submit for AI Coach to Grade
                       </>
                     )}
                   </button>
@@ -311,10 +311,10 @@ export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) 
                             <button
                               className="ai-quiz-trigger-btn"
                               onClick={() => handleSelectExercise(ms, sk, sub)}
-                              title="Bắt đầu thực hành bài tập thực tế & mở chatbox AI hướng dẫn"
+                              title="Start practical exercise & open AI Coach chatbox"
                             >
                               <Bot size={16} />
-                              <span>🚀 Bắt Đầu Thực Hành & Chat AI</span>
+                              <span>🚀 Start Practice & AI Chat</span>
                             </button>
                           </div>
                         </div>

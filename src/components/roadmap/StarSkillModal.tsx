@@ -42,7 +42,7 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
         <div className="star-modal-glow-top" />
 
         {/* Close Button */}
-        <button className="star-modal-close-btn" onClick={onClose} title="Đóng modal (Esc)">
+        <button className="star-modal-close-btn" onClick={onClose} title="Close modal (Esc)">
           <X size={20} />
         </button>
 
@@ -62,7 +62,7 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
             </div>
             <h2 className="star-skill-name">{skill.name}</h2>
             <p className="star-skill-desc">
-              Ngôi sao kỹ năng thuộc mốc lộ trình của bạn. Dưới đây là danh sách các bài tập và trạng thái hoàn thành.
+              Skill star belonging to your roadmap milestone. Below is the list of exercises and completion status.
             </p>
           </div>
         </div>
@@ -71,7 +71,7 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
         <div className="star-progress-card">
           <div className="star-progress-header">
             <span className="star-progress-title">
-              <Award size={16} color="#0284c7" /> Mức Độ Thành Thạo Kỹ Năng
+              <Award size={16} color="#0284c7" /> Skill Proficiency Level
             </span>
             <span className="star-progress-percentage">{skill.levelPercentage}%</span>
           </div>
@@ -83,16 +83,16 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
           </div>
           <div className="star-progress-meta">
             <span>
-              Đã hoàn thành <strong>{completedCount}/{totalCount}</strong> bài tập
+              Completed <strong>{completedCount}/{totalCount}</strong> exercises
             </span>
-            <span>{isFullyMastered ? '✨ Đã làm chủ trọn vẹn!' : '🚀 Đang rèn luyện'}</span>
+            <span>{isFullyMastered ? '✨ Fully Mastered!' : '🚀 Training in progress'}</span>
           </div>
         </div>
 
         {/* Subtopics / Exercises List */}
         <div className="star-subtopics-section">
           <h3 className="star-subtopics-title">
-            📝 Danh Sách Bài Tập & Hạng Mục Học tập ({completedCount}/{totalCount})
+            📝 List of Exercises & Learning Topics ({completedCount}/{totalCount})
           </h3>
 
           <div className="star-subtopics-list">
@@ -105,7 +105,7 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
                   <button
                     className="star-check-btn"
                     onClick={() => onToggleCheck(skill, subTopic, !subTopic.isCompleted)}
-                    title={subTopic.isCompleted ? 'Đánh dấu chưa hoàn thành' : 'Đánh dấu đã hoàn thành'}
+                    title={subTopic.isCompleted ? 'Mark as incomplete' : 'Mark as complete'}
                   >
                     {subTopic.isCompleted ? (
                       <CheckCircle size={22} className="check-icon-active" />
@@ -118,7 +118,7 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
                     <div className="star-subtopic-head">
                       <span className="star-subtopic-name">{subTopic.title}</span>
                       {subTopic.isCompleted && (
-                        <span className="done-badge-mini">✓ Đã làm</span>
+                        <span className="done-badge-mini">✓ Done</span>
                       )}
                     </div>
 
@@ -128,7 +128,7 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
 
                     {subTopic.aiFeedback && (
                       <div className="star-ai-feedback-box">
-                        <strong>🤖 AI Đánh giá:</strong> {subTopic.aiFeedback}
+                        <strong>🤖 AI Review:</strong> {subTopic.aiFeedback}
                       </div>
                     )}
                   </div>
@@ -147,10 +147,10 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
                       onClose();
                       onOpenQuiz(skill, subTopic);
                     }}
-                    title="Mở AI Coach kiểm tra & hướng dẫn bài tập"
+                    title="Open AI Coach for testing & exercise guidance"
                   >
                     <Bot size={16} />
-                    <span>🤖 Làm Bài Test AI</span>
+                    <span>🤖 Take AI Test</span>
                   </button>
                 </div>
               </div>
@@ -161,7 +161,7 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
         {/* Modal Footer */}
         <div className="star-modal-footer">
           <button className="btn-secondary" onClick={onClose}>
-            Đóng Cửa Sổ
+            Close Window
           </button>
         </div>
       </div>

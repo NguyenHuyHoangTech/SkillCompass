@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
-import Onboarding from './pages/Onboarding';
+import { Onboarding } from './pages/Onboarding';
 import Roadmap from './pages/Roadmap';
+import { AITester } from './components/ai/AITester';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
           <Route path="/" element={<Onboarding />} />
           <Route path="/roadmap" element={<Roadmap />} />
         </Routes>
+        <AITester />
       </BrowserRouter>
     </AppProvider>
   );

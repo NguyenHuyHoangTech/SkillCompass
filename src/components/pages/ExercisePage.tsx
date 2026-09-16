@@ -33,10 +33,10 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
     return (
       <div className="page-view-container glass-panel" style={{ padding: '40px', textAlign: 'center' }}>
         <AlertCircle size={48} color="#ef4444" style={{ margin: '0 auto 16px' }} />
-        <h3>Chưa chọn bài tập</h3>
-        <p style={{ color: '#64748b', marginBottom: '20px' }}>Vui lòng chọn một mục kỹ năng từ Lộ trình để làm bài tập.</p>
+        <h3>No exercise selected</h3>
+        <p style={{ color: '#64748b', marginBottom: '20px' }}>Please select a skill item from the Roadmap to do the exercise.</p>
         <button className="btn-primary" onClick={onBackToRoadmap}>
-          <ArrowLeft size={16} /> Quay về Lộ Trình
+          <ArrowLeft size={16} /> Back to Roadmap
         </button>
       </div>
     );
@@ -51,16 +51,16 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
     initialCodeSnippet?: string;
   }> = {
     default: {
-      questionText: `Áp dụng thực tế cho "${subTopic.title}": Hãy phân tích giải pháp tối ưu nhất để giải quyết vấn đề dưới đây trong hệ thống.`,
+      questionText: `Practical application for "${subTopic.title}": Analyze the most optimal solution to solve the following system problem.`,
       options: [
-        'A. Sử dụng đúng chuẩn thiết kế nhất quán, giảm tải cognitive load cho người dùng.',
-        'B. Tách biệt hoàn toàn các layer, không quan tâm tới trải nghiệm người dùng cuối.',
-        'C. Bỏ qua phân cấp thị giác để tiết kiệm thời gian phát triển.',
-        'D. Lạm dụng animation phức tạp gây chậm tốc độ tải trang.',
+        'A. Use consistent design standards, reducing cognitive load for users.',
+        'B. Completely separate layers, ignoring end-user experience.',
+        'C. Skip visual hierarchy to save development time.',
+        'D. Overuse complex animations causing slow page load speed.',
       ],
       correctIndex: 0,
-      codePrompt: 'Viết dòng giải thích tư duy hoặc snippet code minh họa giải pháp của bạn:',
-      initialCodeSnippet: `// Giải pháp cho ${subTopic.title}\nfunction handleOptimization() {\n  // 1. Áp dụng chuẩn UX & Layout\n  // 2. Tối ưu hiệu năng & trải nghiệm\n}`,
+      codePrompt: 'Write a line explaining your mindset or a code snippet illustrating your solution:',
+      initialCodeSnippet: `// Solution for ${subTopic.title}\nfunction handleOptimization() {\n  // 1. Apply UX & Layout standards\n  // 2. Optimize performance & experience\n}`,
     }
   };
 
@@ -68,7 +68,7 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
 
   const handleSubmit = async () => {
     if (selectedOption === null) {
-      alert('Vui lòng chọn một phương án trả lời trước khi nộp bài!');
+      alert('Please select an answer option before submitting!');
       return;
     }
 
@@ -79,8 +79,8 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
       const finalScore = userCode.trim().length > 20 ? Math.min(100, baseScore + 10) : baseScore;
 
       const aiFeedbackText = isCorrect
-        ? `Xuất sắc! Bạn đã chọn chính xác đáp án A và có phân tích tư duy đúng đắn cho mục "${subTopic.title}".`
-        : `Bạn đã chọn đáp án chưa tối ưu nhất. Cần chú ý áp dụng nguyên tắc chuẩn hóa và tối ưu trải nghiệm cho mục "${subTopic.title}".`;
+        ? `Excellent! You correctly chose option A and have the right mindset for "${subTopic.title}".`
+        : `You chose a less than optimal answer. Make sure to apply standardization principles and optimize experience for "${subTopic.title}".`;
 
       // Save evaluation to backend API / local roadmap
       await ApiService.updateSubTopic({
@@ -96,15 +96,15 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
         score: finalScore,
         feedback: aiFeedbackText,
         suggestions: [
-          'Tiếp tục thực hành các bài tập bài test để nâng cao điểm AI Score',
-          'Áp dụng kiến thức này vào dự án thực tế trong lộ trình',
+          'Continue practicing test exercises to improve your AI Score',
+          'Apply this knowledge to practical projects in your roadmap',
         ],
       });
 
       onSuccessEvaluation();
     } catch (err) {
       console.error(err);
-      alert('Đã có lỗi xảy ra khi nộp bài tập. Vui lòng thử lại!');
+      alert('An error occurred while submitting the exercise. Please try again!');
     } finally {
       setIsSubmitting(false);
     }
@@ -121,9 +121,9 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
       {/* 1. Header Bar */}
       <div className="exercise-header-banner glass-panel">
         <div className="exercise-header-left">
-          <button className="exercise-back-btn" onClick={onBackToRoadmap} title="Quay về Lộ Trình">
+          <button className="exercise-back-btn" onClick={onBackToRoadmap} title="Back to Roadmap">
             <ArrowLeft size={18} />
-            <span>Về Lộ Trình</span>
+            <span>To Roadmap</span>
           </button>
           <div className="exercise-breadcrumb">
             <span className="bc-ms">{milestoneTitle}</span>
@@ -132,7 +132,7 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
           </div>
         </div>
         <div className="exercise-header-right">
-          <span className="exercise-badge">📝 Trang Làm Bài Tập</span>
+          <span className="exercise-badge">📝 Exercise Page</span>
         </div>
       </div>
 
@@ -151,14 +151,14 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
           {/* Question Text */}
           <div className="exercise-question-box">
             <div className="q-label">
-              <Sparkles size={16} /> Câu Hỏi Tình Huống AI Đề Xuất:
+              <Sparkles size={16} /> AI Proposed Scenario Question:
             </div>
             <p className="q-text">{currentQ.questionText}</p>
           </div>
 
           {/* Multiple Choice Options */}
           <div className="exercise-options-group">
-            <label className="options-group-title">Chọn phương án trả lời đúng nhất:</label>
+            <label className="options-group-title">Select the best answer:</label>
             {currentQ.options.map((option, idx) => (
               <div
                 key={idx}
@@ -174,12 +174,12 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
           {/* Code / Text Reasoning Section */}
           <div className="exercise-code-box">
             <label className="code-label">
-              <Code2 size={16} /> {currentQ.codePrompt || 'Giải trình thêm tư duy hoặc code minh họa (không bắt buộc):'}
+              <Code2 size={16} /> {currentQ.codePrompt || 'Explain your reasoning or provide sample code (optional):'}
             </label>
             <textarea
               className="exercise-textarea"
               rows={4}
-              placeholder="Nhập ghi chú hoặc mã code của bạn ở đây..."
+              placeholder="Enter your notes or code here..."
               value={userCode}
               onChange={(e) => setUserCode(e.target.value)}
             />
@@ -189,7 +189,7 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
           <div className="exercise-actions-bar">
             {evaluationResult ? (
               <button className="btn-secondary-custom" onClick={handleReset}>
-                <RefreshCw size={16} /> Làm Lại Bài Tập
+                <RefreshCw size={16} /> Retry Exercise
               </button>
             ) : (
               <button
@@ -199,17 +199,17 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
               >
                 {isSubmitting ? (
                   <>
-                    <span className="spin-icon">💫</span> AI Đang Chấm Điểm...
+                    <span className="spin-icon">💫</span> AI Grading...
                   </>
                 ) : (
                   <>
-                    <Send size={16} /> Nộp Bài & Chấm Điểm AI
+                    <Send size={16} /> Submit & AI Grade
                   </>
                 )}
               </button>
             )}
             <button className="btn-outline-back" onClick={onBackToRoadmap}>
-              Lưu & Quay về Lộ Trình
+              Save & Back to Roadmap
             </button>
           </div>
         </div>
@@ -218,7 +218,7 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
         <div className="exercise-sidebar-card glass-panel">
           <div className="sidebar-card-header">
             <Award size={20} className="award-icon" />
-            <h3>Kết Quả & Điểm AI Score</h3>
+            <h3>Results & AI Score</h3>
           </div>
 
           {evaluationResult ? (
@@ -226,13 +226,13 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
               <div className="score-display-wrap">
                 <span className="score-num-big">{evaluationResult.score}%</span>
                 <span className="score-status-label">
-                  {evaluationResult.score >= 80 ? '🎯 Đạt Chuẩn Xuất Sắc' : '⚡ Đã Hoàn Thành'}
+                  {evaluationResult.score >= 80 ? '🎯 Excellent' : '⚡ Completed'}
                 </span>
               </div>
 
               <div className="feedback-section">
                 <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0284c7', marginBottom: '6px' }}>
-                  🤖 Đánh Giá Từ AI Coach:
+                  🤖 Feedback from AI Coach:
                 </h4>
                 <p className="feedback-text">{evaluationResult.feedback}</p>
               </div>
@@ -240,7 +240,7 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
               {evaluationResult.suggestions.length > 0 && (
                 <div className="suggestions-section">
                   <h4 style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569', marginBottom: '6px' }}>
-                    💡 Gợi Ý Phát Triển:
+                    💡 Development Suggestions:
                   </h4>
                   <ul className="suggestion-list">
                     {evaluationResult.suggestions.map((item, idx) => (
@@ -254,17 +254,17 @@ export const ExercisePage: React.FC<ExercisePageProps> = ({
               )}
 
               <button className="btn-return-roadmap-full" onClick={onBackToRoadmap}>
-                <CheckCircle2 size={16} /> Hoàn Tất & Về Lộ Trình
+                <CheckCircle2 size={16} /> Done & Return to Roadmap
               </button>
             </div>
           ) : (
             <div className="eval-placeholder-box">
               <div className="placeholder-icon">🤖</div>
-              <h4>Sẵn Sàng Chấm Điểm</h4>
-              <p>Chọn đáp án và bấm nút **Nộp Bài & Chấm Điểm AI** để nhận kết quả phân tích năng lực chi tiết.</p>
+              <h4>Ready to Grade</h4>
+              <p>Select an answer and click **Submit & AI Grade** to receive detailed capability analysis.</p>
               <div className="placeholder-tips">
-                <span>✓ Chấm điểm tức thì bằng AI</span>
-                <span>✓ Tự động lưu vào Lộ trình cá nhân</span>
+                <span>✓ Instant AI grading</span>
+                <span>✓ Automatically saved to your Roadmap</span>
               </div>
             </div>
           )}
