@@ -3,14 +3,16 @@ import type { SkillCategory, SubTopic, Skill } from '../../types/roadmap';
 
 interface SkillCategoryListProps {
   categories: SkillCategory[];
-  onOpenQuiz: (skill: Skill, subTopic: SubTopic) => void;
   onToggleCheck: (skill: Skill, subTopic: SubTopic, completed: boolean) => void;
+  onAIReplace?: () => void;
+  onManualAdd?: () => void;
 }
 
 export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
   categories,
-  onOpenQuiz,
   onToggleCheck,
+  onAIReplace,
+  onManualAdd,
 }) => {
   // Flatten skills with their category name attached
   const allSkills = categories.flatMap(cat => 
@@ -20,9 +22,31 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
   return (
     <div className="max-w-4xl mx-auto pb-10">
 
-      <h3 className="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
-          <i className="fa-solid fa-layer-group text-blue-500"></i> Các Kỹ năng Cần thiết
-      </h3>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+        <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
+            <i className="fa-solid fa-layer-group text-blue-500"></i> Các Kỹ năng Cần thiết
+        </h3>
+        
+        <div className="flex items-center gap-2">
+          {onAIReplace && (
+            <button 
+              onClick={onAIReplace}
+              className="px-3 py-1.5 bg-purple-100 hover:bg-purple-200 text-purple-700 text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 border border-purple-200 shadow-sm"
+              title="Tạo mới hoặc thay thế các kỹ năng 0% bằng AI"
+            >
+              <i className="fa-solid fa-wand-magic-sparkles"></i> Tạo bằng AI
+            </button>
+          )}
+          {onManualAdd && (
+            <button 
+              onClick={onManualAdd}
+              className="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 border border-slate-200 shadow-sm"
+            >
+              <i className="fa-solid fa-plus"></i> Tạo thủ công
+            </button>
+          )}
+        </div>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {allSkills.map((skill) => {

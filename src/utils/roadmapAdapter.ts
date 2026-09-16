@@ -1,5 +1,5 @@
-import type { UserRoadmap, Milestone as ComplexMilestone, SkillCategory, Skill as ComplexSkill, SubTopic, OverallAiEvaluation } from '../types/roadmap';
-import type { Milestone as SimpleMilestone, Skill as SimpleSkill } from '../services/ai';
+import type { UserRoadmap, Milestone as ComplexMilestone, SkillCategory, Skill as ComplexSkill, SubTopic } from '../types/roadmap';
+import type { Milestone as SimpleMilestone } from '../services/ai';
 
 export const convertToUserRoadmap = (
     simpleMilestones: SimpleMilestone[], 
@@ -7,7 +7,7 @@ export const convertToUserRoadmap = (
     assessFeedback: string,
     testedSkills: string[]
 ): UserRoadmap => {
-    const complexMilestones: ComplexMilestone[] = simpleMilestones.map((sm, index) => {
+    const complexMilestones: ComplexMilestone[] = simpleMilestones.map((sm, _index) => {
         // Create a single category for simplicity, containing all skills for this milestone
         const complexSkills: ComplexSkill[] = (sm.skills || []).map((ss, sIdx) => {
             

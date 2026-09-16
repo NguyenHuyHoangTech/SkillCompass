@@ -47,7 +47,7 @@ export const getAvailableModels = async (key: string): Promise<{success: boolean
         const res = await testAi.models.list();
         const models: string[] = [];
         for await (const m of res) {
-            const modelNameStr = m.name.replace(/^models\//, '');
+            const modelNameStr = m.name?.replace(/^models\//, '') || '';
             if (modelNameStr.includes('gemini') || modelNameStr.includes('gemma')) {
                 models.push(modelNameStr);
             }

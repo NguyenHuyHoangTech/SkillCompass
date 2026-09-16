@@ -11,6 +11,8 @@ import { AIQuizModal } from '../components/ai/AIQuizModal';
 import { AICareerChatbot } from '../components/ai/AICareerChatbot';
 import { EditMilestoneModal } from '../components/roadmap/EditMilestoneModal';
 import { AIRoadmapRecommendModal } from '../components/roadmap/AIRoadmapRecommendModal';
+import { AddSkillModal } from '../components/roadmap/AddSkillModal';
+import type { ManualSkillData } from '../components/roadmap/AddSkillModal';
 import { AnalyticsPage } from '../components/pages/AnalyticsPage';
 import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
 import { AllSkillsPage } from '../components/pages/AllSkillsPage';
@@ -46,6 +48,7 @@ export default function Roadmap() {
   const [isEditMilestoneModalOpen, setIsEditMilestoneModalOpen] = useState(false);
   const [milestoneToEdit, setMilestoneToEdit] = useState<any>(null);
   const [isAIRecoModalOpen, setIsAIRecoModalOpen] = useState(false);
+  const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -239,6 +242,148 @@ export default function Roadmap() {
     } else if (newMilestones.length > 0) {
       setActiveMilestoneId(newMilestones[newMilestones.length - 1].id);
     }
+  };  const handleAIReplaceSkills = async () => {
+    if (!roadmap) return;
+    const activeMs = roadmap.milestones.find((m) => m.id === activeMilestoneId);
+    if (!activeMs) return;
+
+    // Define rich mock skills to replace/add
+    const aiMockSkills = [
+      {
+        title: 'Advanced System Architecture',
+        description: 'Design highly scalable, fault-tolerant systems using modern architectural patterns.',
+        icon: 'fa-server'
+      },
+      {
+        title: 'Cloud Native & Kubernetes',
+        description: 'Deploy and manage containerized applications using Docker and Kubernetes.',
+        icon: 'fa-cloud'
+      },
+      {
+        title: 'Performance Optimization',
+        description: 'Identify bottlenecks and optimize frontend/backend performance at scale.',
+        icon: 'fa-bolt'
+      },
+      {
+        title: 'AI Integration & MLOps',
+        description: 'Integrate LLMs and machine learning models into production systems.',
+        icon: 'fa-microchip'
+      },
+    ];
+
+    let newMilestones = [...roadmap.milestones];
+    const msIndex = newMilestones.findIndex(m => m.id === activeMilestoneId);
+    let currentMs = { ...newMilestones[msIndex] };
+    
+    // Check if there are 0% skills to replace
+    let has0PercentSkills = false;
+    currentMs.categories.forEach(cat => {
+      if (cat.skills.some(s => s.levelPercentage === 0)) has0PercentSkills = true;
+    });
+
+    let mockIndex = 0;
+
+    currentMs.categories = currentMs.categories.map(cat => {
+      let newSkills = [...cat.skills];
+      if (has0PercentSkills) {
+        newSkills = newSkills.map(skill => {
+          if (skill.levelPercentage === 0) {
+            const mock = aiMockSkills[mockIndex % aiMockSkills.length];
+            mockIndex++;
+            return {
+              ...skill,
+              name: mock.title,
+              icon: mock.icon,
+              subTopics: [
+                { id: `sub-${Date.now()}-1`, title: `Core Concepts of ${mock.title}`, isCompleted: false },
+                { id: `sub-${Date.now()}-2`, title: `Advanced Patterns & Best Practices`, isCompleted: false },
+                { id: `sub-${Date.now()}-3`, title: `Real-world Implementation Project`, isCompleted: false },
+                { id: `sub-${Date.now()}-4`, title: `Debugging and Troubleshooting`, isCompleted: false }
+              ]
+            };
+          }
+          return skill;
+        });
+      } else {
+        // If no 0% skills, just add a new one to the first category
+        if (mockIndex === 0) {
+          const mock = aiMockSkills[0];
+          newSkills.push({
+            id: `sk-${Date.now()}`,
+            name: mock.title,
+            icon: mock.icon,
+            levelPercentage: 0,
+            subTopics: [
+                { id: `sub-${Date.now()}-1`, title: `Core Concepts of ${mock.title}`, isCompleted: false },
+                { id: `sub-${Date.now()}-2`, title: `Advanced Patterns & Best Practices`, isCompleted: false },
+                { id: `sub-${Date.now()}-3`, title: `Real-world Implementation Project`, isCompleted: false }
+            ]
+          });
+          mockIndex++;
+        }
+      }
+      return { ...cat, skills: newSkills };
+    });
+
+    newMilestones[msIndex] = currentMs;
+    const updatedRoadmap = { ...roadmap, milestones: newMilestones };
+    setRoadmap(updatedRoadmap);
+    localStorage.setItem('skill_compass_roadmap', JSON.stringify(updatedRoadmap));
+  };
+
+  const handleManualAddSkill = async (data: ManualSkillData) => {
+    if (!roadmap) return;
+    const activeMs = roadmap.milestones.find((m) => m.id === activeMilestoneId);
+    if (!activeMs) return;
+
+    let newMilestones = [...roadmap.milestones];
+    const msIndex = newMilestones.findIndex(m => m.id === activeMilestoneId);
+    let currentMs = { ...newMilestones[msIndex] };
+
+    let categoryExists = false;
+    currentMs.categories = currentMs.categories.map(cat => {
+      if (cat.name === data.categoryName) {
+        categoryExists = true;
+        return {
+          ...cat,
+          skills: [...cat.skills, {
+            id: `sk-manual-${Date.now()}`,
+            name: data.title,
+            icon: 'fa-star', // default icon
+            levelPercentage: 0,
+            subTopics: [
+              { id: `sub-m-${Date.now()}-1`, title: `Mục nhỏ 1 của ${data.title}`, isCompleted: false },
+              { id: `sub-m-${Date.now()}-2`, title: `Mục nhỏ 2 của ${data.title}`, isCompleted: false },
+              { id: `sub-m-${Date.now()}-3`, title: `Mục nhỏ 3 của ${data.title}`, isCompleted: false },
+            ]
+          }]
+        };
+      }
+      return cat;
+    });
+
+    if (!categoryExists) {
+      currentMs.categories.push({
+        id: `cat-manual-${Date.now()}`,
+        name: data.categoryName,
+        skills: [{
+          id: `sk-manual-${Date.now()}`,
+          name: data.title,
+          icon: 'fa-star',
+          levelPercentage: 0,
+          subTopics: [
+            { id: `sub-m-${Date.now()}-1`, title: `Mục nhỏ 1 của ${data.title}`, isCompleted: false },
+            { id: `sub-m-${Date.now()}-2`, title: `Mục nhỏ 2 của ${data.title}`, isCompleted: false },
+            { id: `sub-m-${Date.now()}-3`, title: `Mục nhỏ 3 của ${data.title}`, isCompleted: false },
+          ]
+        }]
+      });
+    }
+
+    newMilestones[msIndex] = currentMs;
+    const updatedRoadmap = { ...roadmap, milestones: newMilestones };
+    setRoadmap(updatedRoadmap);
+    localStorage.setItem('skill_compass_roadmap', JSON.stringify(updatedRoadmap));
   };
 
 
@@ -321,10 +466,11 @@ export default function Roadmap() {
                 </div>
 
                 <div className="flex-1 overflow-y-auto hide-scrollbar p-4 sm:p-8" id="sec-checklist">
-                  <SkillCategoryList
+                  <SkillCategoryList 
                     categories={activeMilestone.categories}
-                    onOpenQuiz={handleOpenQuiz}
                     onToggleCheck={handleToggleCheck}
+                    onAIReplace={handleAIReplaceSkills}
+                    onManualAdd={() => setIsAddSkillModalOpen(true)}
                   />
                 </div>
               </div>
@@ -391,6 +537,13 @@ export default function Roadmap() {
             isOpen={isAIRecoModalOpen}
             onClose={() => setIsAIRecoModalOpen(false)}
             onApply={handleApplyAIReco}
+          />
+
+          <AddSkillModal
+            isOpen={isAddSkillModalOpen}
+            onClose={() => setIsAddSkillModalOpen(false)}
+            onSave={handleManualAddSkill}
+            existingCategories={roadmap?.milestones.find(m => m.id === activeMilestoneId)?.categories.map(c => c.name) || []}
           />
         </div>
       </div>

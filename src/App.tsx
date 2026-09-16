@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
-import { Onboarding } from './pages/Onboarding';
 import Roadmap from './pages/Roadmap';
 import { AITester } from './components/ai/AITester';
 

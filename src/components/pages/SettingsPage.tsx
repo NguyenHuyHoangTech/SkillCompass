@@ -1,21 +1,11 @@
-import React, { useState } from 'react';
-import { Settings, User, Sliders, Globe } from 'lucide-react';
-import { useAppContext } from '../../context/AppContext';
-import type { Language, Theme } from '../../utils/i18n';
+import React from 'react';
+import { Settings, User, Sliders } from 'lucide-react';
 
 interface SettingsPageProps {
   userName: string;
 }
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({ userName }) => {
-  const { theme, setTheme, language, setLanguage, t } = useAppContext();
-  const [saveStatus, setSaveStatus] = useState('');
-
-  const handleSaveTheme = () => {
-    setSaveStatus(t('savedSuccess'));
-    setTimeout(() => setSaveStatus(''), 3000);
-  };
-
   return (
     <div className="page-view-container">
       <div className="page-header-banner glass-panel">

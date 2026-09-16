@@ -22,7 +22,6 @@ interface QuizLibraryPageProps {
 }
 
 export const QuizLibraryPage: React.FC<QuizLibraryPageProps> = ({ milestones }) => {
-  const { t } = useAppContext();
   const [activeExercise, setActiveExercise] = useState<{
     milestone: Milestone;
     skill: Skill;
