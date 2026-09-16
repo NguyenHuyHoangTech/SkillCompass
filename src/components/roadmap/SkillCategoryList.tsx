@@ -1,6 +1,6 @@
 import React from 'react';
 import type { SkillCategory, SubTopic, Skill } from '../../types/roadmap';
-import { CheckCircle, Circle, Bot, Sparkles, Code, FileCode, GitBranch, Atom, Server, Zap, Database, Cpu } from 'lucide-react';
+import { CheckCircle, Circle, Bot, Sparkles, Code, FileCode, GitBranch, Atom, Server, Zap, Database, Cpu, ExternalLink, BookOpen } from 'lucide-react';
 
 interface SkillCategoryListProps {
   categories: SkillCategory[];
@@ -13,7 +13,6 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
   onOpenQuiz,
   onToggleCheck,
 }) => {
-  // Helper icon renderer
   const renderIcon = (iconName?: string) => {
     switch (iconName) {
       case 'Code': return <Code size={20} className="skill-icon" />;
@@ -53,7 +52,6 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
                   </div>
                 </div>
 
-                {/* Progress bar for skill */}
                 <div className="skill-progress-bar">
                   <div
                     className="skill-progress-fill"
@@ -61,51 +59,66 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
                   />
                 </div>
 
-                {/* SubTopics Checklist */}
                 <div className="subtopic-list">
-                  <div className="subtopic-header-label">Các mục cần học ({skill.subTopics.filter(st => st.isCompleted).length}/{skill.subTopics.length}):</div>
-                  {skill.subTopics.map((subTopic) => (
-                    <div
-                      key={subTopic.id}
-                      className={`subtopic-item ${subTopic.isCompleted ? 'completed' : ''}`}
-                    >
-                      <div className="subtopic-left">
-                        <button
-                          className="check-toggle-btn"
-                          onClick={() => onToggleCheck(skill, subTopic, !subTopic.isCompleted)}
-                          title={subTopic.isCompleted ? 'Đánh dấu chưa học' : 'Đã học (Tự tích)'}
-                        >
-                          {subTopic.isCompleted ? (
-                            <CheckCircle size={18} className="check-icon-active" />
-                          ) : (
-                            <Circle size={18} className="check-icon-inactive" />
+                  <div className="subtopic-header-label">Topics to learn ({skill.subTopics.filter(st => st.isCompleted).length}/{skill.subTopics.length}):</div>
+                  {skill.subTopics.map((subTopic) => {
+                    const courseraUrl = subTopic.courseraUrl || `https://www.coursera.org/search?query=${encodeURIComponent(subTopic.title + ' ' + skill.name)}`;
+                    return (
+                      <div
+                        key={subTopic.id}
+                        className={`subtopic-item ${subTopic.isCompleted ? 'completed' : ''}`}
+                      >
+                        <div className="subtopic-left">
+                          <button
+                            className="check-toggle-btn"
+                            onClick={() => onToggleCheck(skill, subTopic, !subTopic.isCompleted)}
+                            title={subTopic.isCompleted ? 'Mark as incomplete' : 'Mark as complete'}
+                          >
+                            {subTopic.isCompleted ? (
+                              <CheckCircle size={18} className="check-icon-active" />
+                            ) : (
+                              <Circle size={18} className="check-icon-inactive" />
+                            )}
+                          </button>
+                          <div className="subtopic-info">
+                            <span className="subtopic-title">{subTopic.title}</span>
+                            {subTopic.description && (
+                              <span className="subtopic-desc">{subTopic.description}</span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="subtopic-actions flex items-center gap-2">
+                          {subTopic.assessmentScore !== undefined && subTopic.assessmentScore > 0 && (
+                            <span className={`score-badge ${subTopic.assessmentScore >= 70 ? 'pass' : 'review'}`}>
+                              {subTopic.assessmentScore}% AI Score
+                            </span>
                           )}
-                        </button>
-                        <div className="subtopic-info">
-                          <span className="subtopic-title">{subTopic.title}</span>
-                          {subTopic.description && (
-                            <span className="subtopic-desc">{subTopic.description}</span>
-                          )}
+
+                          <a
+                            href={courseraUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="coursera-link-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white border border-blue-200 font-bold text-xs transition-all shadow-xs no-underline"
+                            title={`Learn "${subTopic.title}" on Coursera`}
+                          >
+                            <BookOpen size={13} />
+                            <span>Coursera</span>
+                            <ExternalLink size={11} className="opacity-80" />
+                          </a>
+
+                          <button
+                            className="ai-quiz-trigger-btn"
+                            onClick={() => onOpenQuiz(skill, subTopic)}
+                            title="Open AI Coach guidance & quiz test"
+                          >
+                            <Bot size={15} />
+                            <span>🤖 Take AI Quiz</span>
+                          </button>
                         </div>
                       </div>
-
-                      <div className="subtopic-actions">
-                        {subTopic.assessmentScore !== undefined && subTopic.assessmentScore > 0 && (
-                          <span className={`score-badge ${subTopic.assessmentScore >= 70 ? 'pass' : 'review'}`}>
-                            {subTopic.assessmentScore}% AI Score
-                          </span>
-                        )}
-                        <button
-                          className="ai-quiz-trigger-btn"
-                          onClick={() => onOpenQuiz(skill, subTopic)}
-                          title="Mở AI Coach hướng dẫn & kiểm tra bài tập"
-                        >
-                          <Bot size={15} />
-                          <span>🤖 Làm Bài Test AI</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ))}

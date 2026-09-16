@@ -12,7 +12,6 @@ interface AIMilestoneEvaluatorProps {
 export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
   milestone,
   onRefreshRoadmap,
-  onOpenCareerChat,
 }) => {
   const [evaluating, setEvaluating] = useState(false);
   const [evaluation, setEvaluation] = useState<OverallAiEvaluation | undefined>(
@@ -21,7 +20,6 @@ export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
   const [optimizing, setOptimizing] = useState(false);
   const [optimizedMessage, setOptimizedMessage] = useState('');
 
-  // Tự động đồng bộ lại đánh giá khi chuyển mốc hoặc tạo mốc mới
   useEffect(() => {
     setEvaluation(milestone.overallAiEvaluation);
     setOptimizedMessage('');
@@ -45,7 +43,7 @@ export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
     setOptimizing(true);
     try {
       await new Promise((r) => setTimeout(r, 1200));
-      setOptimizedMessage(`✨ AI đã tối ưu hóa mốc "${milestone.title}": Sắp xếp lại thứ tự ưu tiên các kỹ năng hot nhất theo xu hướng tuyển dụng thị trường hiện tại!`);
+      setOptimizedMessage(`✨ AI optimized stage "${milestone.title}": Prioritized high-demand skills based on current hiring trends!`);
       onRefreshRoadmap();
     } catch (err) {
       console.error(err);
@@ -62,34 +60,24 @@ export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
             <Bot size={20} />
           </div>
           <div>
-            <h3>AI Đánh Giá Tổng Thể Giai Đoạn</h3>
+            <h3>Overall AI Stage Evaluation</h3>
           </div>
         </div>
 
         <div className="evaluator-header-actions">
-          {onOpenCareerChat && (
-            <button
-              className="eval-action-btn btn-ai-propose"
-              onClick={onOpenCareerChat}
-              title="Mở AI Advisor để đề xuất mốc lộ trình tương lai"
-            >
-              <Bot size={16} className="btn-icon" /> <span>Đề Xuất Mốc Tương Lai</span>
-            </button>
-          )}
-
           <button
             className="eval-action-btn btn-ai-optimize"
             onClick={handleOptimizeRoadmap}
             disabled={optimizing}
-            title="AI Tối Ưu Lộ Trình học tập theo xu hướng tuyển dụng"
+            title="AI Roadmap Optimization"
           >
             {optimizing ? (
               <>
-                <Loader2 size={16} className="spin-icon" /> <span>Đang Tối Ưu...</span>
+                <Loader2 size={16} className="spin-icon" /> <span>Optimizing...</span>
               </>
             ) : (
               <>
-                <Sparkles size={16} className="btn-icon spark" /> <span>AI Tối Ưu Lộ Trình</span>
+                <Sparkles size={16} className="btn-icon spark" /> <span>AI Optimize Roadmap</span>
               </>
             )}
           </button>
@@ -98,21 +86,20 @@ export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
             className="eval-action-btn btn-ai-re-evaluate"
             onClick={handleEvaluatePhase}
             disabled={evaluating}
-            title="AI Đánh giá lại kết quả tổng thể giai đoạn"
+            title="Re-evaluate stage progress"
           >
             {evaluating ? (
               <>
-                <Loader2 size={16} className="spin-icon" /> <span>Phân Tích...</span>
+                <Loader2 size={16} className="spin-icon" /> <span>Analyzing...</span>
               </>
             ) : (
               <>
-                <RefreshCw size={16} className="btn-icon" /> <span>Đánh Giá Lại Giai Đoạn</span>
+                <RefreshCw size={16} className="btn-icon" /> <span>Re-Evaluate Stage</span>
               </>
             )}
           </button>
         </div>
       </div>
-
 
       {optimizedMessage && (
         <div className="optimized-alert-box">
@@ -123,7 +110,7 @@ export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
       {evaluating ? (
         <div className="evaluator-loading-state">
           <Loader2 size={28} className="spin-icon" />
-          <p>AI đang phân tích tổng hợp kết quả hoàn thành bài test và tiến độ mốc này...</p>
+          <p>AI is analyzing quiz results and stage progress...</p>
         </div>
       ) : evaluation ? (
         <div className="evaluator-content-body">
@@ -132,16 +119,15 @@ export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
               <span className="r-score">{evaluation.score}%</span>
             </div>
             <div className="readiness-info">
-              <h4>{evaluation.score}% AI Đánh Giá Năng Lực {milestone.roleName}</h4>
+              <h4>{evaluation.score}% AI Assessment: {milestone.roleName}</h4>
               <p>{evaluation.summary}</p>
             </div>
           </div>
 
-
           <div className="eval-grid-columns">
             <div className="eval-col strengths">
               <div className="eval-col-title">
-                <CheckCircle size={16} /> Điểm Mạnh Đạt Được
+                <CheckCircle size={16} /> Key Strengths Achieved
               </div>
               <ul>
                 {evaluation.strengths.map((item, idx) => (
@@ -152,7 +138,7 @@ export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
 
             <div className="eval-col gaps">
               <div className="eval-col-title">
-                <AlertTriangle size={16} /> Hạn Chế / Cần Bổ Sung
+                <AlertTriangle size={16} /> Gaps / Areas to Improve
               </div>
               <ul>
                 {evaluation.weaknesses.map((item, idx) => (
@@ -163,7 +149,7 @@ export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
 
             <div className="eval-col actions">
               <div className="eval-col-title">
-                <Lightbulb size={16} /> Hành Động Khuyến Nghị Tiếp Theo
+                <Lightbulb size={16} /> Recommended Next Action Items
               </div>
               <ul>
                 {evaluation.actionItems.map((item, idx) => (
@@ -176,9 +162,9 @@ export const AIMilestoneEvaluator: React.FC<AIMilestoneEvaluatorProps> = ({
       ) : (
         <div className="evaluator-empty-state">
           <Bot size={36} className="empty-ai-icon" />
-          <p>Nhấn <strong>"Đánh Giá Lại Giai Đoạn"</strong> để AI tổng hợp kết quả tiến độ và phân tích độ sẵn sàng ứng tuyển của bạn cho mốc này!</p>
+          <p>Click <strong>"Re-Evaluate Stage"</strong> for AI to synthesize your progress and readiness for this milestone!</p>
           <button className="btn-primary" onClick={handleEvaluatePhase}>
-            <Sparkles size={16} /> Đánh Giá Ngay Với AI
+            <Sparkles size={16} /> Evaluate Now With AI
           </button>
         </div>
       )}

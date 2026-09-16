@@ -6,6 +6,7 @@ export interface SubTopic {
   assessmentScore?: number; // 0 - 100
   lastAssessedAt?: string;
   aiFeedback?: string;
+  courseraUrl?: string;
 }
 
 export interface Skill {

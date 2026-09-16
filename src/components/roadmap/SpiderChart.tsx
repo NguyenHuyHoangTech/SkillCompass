@@ -16,15 +16,15 @@ interface CountryMarket {
 }
 
 export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneTitle }) => {
-  const [selectedMarketId, setSelectedMarketId] = useState<string>('market-vn');
+  const [selectedMarketId, setSelectedMarketId] = useState<string>('market-us');
 
   const countryMarkets: CountryMarket[] = [
     {
-      id: 'market-vn',
-      name: 'Việt Nam',
-      flag: '🇻🇳',
-      color: '#10b981',
-      benchmarks: [75, 85, 80, 70, 65],
+      id: 'market-us',
+      name: 'United States',
+      flag: '🇺🇸',
+      color: '#f59e0b',
+      benchmarks: [90, 92, 90, 85, 90],
     },
     {
       id: 'market-sg',
@@ -34,15 +34,15 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
       benchmarks: [85, 90, 88, 80, 85],
     },
     {
-      id: 'market-us',
-      name: 'Mỹ',
-      flag: '🇺🇸',
-      color: '#f59e0b',
-      benchmarks: [90, 92, 90, 85, 90],
+      id: 'market-vn',
+      name: 'Vietnam',
+      flag: '🇻🇳',
+      color: '#10b981',
+      benchmarks: [75, 85, 80, 70, 65],
     },
     {
       id: 'market-jp',
-      name: 'Nhật Bản',
+      name: 'Japan',
       flag: '🇯🇵',
       color: '#ec4899',
       benchmarks: [75, 85, 80, 75, 90],
@@ -51,7 +51,6 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
 
   const currentMarket = countryMarkets.find((m) => m.id === selectedMarketId) || countryMarkets[0];
 
-  // Extract all skills from categories to form axes
   const skillsList = categories.flatMap((cat) =>
     cat.skills.map((s) => ({
       id: s.id,
@@ -60,21 +59,20 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
     }))
   );
 
-  // Standardize display skills to exactly 5 axes with short & concise names
   const displaySkills = [...skillsList];
   const standardLabels = [
-    'Tư Duy UX',
+    'UX Mindset',
     'Layout & CSS',
     'React & Tailwind',
     'Animation & Micro',
-    'Tối Ưu & A11y',
+    'Optimization & A11y',
   ];
 
   while (displaySkills.length < 5) {
     const idx = displaySkills.length;
     displaySkills.push({
       id: `sk-std-${idx}`,
-      name: standardLabels[idx] || `Kỹ năng ${idx + 1}`,
+      name: standardLabels[idx] || `Skill ${idx + 1}`,
       value: 0,
     });
   }
@@ -83,7 +81,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
 
   const numAxes = 5;
   const center = 185;
-  const radius = 92; // Enlarged radar chart grid area with generous padding
+  const radius = 92;
   const levels = [0.2, 0.4, 0.6, 0.8, 1.0];
 
   const getCoordinates = (index: number, valPercent: number) => {
@@ -94,16 +92,15 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
     return { x, y, angle };
   };
 
-  // Helper to map long skill names into short & concise titles
   const formatLabelLines = (name: string): string[] => {
     const shortNameMap: Record<string, string> = {
-      'Nguyên Tắc UX & Trực Quan': 'Tư Duy UX',
+      'Nguyên Tắc UX & Trực Quan': 'UX Mindset',
       'Visual Hierarchy & Layout Balance': 'Layout & CSS',
       'Flexbox, CSS Grid & SASS': 'CSS Grid & Flex',
       'Tailwind CSS & React Components': 'React & Tailwind',
       'Micro-interactions & Fonts/WebP': 'Animation & Micro',
-      'Mobile-First & Performance Tuning': 'Tối Ưu & Mobile',
-      'Cross-Browser & Web Accessibility': 'Tối Ưu & A11y',
+      'Mobile-First & Performance Tuning': 'Perf & Mobile',
+      'Cross-Browser & Web Accessibility': 'Browser & A11y',
       'Module Federation & GraphQL': 'GraphQL & Federation',
     };
 
@@ -146,7 +143,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
       <div className="chart-header compact-header">
         <div className="chart-header-top-row">
           <div className="chart-title-group">
-            <h3>Biểu Đồ Mạng Nhện Năng Lực</h3>
+            <h3>Radar Skill Capability Chart</h3>
           </div>
 
           <div className="country-market-selector-wrap">
@@ -155,7 +152,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
               className="country-market-select"
               value={selectedMarketId}
               onChange={(e) => setSelectedMarketId(e.target.value)}
-              title="Chọn thị trường quốc gia"
+              title="Select Market Benchmark"
             >
               {countryMarkets.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -167,22 +164,22 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
         </div>
 
         <p className="chart-subtitle compact-sub">
-          So sánh kỹ năng thuộc {milestoneTitle} với tiêu chuẩn <strong>{currentMarket.name}</strong>
+          Comparing skills in {milestoneTitle} with <strong>{currentMarket.name}</strong> benchmark
         </p>
 
         <div className="radar-legend-bar compact-legend">
           <div className="legend-item user-legend">
             <span className="legend-dot user-dot" />
-            <span className="legend-text">Bạn ({avgUserScore}%)</span>
+            <span className="legend-text">You ({avgUserScore}%)</span>
           </div>
           <div className="legend-item market-legend">
             <span className="legend-dot market-dot" style={{ background: currentMarket.color }} />
-            <span className="legend-text">Thị Trường {currentMarket.flag} ({avgMarketBench}%)</span>
+            <span className="legend-text">Market {currentMarket.flag} ({avgMarketBench}%)</span>
           </div>
         </div>
       </div>
 
-      {/* SVG Radar Chart (Enlarged canvas 370x370 for spacious label padding) */}
+      {/* SVG Radar Chart */}
       <div className="chart-container-flex compact-flex">
         <svg viewBox="0 0 370 370" className="spider-svg compact-svg">
           <defs>
@@ -202,7 +199,6 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
             </filter>
           </defs>
 
-          {/* Grid Polygons */}
           {levels.map((level, lvlIdx) => {
             const gridPoints = finalSkills
               .map((_, i) => {
@@ -219,7 +215,6 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
             );
           })}
 
-          {/* Axes lines */}
           {finalSkills.map((_, i) => {
             const { x, y } = getCoordinates(i, 100);
             return (
@@ -234,7 +229,6 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
             );
           })}
 
-          {/* LAYER 1: Market Country Benchmark */}
           <polygon
             points={marketPolygonPoints}
             fill={`${currentMarket.color}15`}
@@ -244,7 +238,6 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
             className="radar-market-poly"
           />
 
-          {/* Market Vertices */}
           {finalSkills.map((_, i) => {
             const benchVal = currentMarket.benchmarks[i] || 75;
             const { x, y } = getCoordinates(i, benchVal);
@@ -261,7 +254,6 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
             );
           })}
 
-          {/* LAYER 2: User Actual Skill Polygon */}
           <polygon
             points={userPolygonPoints}
             fill="url(#radarGrad)"
@@ -271,7 +263,6 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
             className="radar-data-poly"
           />
 
-          {/* User Vertices */}
           {finalSkills.map((sk, i) => {
             const { x, y } = getCoordinates(i, sk.value);
             return (
@@ -282,7 +273,6 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
             );
           })}
 
-          {/* Sleek Skill Labels with ample padding */}
           {finalSkills.map((sk, i) => {
             const angle = (Math.PI * 2 * i) / numAxes - Math.PI / 2;
             const labelRadius = radius + 22;
@@ -312,21 +302,20 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({ categories, milestoneT
         </svg>
       </div>
 
-      {/* Compact Footer Stats - Text & Numbers on 1 Single Row */}
       <div className="chart-footer-stats compact-footer">
         <div className="stat-pill">
-          <span className="stat-label">TB Bạn:</span>
+          <span className="stat-label">Your Avg:</span>
           <span className="stat-val highlight">{avgUserScore}%</span>
         </div>
         <div className="stat-pill">
-          <span className="stat-label">Thị Trường:</span>
+          <span className="stat-label">Market:</span>
           <span className="stat-val" style={{ color: currentMarket.color, fontWeight: 800 }}>
             {avgMarketBench}%
           </span>
         </div>
         <div className="stat-pill match-pill">
           <span className="stat-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-            <ShieldCheck size={11} color="#059669" /> Khớp:
+            <ShieldCheck size={11} color="#059669" /> Match:
           </span>
           <span className="stat-val match-val">{marketMatchPercent}%</span>
         </div>

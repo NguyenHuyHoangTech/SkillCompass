@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Skill, SubTopic, QuizQuestionResponse, QuizEvaluationResponse } from '../../types/roadmap';
 import { ApiService } from '../../services/apiService';
+import { FormattedMarkdownText } from '../common/FormattedMarkdownText';
 import { Bot, X, Sparkles, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 interface AIQuizModalProps {
@@ -84,8 +85,8 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
               <Bot size={22} className="ai-icon-pulse" />
             </div>
             <div>
-              <h3 className="modal-title">🤖 AI Coach Hướng Dẫn & Kiểm Tra: {subTopic.title}</h3>
-              <p className="modal-subtitle">AI Coach hướng dẫn bài tập cho kỹ năng: {skill.name} • {milestoneTitle}</p>
+              <h3 className="modal-title">🤖 AI Coach Quiz & Guidance: {subTopic.title}</h3>
+              <p className="modal-subtitle">AI Coach practice exercise for: {skill.name} • {milestoneTitle}</p>
             </div>
           </div>
           <button className="modal-close-btn" onClick={onClose}>
@@ -97,7 +98,7 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
           {loadingQuestion ? (
             <div className="modal-loading-state">
               <Loader2 size={32} className="spin-icon" />
-              <p>AI Coach đang khởi tạo bài tập hướng dẫn cho bạn...</p>
+              <p>AI Coach is generating exercise question...</p>
             </div>
           ) : evaluationResult ? (
             <div className="evaluation-result-view">
@@ -107,25 +108,25 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
                   <span className="score-lbl">AI Score</span>
                 </div>
                 <div className="score-meta">
-                  <h4>{evaluationResult.isPassed ? '🎉 Đạt Yêu Cầu Kỹ Năng!' : '⚠️ Cần Ôn Tập Thêm'}</h4>
+                  <h4>{evaluationResult.isPassed ? '🎉 Skill Benchmark Passed!' : '⚠️ Needs More Practice'}</h4>
                   <p>{evaluationResult.feedback}</p>
                 </div>
               </div>
 
               <div className="result-details-grid">
                 <div className="detail-box strengths">
-                  <div className="detail-title"><CheckCircle2 size={16} /> Điểm Mạnh Đánh Giá</div>
+                  <div className="detail-title"><CheckCircle2 size={16} /> Evaluation Strengths</div>
                   <p>{evaluationResult.strengths}</p>
                 </div>
                 <div className="detail-box improvements">
-                  <div className="detail-title"><AlertCircle size={16} /> Gợi Ý Cải Thiện Từ AI</div>
+                  <div className="detail-title"><AlertCircle size={16} /> AI Improvement Suggestions</div>
                   <p>{evaluationResult.improvements}</p>
                 </div>
               </div>
 
               <div className="modal-footer-actions">
                 <button className="btn-primary" onClick={onClose}>
-                  Hoàn Thành Bài Tập
+                  Complete Exercise
                 </button>
                 <button
                   className="btn-secondary"
@@ -134,7 +135,7 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
                     setUserAnswer('');
                   }}
                 >
-                  Thử Trả Lời Lại
+                  Try Again
                 </button>
               </div>
             </div>
@@ -142,22 +143,27 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
             <form onSubmit={handleSubmitAnswer} className="quiz-form">
               <div className="question-card">
                 <div className="question-badge">
-                  <Sparkles size={16} /> Đề Bài & Tình Huống AI Coach Đề Xuất
+                  <Sparkles size={16} /> Scenario & Assessment Test from AI Coach
                 </div>
-                <p className="question-text">{questionData?.question}</p>
+                <div className="question-text">
+                  <FormattedMarkdownText 
+                    content={(questionData?.question || '').split('[SECRET_ANSWER_KEY]')[0].trim()} 
+                    className="text-slate-800 text-xs sm:text-sm font-medium" 
+                  />
+                </div>
                 {questionData?.hint && (
                   <div className="hint-box">
-                    💡 <strong>Hướng dẫn từ AI Coach:</strong> {questionData.hint}
+                    💡 <strong>AI Coach Hint:</strong> {questionData.hint}
                   </div>
                 )}
               </div>
 
               <div className="answer-input-wrap">
-                <label className="input-label">Câu trả lời / Giải pháp bài tập của bạn:</label>
+                <label className="input-label">Your solution / answer explanation:</label>
                 <textarea
                   className="answer-textarea"
                   rows={4}
-                  placeholder="Nhập phần giải thích tư duy hoặc snippet mã code của bạn ở đây..."
+                  placeholder="Enter your explanation logic or code snippet here..."
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
                   disabled={evaluating}
@@ -166,7 +172,7 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
 
               <div className="modal-footer-actions">
                 <button type="button" className="btn-secondary" onClick={onClose}>
-                  Hủy Bỏ
+                  Cancel
                 </button>
 
                 <button
@@ -176,11 +182,11 @@ export const AIQuizModal: React.FC<AIQuizModalProps> = ({
                 >
                   {evaluating ? (
                     <>
-                      <Loader2 size={16} className="spin-icon" /> AI Coach Đang Chấm Điểm...
+                      <Loader2 size={16} className="spin-icon" /> AI Coach Grading...
                     </>
                   ) : (
                     <>
-                      <Send size={16} /> 🤖 Nộp Bài Để AI Coach Chấm Điểm
+                      <Send size={16} /> 🤖 Submit Solution for AI Grading
                     </>
                   )}
                 </button>

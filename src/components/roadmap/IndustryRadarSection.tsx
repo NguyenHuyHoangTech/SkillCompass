@@ -17,23 +17,21 @@ interface IndustryCareerConfig {
 }
 
 export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ milestones }) => {
-  // Calculate average user skill score across all skills in milestones
   const allSkills = milestones.flatMap((m) => m.categories.flatMap((c) => c.skills));
   const avgSkillScore = allSkills.length > 0
     ? Math.round(allSkills.reduce((acc, s) => acc + s.levelPercentage, 0) / allSkills.length)
     : 0;
 
-  // Career Industry radar definitions
   const industryConfigs: IndustryCareerConfig[] = [
     {
       id: 'ind-frontend',
       title: 'Frontend Web Developer',
       icon: '💻',
-      categoryTag: 'Lập Trình Web Giao Diện',
-      description: 'Chuyên gia xây dựng giao diện ứng dụng Web mượt mà, tối ưu hiệu năng và trải nghiệm người dùng.',
+      categoryTag: 'Frontend Web Engineering',
+      description: 'Specialist in building fluid Web application interfaces, optimizing performance, and crafting top-tier user experiences.',
       themeColor: '#0284c7',
       axes: [
-        { name: 'Tư Duy UX/UI', benchmark: 80, calculatedScore: Math.min(100, Math.round(avgSkillScore * 1.1)) },
+        { name: 'UX/UI Mindset', benchmark: 80, calculatedScore: Math.min(100, Math.round(avgSkillScore * 1.1)) },
         { name: 'HTML5 & CSS3 Layout', benchmark: 90, calculatedScore: Math.min(100, Math.round(avgSkillScore * 1.2)) },
         { name: 'React & TypeScript', benchmark: 85, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.9)) },
         { name: 'Micro-Interactions', benchmark: 75, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.8)) },
@@ -44,11 +42,11 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
       id: 'ind-backend',
       title: 'Backend & Cloud Engineer',
       icon: '⚙️',
-      categoryTag: 'Lập Trình Máy Chủ & Đám Mây',
-      description: 'Kiến trúc sư hệ thống xử lý dữ liệu, API microservices và quản trị cơ sở dữ liệu quy mô lớn.',
+      categoryTag: 'Server & Cloud Architecture',
+      description: 'System architect processing high-throughput data streams, microservice APIs, and managing enterprise databases.',
       themeColor: '#059669',
       axes: [
-        { name: 'Cơ Sở Dữ Liệu SQL/NoSQL', benchmark: 85, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.75)) },
+        { name: 'SQL/NoSQL Databases', benchmark: 85, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.75)) },
         { name: 'REST & GraphQL APIs', benchmark: 90, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.8)) },
         { name: 'System Architecture', benchmark: 80, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.65)) },
         { name: 'Docker & DevOps CI/CD', benchmark: 75, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.6)) },
@@ -59,26 +57,26 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
       id: 'ind-fullstack',
       title: 'Fullstack Software Engineer',
       icon: '🚀',
-      categoryTag: 'Lập Trình Toàn Diện Fullstack',
-      description: 'Kỹ sư công nghệ toàn năng làm chủ cả Frontend UI và Backend Architecture.',
+      categoryTag: 'Fullstack Development',
+      description: 'Versatile tech engineer mastering both Frontend UI systems and Backend architecture.',
       themeColor: '#7c3aed',
       axes: [
         { name: 'Frontend React/Vue', benchmark: 85, calculatedScore: Math.min(100, Math.round(avgSkillScore * 1.0)) },
         { name: 'Backend Node/Python', benchmark: 85, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.75)) },
         { name: 'Database Design', benchmark: 80, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.7)) },
         { name: 'Cloud Deployment', benchmark: 75, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.65)) },
-        { name: 'Tối Ưu & Scale', benchmark: 80, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.8)) },
+        { name: 'Optimization & Scale', benchmark: 80, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.8)) },
       ],
     },
     {
       id: 'ind-uiux',
       title: 'UI/UX Product Designer',
       icon: '🎨',
-      categoryTag: 'Thiết Kế Trải Nghiệm Sản Phẩm',
-      description: 'Nhà thiết kế nghiên cứu hành vi người dùng, Figma prototyping và xây dựng Design System.',
+      categoryTag: 'Product Experience Design',
+      description: 'Designer conducting user behavior research, Figma prototyping, and building design token systems.',
       themeColor: '#ec4899',
       axes: [
-        { name: 'Nghiên Cứu User Research', benchmark: 85, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.95)) },
+        { name: 'User Research', benchmark: 85, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.95)) },
         { name: 'Figma & Wireframing', benchmark: 90, calculatedScore: Math.min(100, Math.round(avgSkillScore * 1.15)) },
         { name: 'Design System Tokens', benchmark: 85, calculatedScore: Math.min(100, Math.round(avgSkillScore * 1.05)) },
         { name: 'Visual Hierarchy', benchmark: 85, calculatedScore: Math.min(100, Math.round(avgSkillScore * 1.1)) },
@@ -89,8 +87,8 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
       id: 'ind-aidata',
       title: 'AI & Data Science Engineer',
       icon: '🤖',
-      categoryTag: 'Trí Tuệ Nhân Tạo & Dữ Liệu',
-      description: 'Kỹ sư huấn luyện mô hình Machine Learning, phân tích dữ liệu lớn và ứng dụng LLM/GenAI.',
+      categoryTag: 'Artificial Intelligence & Data',
+      description: 'Engineer training Machine Learning models, analyzing big data pipelines, and deploying LLM/GenAI applications.',
       themeColor: '#d97706',
       axes: [
         { name: 'Python & Data Processing', benchmark: 90, calculatedScore: Math.min(100, Math.round(avgSkillScore * 0.6)) },
@@ -105,7 +103,6 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
   const [activeIndustryId, setActiveIndustryId] = useState<string>('ind-frontend');
   const activeIndustry = industryConfigs.find((ind) => ind.id === activeIndustryId) || industryConfigs[0];
 
-  // SVG Geometry constants
   const numAxes = 5;
   const center = 185;
   const radius = 95;
@@ -151,10 +148,10 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
           </div>
           <div>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-              Sơ Đồ Mạng Nhện Năng Lực Theo Ngành Nghề
+              Industry Capability Radar Chart
             </h3>
             <p style={{ fontSize: '0.84rem', color: '#64748b', margin: '2px 0 0 0' }}>
-              So sánh năng lực hiện tại của bạn với tiêu chuẩn năng lực các vị trí công nghệ hàng đầu
+              Compare your current skills against industry benchmarks for top tech positions
             </p>
           </div>
         </div>
@@ -162,7 +159,7 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
           <Sparkles size={16} color="#0284c7" />
           <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0369a1' }}>
-            {industryConfigs.length} Ngành Nghề Phân Tích
+            {industryConfigs.length} Industries Analyzed
           </span>
         </div>
       </div>
@@ -198,17 +195,17 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
         })}
       </div>
 
-      {/* Main Content Grid: Left SVG Radar Chart, Right Industry Breakdown */}
+      {/* Main Content Grid */}
       <div className="industry-radar-content-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginTop: '20px', alignItems: 'center' }}>
         {/* SVG Radar */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#f8fafc', padding: '16px', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '8px' }}>
             <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#475569' }}>
-              🎯 Sơ Đồ Năng Lực {activeIndustry.icon} {activeIndustry.title}
+              🎯 Capability Chart {activeIndustry.icon} {activeIndustry.title}
             </span>
             <div style={{ display: 'flex', gap: '12px', fontSize: '0.75rem', fontWeight: 700 }}>
-              <span style={{ color: activeIndustry.themeColor }}>● Bạn ({userAvg}%)</span>
-              <span style={{ color: '#94a3b8' }}>-- Tiêu chuẩn ({benchmarkAvg}%)</span>
+              <span style={{ color: activeIndustry.themeColor }}>● You ({userAvg}%)</span>
+              <span style={{ color: '#94a3b8' }}>-- Benchmark ({benchmarkAvg}%)</span>
             </div>
           </div>
 
@@ -220,7 +217,6 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
               </radialGradient>
             </defs>
 
-            {/* Grid levels */}
             {levels.map((lvl, lIdx) => {
               const pts = activeIndustry.axes
                 .map((_, i) => {
@@ -231,25 +227,19 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
               return <polygon key={lIdx} points={pts} fill="none" stroke="#cbd5e1" strokeWidth="1" strokeDasharray="3,3" />;
             })}
 
-            {/* Axis lines */}
             {activeIndustry.axes.map((_, i) => {
               const { x, y } = getCoordinates(i, 100);
               return <line key={i} x1={center} y1={center} x2={x} y2={y} stroke="#cbd5e1" strokeWidth="1" />;
             })}
 
-            {/* Benchmark Polygon */}
             <polygon points={benchmarkPoints} fill="none" stroke="#94a3b8" strokeWidth="1.8" strokeDasharray="4,4" />
-
-            {/* User Polygon */}
             <polygon points={userPoints} fill={`url(#indGrad-${activeIndustry.id})`} stroke={activeIndustry.themeColor} strokeWidth="2.5" />
 
-            {/* User Dots */}
             {activeIndustry.axes.map((axis, i) => {
               const { x, y } = getCoordinates(i, axis.calculatedScore || 0);
               return <circle key={i} cx={x} cy={y} r="4.5" fill={activeIndustry.themeColor} stroke="#ffffff" strokeWidth="1.5" />;
             })}
 
-            {/* Labels */}
             {activeIndustry.axes.map((axis, i) => {
               const angle = (Math.PI * 2 * i) / numAxes - Math.PI / 2;
               const labelR = radius + 22;
@@ -280,14 +270,13 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
             </p>
           </div>
 
-          {/* Match Score Card */}
           <div style={{ padding: '16px', background: '#f0f9ff', borderRadius: '14px', border: '1px solid #bae6fd', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0369a1', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <ShieldCheck size={16} color="#0284c7" /> Độ Khớp Với Tiêu Chuẩn Ngành:
+                <ShieldCheck size={16} color="#0284c7" /> Industry Match Rate:
               </div>
               <div style={{ fontSize: '0.82rem', color: '#0369a1', marginTop: '4px' }}>
-                {matchPercent >= 80 ? '🎉 Sẵn sàng ứng tuyển thực tế' : '⚡ Đang trên đà hoàn thiện kỹ năng'}
+                {matchPercent >= 80 ? '🎉 Ready for real-world job applications' : '⚡ Building required competencies'}
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
@@ -295,9 +284,8 @@ export const IndustryRadarSection: React.FC<IndustryRadarSectionProps> = ({ mile
             </div>
           </div>
 
-          {/* Axes Benchmark List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#334155' }}>Chi Tiết 5 Trục Năng Lực Nổi Bật:</span>
+            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#334155' }}>Key 5 Competency Axes:</span>
             {activeIndustry.axes.map((axis, idx) => {
               const uScore = axis.calculatedScore || 0;
               const isPassed = uScore >= axis.benchmark;

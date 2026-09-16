@@ -63,6 +63,20 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         {/* Navigation List: Các mục Lộ Trình, Tất Cả Kỹ Năng, Bài Tập */}
         <nav className="sidebar-menu-list">
           <button
+<<<<<<< Updated upstream
+=======
+            className={`sidebar-menu-btn ${activePage === 'page-onboarding' ? 'active' : ''}`}
+            onClick={() => {
+              onSelectPage('page-onboarding');
+              onClose();
+            }}
+          >
+            <Wand2 size={20} className="menu-btn-icon" style={{ color: 'var(--primary)' }} />
+            <span className="menu-btn-label">AI Roadmap Creator</span>
+          </button>
+
+          <button
+>>>>>>> Stashed changes
             className={`sidebar-menu-btn ${activePage === 'page-roadmap' ? 'active' : ''}`}
             onClick={() => {
               onSelectPage('page-roadmap');
@@ -70,8 +84,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             }}
           >
             <Map size={20} className="menu-btn-icon" />
+<<<<<<< Updated upstream
             <span className="menu-btn-label">Lộ Trình Career</span>
             <span className="menu-btn-badge">Chính</span>
+=======
+            <span className="menu-btn-label">{t('roadmap')}</span>
+>>>>>>> Stashed changes
           </button>
 
           <button

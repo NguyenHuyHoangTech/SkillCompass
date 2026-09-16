@@ -83,6 +83,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
         {/* Right: Featured AI Button & User Dropdown Menu */}
         <div className="top-nav-auth-actions" ref={dropdownRef}>
+<<<<<<< Updated upstream
           {onOpenCareerChat && (
             <button
               className="top-header-ai-featured-btn"
@@ -97,19 +98,35 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           {isLoggedIn ? (
             <div className="user-dropdown-wrapper">
               {/* Clickable Profile Badge */}
+=======
+          {/* Quick Theme Toggle */}
+          <button 
+            className="top-icon-btn"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            title={t('theme')}
+            style={{ marginRight: 4 }}
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
+          <AiConfigMenu />
+
+          {isLoggedIn ? (
+            <div className="user-dropdown-wrapper shrink-0">
+>>>>>>> Stashed changes
               <button
-                className="top-nav-user-profile-btn"
+                className="top-nav-user-profile-btn whitespace-nowrap shrink-0"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <div className="top-user-avatar">
-                  <User size={18} />
+                <div className="top-user-avatar shrink-0">
+                  <User size={16} />
                 </div>
-                <div className="top-user-meta">
-                  <span className="top-user-name">{userName}</span>
+                <div className="top-user-meta whitespace-nowrap shrink-0">
+                  <span className="top-user-name whitespace-nowrap shrink-0">{userName}</span>
                 </div>
                 <ChevronDown
-                  size={15}
-                  className={`dropdown-chevron ${isDropdownOpen ? 'open' : ''}`}
+                  size={14}
+                  className={`dropdown-chevron shrink-0 ${isDropdownOpen ? 'open' : ''}`}
                 />
               </button>
 

@@ -11,10 +11,10 @@ export const HorizontalSubTabBar: React.FC<HorizontalSubTabBarProps> = ({
   onSelectSubTab,
 }) => {
   const tabs = [
-    { id: 'view-all', label: 'Tổng Quan Đầy Đủ', icon: Layers },
-    { id: 'view-checklist', label: 'Danh Sách Bài Học & Checklist', icon: CheckSquare },
-    { id: 'view-radar', label: 'Biểu Đồ Mạng Nhện Năng Lực', icon: PieChart },
-    { id: 'view-optimizer', label: 'AI Tối Ưu & Đánh Giá Giai Đoạn', icon: Sparkles },
+    { id: 'view-all', label: 'Full Overview', icon: Layers },
+    { id: 'view-checklist', label: 'Skills Checklist', icon: CheckSquare },
+    { id: 'view-radar', label: 'Capability Radar Chart', icon: PieChart },
+    { id: 'view-optimizer', label: 'AI Stage Evaluation', icon: Sparkles },
   ];
 
   return (

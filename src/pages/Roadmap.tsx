@@ -1,26 +1,32 @@
 import { useState, useEffect } from 'react';
-import type { UserRoadmap, Skill, SubTopic, Milestone } from './types/roadmap';
-import { ApiService } from './services/apiService';
-import { TopNavbar } from './components/layout/TopNavbar';
-import { SidebarNav } from './components/layout/SidebarNav';
-import { RoadmapHeader } from './components/roadmap/RoadmapHeader';
-import { SpiderChart } from './components/roadmap/SpiderChart';
-import { SkillCategoryList } from './components/roadmap/SkillCategoryList';
-import { AIMilestoneEvaluator } from './components/ai/AIMilestoneEvaluator';
-import { AIQuizModal } from './components/ai/AIQuizModal';
-import { AICareerChatbot } from './components/ai/AICareerChatbot';
-import { AnalyticsPage } from './components/pages/AnalyticsPage';
-import { QuizLibraryPage } from './components/pages/QuizLibraryPage';
-import { AllSkillsPage } from './components/pages/AllSkillsPage';
-import { SettingsPage } from './components/pages/SettingsPage';
-import './App.css';
+import type { UserRoadmap, Skill, SubTopic, Milestone } from '../types/roadmap';
+import { ApiService } from '../services/apiService';
+import { TopNavbar } from '../components/layout/TopNavbar';
+import { SidebarNav } from '../components/layout/SidebarNav';
+import { RoadmapHeader } from '../components/roadmap/RoadmapHeader';
+import { SpiderChart } from '../components/roadmap/SpiderChart';
+import { SkillCategoryList } from '../components/roadmap/SkillCategoryList';
+import { AIMilestoneEvaluator } from '../components/ai/AIMilestoneEvaluator';
+import { AIQuizModal } from '../components/ai/AIQuizModal';
+import { AICareerChatbot } from '../components/ai/AICareerChatbot';
+import { AnalyticsPage } from '../components/pages/AnalyticsPage';
+import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
+import { AllSkillsPage } from '../components/pages/AllSkillsPage';
+import { SettingsPage } from '../components/pages/SettingsPage';
+import Onboarding from './Onboarding';
+import '../App.css';
 
-export function App() {
+export default function Roadmap() {
   const [roadmap, setRoadmap] = useState<UserRoadmap | null>(null);
   const [activeMilestoneId, setActiveMilestoneId] = useState<string>('ms-stage-1');
 
   // Page Routing State (Sidebar Vertical Tabs switch DIFFERENT PAGES)
-  const [activePage, setActivePage] = useState<string>('page-roadmap');
+  const [activePage, setActivePage] = useState<string>(() => {
+    if (window.location.pathname.includes('/roadmap')) {
+      return 'page-roadmap';
+    }
+    return 'page-onboarding';
+  });
 
   // Sub-Tab Navigation inside Roadmap Page (Horizontal Tabs in Header)
   const [activeSubTab, setActiveSubTab] = useState<string>('view-all');
@@ -119,16 +125,17 @@ export function App() {
     return (
       <div className="app-loading-screen">
         <div className="spin-icon" style={{ fontSize: '2.5rem', marginBottom: '16px' }}>💫</div>
-        <h2>Skill Compass AI - Đang tải dữ liệu hệ thống...</h2>
+        <h2>Skill Compass AI - Loading system data...</h2>
       </div>
     );
   }
 
   const activeMilestone =
-    roadmap.milestones.find((m) => m.id === activeMilestoneId) || roadmap.milestones[0];
+    (roadmap?.milestones && roadmap.milestones.length > 0)
+      ? (roadmap.milestones.find((m) => m.id === activeMilestoneId) || roadmap.milestones[0])
+      : null;
 
   return (
-<<<<<<< Updated upstream
     <div className="app-main-outer-shell">
       {/* 1. Sticky Top Navbar với các Tab chuyển trang chính (Lộ Trình, Tất Cả Kỹ Năng, Bài Tập & Test) */}
       <TopNavbar
@@ -154,65 +161,71 @@ export function App() {
 
         {/* 3. Main Viewport Container */}
         <div className="main-viewport">
+          {activePage === 'page-onboarding' && (
+            <Onboarding onFinish={async () => {
+              await loadRoadmap();
+              setActivePage('page-roadmap');
+            }} />
+          )}
+
           {activePage === 'page-roadmap' && (
             <div className="roadmap-page-view">
               {/* Horizontal Milestone Tabs */}
               <RoadmapHeader
-                milestones={roadmap.milestones}
+                milestones={roadmap.milestones || []}
                 activeMilestoneId={activeMilestoneId}
                 onSelectMilestone={handleSelectMilestone}
                 onOpenCareerChat={() => setIsCareerChatOpen(true)}
               />
 
               {/* Tất cả các thành phần luôn được hiển thị trọn vẹn trên 1 TRANG duy nhất */}
-              <div className="roadmap-single-page-wrapper">
-                {/* Row 1: AI Đánh Giá Tổng Thể & Biểu Đồ Mạng Nhện nằm CHUNG 1 DÒNG */}
-                <div className="top-eval-radar-row">
-                  <div className="evaluator-col" id="sec-optimizer">
-                    <AIMilestoneEvaluator
-                      milestone={activeMilestone}
-                      onRefreshRoadmap={loadRoadmap}
-                      onOpenCareerChat={() => setIsCareerChatOpen(true)}
-                    />
+              {activeMilestone && (
+                <div className="roadmap-single-page-wrapper">
+                  {/* Row 1: AI Đánh Giá Tổng Thể & Biểu Đồ Mạng Nhện nằm CHUNG 1 DÒNG */}
+                  <div className="top-eval-radar-row">
+                    <div className="evaluator-col" id="sec-optimizer">
+                      <AIMilestoneEvaluator
+                        milestone={activeMilestone}
+                        onRefreshRoadmap={loadRoadmap}
+                        onOpenCareerChat={() => setIsCareerChatOpen(true)}
+                      />
+                    </div>
+                    <div className="radar-col" id="sec-radar">
+                      <SpiderChart
+                        categories={activeMilestone.categories || []}
+                        milestoneTitle={activeMilestone.title || ''}
+                      />
+                    </div>
                   </div>
-                  <div className="radar-col" id="sec-radar">
-                    <SpiderChart
-                      categories={activeMilestone.categories}
-                      milestoneTitle={activeMilestone.title}
+
+                  {/* Row 2: Danh Sách Kỹ Năng / Checklist rộng 100% bên dưới */}
+                  <div className="checklist-full-row" id="sec-checklist">
+                    <SkillCategoryList
+                      categories={activeMilestone.categories || []}
+                      onOpenQuiz={handleOpenQuiz}
+                      onToggleCheck={handleToggleCheck}
                     />
                   </div>
                 </div>
-
-                {/* Row 2: Danh Sách Kỹ Năng / Checklist rộng 100% bên dưới */}
-                <div className="checklist-full-row" id="sec-checklist" style={{ marginTop: '14px' }}>
-                  <SkillCategoryList
-                    categories={activeMilestone.categories}
-                    onOpenQuiz={handleOpenQuiz}
-                    onToggleCheck={handleToggleCheck}
-                  />
-                </div>
-              </div>
-
-
-
+              )}
             </div>
           )}
 
           {activePage === 'page-all-skills' && (
             <AllSkillsPage
-              milestones={roadmap.milestones}
+              milestones={roadmap.milestones || []}
               onOpenQuiz={handleOpenQuiz}
               onToggleCheck={handleToggleCheck}
             />
           )}
 
-          {activePage === 'page-analytics' && (
+          {activePage === 'page-analytics' && activeMilestone && (
             <AnalyticsPage milestone={activeMilestone} />
           )}
 
           {activePage === 'page-quiz-lib' && (
             <QuizLibraryPage
-              milestones={roadmap.milestones}
+              milestones={roadmap.milestones || []}
               onOpenQuiz={handleOpenQuiz}
             />
           )}
@@ -222,15 +235,17 @@ export function App() {
           )}
 
           {/* AI Quiz Modal */}
-          <AIQuizModal
-            isOpen={isQuizModalOpen}
-            milestoneId={activeMilestoneId}
-            milestoneTitle={activeMilestone.title}
-            skill={selectedSkill}
-            subTopic={selectedSubTopic}
-            onClose={() => setIsQuizModalOpen(false)}
-            onSuccessEvaluation={handleSuccessEvaluation}
-          />
+          {activeMilestone && (
+            <AIQuizModal
+              isOpen={isQuizModalOpen}
+              milestoneId={activeMilestoneId}
+              milestoneTitle={activeMilestone.title}
+              skill={selectedSkill}
+              subTopic={selectedSubTopic}
+              onClose={() => setIsQuizModalOpen(false)}
+              onSuccessEvaluation={handleSuccessEvaluation}
+            />
+          )}
 
           {/* Floating AI Career Advisor Chatbot với chức năng Thêm Mốc Lộ Trình Tương Lai do AI Đề Xuất */}
           <AICareerChatbot
@@ -244,17 +259,6 @@ export function App() {
         </div>
       </div>
     </div>
-=======
-    <AppProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Roadmap />} />
-          <Route path="/roadmap" element={<Roadmap />} />
-        </Routes>
-      </BrowserRouter>
-    </AppProvider>
->>>>>>> Stashed changes
   );
 }
 
-export default App;
