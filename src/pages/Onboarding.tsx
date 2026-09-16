@@ -5,6 +5,7 @@ import { useAppContext } from '../context/AppContext';
 import { 
     updateAIConfig,
     testGeminiKey,
+    getAvailableModels,
     generateAssessmentQuestion, 
     evaluateAssessmentAnswer,
     generateDynamicRIASECCards,
@@ -27,22 +28,49 @@ export default function Onboarding() {
     const [showApiConfig, setShowApiConfig] = useState(false);
     const [tempApiKey, setTempApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
     const [tempModel, setTempModel] = useState(localStorage.getItem('gemini_model_name') || 'gemini-1.5-flash');
-    const [testResult, setTestResult] = useState<{success: boolean, message: string} | null>(null);
+    
+    // API Key Test State
+    const [isKeyValid, setIsKeyValid] = useState(!!localStorage.getItem('gemini_api_key'));
+    const [keyTestResult, setKeyTestResult] = useState<{success: boolean, message: string} | null>(null);
     const [isTestingKey, setIsTestingKey] = useState(false);
+    const [availableModels, setAvailableModels] = useState<string[]>([]);
+    
+    // Model Test State
     const [testMessage, setTestMessage] = useState("Xin chào, bạn có hoạt động không?");
     const [aiReply, setAiReply] = useState("");
+    const [isSendingMessage, setIsSendingMessage] = useState(false);
 
-    const handleTestKey = async () => {
+    const handleVerifyKey = async () => {
         setIsTestingKey(true);
-        setTestResult(null);
+        setKeyTestResult(null);
+        const res = await getAvailableModels(tempApiKey);
+        setKeyTestResult({ success: res.success, message: res.success ? `Kết nối thành công! Đã tải ${res.models.length} models.` : res.message });
+        setIsKeyValid(res.success);
+        if (res.success && res.models.length > 0) {
+            setAvailableModels(res.models);
+            
+            let nextModel = tempModel;
+            if (!res.models.includes(tempModel)) {
+                nextModel = res.models.includes('gemini-2.5-flash') ? 'gemini-2.5-flash' : res.models[0];
+            }
+            
+            setTempModel(nextModel);
+            updateAIConfig(tempApiKey, nextModel);
+        }
+        setIsTestingKey(false);
+    };
+
+    const handleSendMessage = async () => {
+        setIsSendingMessage(true);
         setAiReply("");
         const res = await testGeminiKey(tempApiKey, tempModel, testMessage);
-        setTestResult(res);
         if (res.success) {
             updateAIConfig(tempApiKey, tempModel);
             if (res.reply) setAiReply(res.reply);
+        } else {
+            setAiReply(`Lỗi: ${res.message}`);
         }
-        setIsTestingKey(false);
+        setIsSendingMessage(false);
     };
     const [localSkills, setLocalSkills] = useState<string[]>(state.skills || []);
     const [customSkill, setCustomSkill] = useState('');
@@ -268,65 +296,89 @@ export default function Onboarding() {
                     </button>
 
                     {showApiConfig && (
-                        <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-50">
+                        <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-50">
                             <h3 className="text-sm font-bold text-slate-800 mb-3">Cấu hình Gemini API</h3>
                             
-                            <div className="space-y-3">
+                            <div className="space-y-4">
+                                {/* Step 1: Input & Test Key */}
                                 <div>
                                     <label className="block text-xs font-medium text-slate-500 mb-1">API Key</label>
-                                    <input 
-                                        type="password" 
-                                        value={tempApiKey}
-                                        onChange={(e) => setTempApiKey(e.target.value)}
-                                        placeholder="AIzaSy..." 
-                                        className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                                    />
-                                </div>
-                                
-                                <div>
-                                    <label className="block text-xs font-medium text-slate-500 mb-1">Model</label>
-                                    <select 
-                                        value={tempModel}
-                                        onChange={(e) => setTempModel(e.target.value)}
-                                        className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                                    >
-                                        <option value="gemini-1.5-flash">Gemini 1.5 Flash (Nhanh)</option>
-                                        <option value="gemini-1.5-pro">Gemini 1.5 Pro (Thông minh)</option>
-                                        <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash Exp</option>
-                                        <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-slate-500 mb-1">Tin nhắn test</label>
-                                    <textarea 
-                                        value={testMessage}
-                                        onChange={(e) => setTestMessage(e.target.value)}
-                                        className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none h-16"
-                                        placeholder="Nhập tin nhắn bất kỳ..."
-                                    />
-                                </div>
-
-                                <button 
-                                    onClick={handleTestKey}
-                                    disabled={isTestingKey || !tempApiKey || !testMessage}
-                                    className="w-full bg-slate-900 text-white text-sm font-medium py-2 rounded-lg hover:bg-slate-800 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
-                                >
-                                    {isTestingKey ? <i className="fa-solid fa-spinner fa-spin"></i> : <i className="fa-solid fa-paper-plane"></i>}
-                                    Gửi Test & Lưu
-                                </button>
-
-                                {testResult && !testResult.success && (
-                                    <div className="text-xs p-2 rounded-md bg-red-50 text-red-700">
-                                        <i className="fa-solid fa-triangle-exclamation mr-1"></i>
-                                        {testResult.message}
+                                    <div className="flex gap-2">
+                                        <input 
+                                            type="password" 
+                                            value={tempApiKey}
+                                            onChange={(e) => {
+                                                setTempApiKey(e.target.value);
+                                                setIsKeyValid(false);
+                                                setKeyTestResult(null);
+                                            }}
+                                            placeholder="AIzaSy..." 
+                                            className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                                        />
+                                        <button 
+                                            onClick={handleVerifyKey}
+                                            disabled={isTestingKey || !tempApiKey}
+                                            className="px-3 bg-slate-900 text-white text-xs font-medium rounded-lg hover:bg-slate-800 disabled:opacity-50 whitespace-nowrap"
+                                        >
+                                            {isTestingKey ? <i className="fa-solid fa-spinner fa-spin"></i> : "Test Key"}
+                                        </button>
                                     </div>
-                                )}
+                                    {keyTestResult && (
+                                        <div className={`mt-2 text-[11px] p-2 rounded-md ${keyTestResult.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                                            <i className={`fa-solid ${keyTestResult.success ? 'fa-check-circle' : 'fa-triangle-exclamation'} mr-1`}></i>
+                                            {keyTestResult.message}
+                                        </div>
+                                    )}
+                                </div>
                                 
-                                {aiReply && (
-                                    <div className="text-xs p-3 rounded-md bg-indigo-50 border border-indigo-100 text-slate-700 max-h-40 overflow-y-auto whitespace-pre-wrap">
-                                        <strong className="text-indigo-700 block mb-1"><i className="fa-solid fa-robot mr-1"></i> AI Trả lời:</strong>
-                                        {aiReply}
+                                {/* Step 2: Select Model & Test Message (Only visible if Key is valid) */}
+                                {isKeyValid && (
+                                    <div className="border-t border-slate-100 pt-3 space-y-3">
+                                        <div>
+                                            <label className="block text-xs font-medium text-slate-500 mb-1">Chọn Model</label>
+                                            <select 
+                                                value={tempModel}
+                                                onChange={(e) => {
+                                                    setTempModel(e.target.value);
+                                                    updateAIConfig(tempApiKey, e.target.value);
+                                                }}
+                                                className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                                            >
+                                                {availableModels.length > 0 ? (
+                                                    availableModels.map(m => (
+                                                        <option key={m} value={m}>{m}</option>
+                                                    ))
+                                                ) : (
+                                                    <option value={tempModel}>{tempModel}</option>
+                                                )}
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs font-medium text-slate-500 mb-1">Tin nhắn test Model</label>
+                                            <textarea 
+                                                value={testMessage}
+                                                onChange={(e) => setTestMessage(e.target.value)}
+                                                className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none h-16"
+                                                placeholder="Nhập tin nhắn bất kỳ..."
+                                            />
+                                        </div>
+
+                                        <button 
+                                            onClick={handleSendMessage}
+                                            disabled={isSendingMessage || !testMessage}
+                                            className="w-full bg-indigo-600 text-white text-sm font-medium py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+                                        >
+                                            {isSendingMessage ? <i className="fa-solid fa-spinner fa-spin"></i> : <i className="fa-solid fa-paper-plane"></i>}
+                                            Gửi Tin Nhắn Test
+                                        </button>
+                                        
+                                        {aiReply && (
+                                            <div className="text-xs p-3 rounded-md bg-indigo-50 border border-indigo-100 text-slate-700 max-h-40 overflow-y-auto whitespace-pre-wrap">
+                                                <strong className="text-indigo-700 block mb-1"><i className="fa-solid fa-robot mr-1"></i> AI Trả lời:</strong>
+                                                {aiReply}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>

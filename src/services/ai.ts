@@ -17,6 +17,24 @@ export const updateAIConfig = (newKey: string, newModel: string) => {
     }
 };
 
+export const getAvailableModels = async (key: string): Promise<{success: boolean, models: string[], message: string}> => {
+    try {
+        const testAi = new GoogleGenAI({ apiKey: key });
+        const res = await testAi.models.list();
+        const models: string[] = [];
+        for await (const m of res) {
+            const modelName = m.name.replace(/^models\//, '');
+            if (modelName.includes('gemini') || modelName.includes('gemma')) {
+                models.push(modelName);
+            }
+        }
+        return { success: true, models, message: "Lấy danh sách model thành công!" };
+    } catch (e: any) {
+        console.error("List models failed:", e);
+        return { success: false, models: [], message: e.message || "Kết nối thất bại!" };
+    }
+};
+
 export const testGeminiKey = async (key: string, model: string, customMessage: string = "Test message"): Promise<{success: boolean, message: string, reply?: string}> => {
     try {
         const testAi = new GoogleGenAI({ apiKey: key });
