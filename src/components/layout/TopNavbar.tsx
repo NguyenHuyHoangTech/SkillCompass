@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, Layers, CheckSquare, PieChart, Sparkles } from 'lucide-react';
+import { Compass, User, LogIn, UserPlus, LogOut, ChevronDown, CheckSquare, PieChart, Sparkles } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 
 interface TopNavbarProps {
@@ -9,14 +9,16 @@ interface TopNavbarProps {
   onSelectSubTab?: (tabId: string) => void;
   onSelectPage?: (pageId: string) => void;
   onToggleSidebar?: () => void;
+  onOpenGalaxy?: () => void;
 }
 
 export const TopNavbar: React.FC<TopNavbarProps> = ({
   userName,
   activePage,
-  activeSubTab = 'view-all',
+  activeSubTab,
   onSelectSubTab,
   onToggleSidebar,
+  onOpenGalaxy,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -25,7 +27,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   const { t } = useAppContext();
 
   const roadmapSubTabs = [
-    { id: 'view-all', label: 'Full Overview', icon: Layers },
     { id: 'view-checklist', label: 'Skill Checklist', icon: CheckSquare },
     { id: 'view-radar', label: 'Radar Chart', icon: PieChart },
     { id: 'view-optimizer', label: 'Gợi ý Lộ trình AI', icon: Sparkles },
@@ -87,8 +88,18 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           <div id="onboarding-step-portal-target" className="top-nav-center-subtabs" style={{ display: 'flex', alignItems: 'center' }}></div>
         )}
 
-        {/* Right: User Dropdown Menu */}
+        {/* Right: User Dropdown Menu & Galaxy Button */}
         <div className="top-nav-auth-actions" ref={dropdownRef}>
+          {onOpenGalaxy && (
+            <button 
+              onClick={onOpenGalaxy}
+              className="hidden md:flex items-center gap-2 px-3 py-1.5 mr-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition-all shadow-sm border border-slate-700 group"
+              title="Khám phá vũ trụ kỹ năng"
+            >
+              <Sparkles size={14} className="text-amber-300 group-hover:scale-110 transition-transform" />
+              <span className="text-xs font-semibold tracking-wide">Vũ trụ Kỹ năng</span>
+            </button>
+          )}
 
           {isLoggedIn ? (
             <div className="user-dropdown-wrapper">

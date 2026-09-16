@@ -35,7 +35,7 @@ export default function Roadmap() {
   );
 
   // Sub-Tab Navigation inside Roadmap Page (Horizontal Tabs in Header)
-  const [activeSubTab, setActiveSubTab] = useState<string>('view-all');
+  const [activeSubTab, setActiveSubTab] = useState<string>('view-checklist');
 
   // Sidebar Drawer Open/Close State
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -52,6 +52,7 @@ export default function Roadmap() {
   const [isAiRoadmapGeneratorOpen, setIsAiRoadmapGeneratorOpen] = useState(false);
   const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
   const [isAiSkillGeneratorOpen, setIsAiSkillGeneratorOpen] = useState(false);
+  const [isGalaxyModalOpen, setIsGalaxyModalOpen] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -133,10 +134,6 @@ export default function Roadmap() {
     }
 
     setActiveSubTab(tabId);
-    if (tabId === 'view-all') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
 
     const targetMap: Record<string, string> = {
       'view-checklist': 'sec-checklist',
@@ -394,8 +391,9 @@ export default function Roadmap() {
         activePage={activePage}
         activeSubTab={activeSubTab}
         onSelectSubTab={handleSelectSubTab}
-        onSelectPage={(page) => setActivePage(page)}
+        onSelectPage={setActivePage}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        onOpenGalaxy={() => setIsGalaxyModalOpen(true)}
       />
 
       <div className="app-layout-wrapper flex-1 flex overflow-hidden relative">
@@ -458,14 +456,6 @@ export default function Roadmap() {
                 </div>
               </div>
             </div>
-          )}
-
-          {activePage === 'page-all-skills' && (
-            <AllSkillsPage
-              milestones={roadmap.milestones}
-              onOpenQuiz={handleOpenQuiz}
-              onToggleCheck={handleToggleCheck}
-            />
           )}
 
           {activePage === 'page-analytics' && (
@@ -538,6 +528,17 @@ export default function Roadmap() {
             unlearnedSkills={unlearnedSkills}
             onConfirm={handleConfirmGeneratedSkills}
           />
+          
+          {isGalaxyModalOpen && (
+            <div className="fixed inset-0 z-[100] bg-slate-900">
+              <AllSkillsPage 
+                milestones={roadmap.milestones}
+                onOpenQuiz={handleOpenQuiz}
+                onToggleCheck={handleToggleCheck}
+                onClose={() => setIsGalaxyModalOpen(false)}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -32,7 +32,7 @@ interface StarSphereCanvasProps {
   selectedCategoryName: string;
   isAutoRotate: boolean;
   onToggleAutoRotate: () => void;
-  onStarDoubleClick: (data: { skill: Skill; categoryName: string; milestoneTitle: string }) => void;
+  onStarClick: (data: { skill: Skill; categoryName: string; milestoneTitle: string }) => void;
 }
 
 export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
@@ -41,7 +41,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
   selectedCategoryName,
   isAutoRotate,
   onToggleAutoRotate,
-  onStarDoubleClick,
+  onStarClick,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -50,7 +50,6 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
   const rotationRef = useRef({ rotX: 0.2, rotY: 0.5, velX: 0, velY: 0 });
   const isDraggingRef = useRef(false);
   const lastMousePos = useRef({ x: 0, y: 0 });
-  const lastClickTimeRef = useRef<number>(0);
   const clickStartPosRef = useRef({ x: 0, y: 0 });
 
   // State for hovered star and star list
@@ -451,39 +450,28 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
     }
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
     isDraggingRef.current = false;
-  };
-
-  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
-
-    const distMoved = Math.hypot(clickX - clickStartPosRef.current.x, clickY - clickStartPosRef.current.y);
-    if (distMoved > 6) return;
-
-    const now = Date.now();
-    const timeDiff = now - lastClickTimeRef.current;
-    lastClickTimeRef.current = now;
-
-    if (timeDiff < 300 && hoveredStar) {
-      onStarDoubleClick({
-        skill: hoveredStar.skill,
-        categoryName: hoveredStar.categoryName,
-        milestoneTitle: hoveredStar.milestoneTitle,
-      });
-    }
-  };
-
-  const handleCanvasDoubleClick = () => {
-    if (hoveredStar) {
-      onStarDoubleClick({
-        skill: hoveredStar.skill,
-        categoryName: hoveredStar.categoryName,
-        milestoneTitle: hoveredStar.milestoneTitle,
-      });
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    // Calculate drag distance
+    const startX = clickStartPosRef.current.x;
+    const startY = clickStartPosRef.current.y;
+    const dragDistance = Math.hypot(x - startX, y - startY);
+    
+    // If it was a click (not a drag)
+    if (dragDistance < 5) {
+      if (hoveredStar) {
+        onStarClick({
+          skill: hoveredStar.skill,
+          categoryName: hoveredStar.categoryName,
+          milestoneTitle: hoveredStar.milestoneTitle,
+        });
+      }
     }
   };
 
@@ -497,8 +485,7 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        onClick={handleCanvasClick}
-        onDoubleClick={handleCanvasDoubleClick}
+        onClick={handleMouseUp}
       />
 
       {/* Minimal Floating HUD Controls */}
@@ -539,14 +526,14 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
             </div>
             <button
               className="star-hover-action-btn"
-              onClick={() => onStarDoubleClick({
+              onClick={() => onStarClick({
                 skill: hoveredStar.skill,
                 categoryName: hoveredStar.categoryName,
                 milestoneTitle: hoveredStar.milestoneTitle,
               })}
             >
               <Eye size={15} />
-              <span>Double-click to view exercises</span>
+              <span>Click to view details</span>
             </button>
           </div>
         </div>

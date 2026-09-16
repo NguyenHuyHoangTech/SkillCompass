@@ -9,12 +9,14 @@ interface AllSkillsPageProps {
   milestones: Milestone[];
   onOpenQuiz: (skill: Skill, subTopic: SubTopic) => void;
   onToggleCheck: (skill: Skill, subTopic: SubTopic, completed: boolean) => void;
+  onClose?: () => void;
 }
 
 export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
   milestones,
   onOpenQuiz,
   onToggleCheck,
+  onClose,
 }) => {
   const { t } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,6 +44,16 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
 
   return (
     <div className="all-skills-pure-space-page">
+      {onClose && (
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-slate-800/50 hover:bg-slate-700/80 text-white flex items-center justify-center backdrop-blur-sm border border-slate-600 transition-all shadow-lg hover:scale-105"
+          title="Đóng vũ trụ kỹ năng"
+        >
+          <X size={20} />
+        </button>
+      )}
+
       {/* 1. Floating Search Bar (Top-Left) */}
       <div className="cosmic-top-left-search">
         <div className="cosmic-search-box glass-panel">
@@ -142,7 +154,7 @@ export const AllSkillsPage: React.FC<AllSkillsPageProps> = ({
           selectedCategoryName={selectedCategoryName}
           isAutoRotate={isAutoRotate}
           onToggleAutoRotate={() => setIsAutoRotate(!isAutoRotate)}
-          onStarDoubleClick={(starData) => {
+          onStarClick={(starData) => {
             setSelectedStarData(starData);
           }}
         />
