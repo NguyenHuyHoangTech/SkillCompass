@@ -119,9 +119,17 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
                 {onLearnSkill && (
                   <button 
                     onClick={() => onLearnSkill(skill)}
-                    className="w-full mt-auto py-2.5 bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white border border-blue-200 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-2 group"
+                    disabled={isSkillCompleted}
+                    className={`w-full mt-auto py-2.5 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-2 group ${
+                      isSkillCompleted
+                        ? 'bg-emerald-50 text-emerald-500 border border-emerald-200 cursor-not-allowed opacity-70'
+                        : isSkillInProgress
+                          ? 'bg-amber-50 hover:bg-amber-500 text-amber-600 hover:text-white border border-amber-200'
+                          : 'bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white border border-blue-200'
+                    }`}
                   >
-                    <i className="fa-solid fa-graduation-cap group-hover:scale-110 transition-transform"></i> Tìm Khóa Học AI
+                    <i className={`fa-solid group-hover:scale-110 transition-transform ${isSkillCompleted ? 'fa-certificate' : (isSkillInProgress ? 'fa-play' : 'fa-graduation-cap')}`}></i> 
+                    {isSkillCompleted ? 'Đã nhận Chứng Chỉ' : (isSkillInProgress ? 'Tiếp tục Khóa học' : 'Tìm Khóa Học AI')}
                   </button>
                 )}
             </div>

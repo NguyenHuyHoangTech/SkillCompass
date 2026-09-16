@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { X, TrendingUp, Award, Target, BrainCircuit, Activity, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { X, TrendingUp, Award, Target, BrainCircuit, Activity, ZoomIn, ZoomOut, RotateCcw, Layers } from 'lucide-react';
 import type { Milestone, SkillCategory } from '../../types/roadmap';
 import { SpiderChart } from '../roadmap/SpiderChart';
 
@@ -223,6 +223,29 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
                         ))}
                         {bottomSkills.length === 0 && <p className="text-sm text-slate-400">Chưa có dữ liệu</p>}
                     </div>
+                </div>
+            </div>
+
+
+            {/* All Skills/Categories Overview */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div className="flex items-center gap-2 mb-4 text-blue-600">
+                    <Layers size={20} />
+                    <h4 className="font-bold">Tổng quan tất cả các mảng kỹ năng</h4>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4">
+                    {avgCategoryList.map((cat, idx) => (
+                        <div key={idx}>
+                            <div className="flex justify-between text-sm font-semibold text-slate-700 mb-1">
+                                <span className="line-clamp-1" title={cat.name}>{cat.name}</span>
+                                <span>{cat.score}%</span>
+                            </div>
+                            <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                <div className="bg-blue-500 h-full rounded-full" style={{ width: `${cat.score}%` }}></div>
+                            </div>
+                        </div>
+                    ))}
+                    {avgCategoryList.length === 0 && <p className="text-sm text-slate-400 col-span-full">Chưa có dữ liệu</p>}
                 </div>
             </div>
 

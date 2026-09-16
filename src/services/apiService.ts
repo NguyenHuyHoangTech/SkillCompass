@@ -9,6 +9,11 @@ import { initialMockRoadmap } from '../data/mockRoadmapData';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
+// Helper to determine if we should bypass the backend completely for this session
+// This happens if the backend is running an old version (missing endpoints)
+const isBackendStale = () => sessionStorage.getItem('skillcompass_backend_stale') === 'true';
+const setBackendStale = () => sessionStorage.setItem('skillcompass_backend_stale', 'true');
+
 function getLocalMockRoadmap(): UserRoadmap {
   const cached = localStorage.getItem('skill_compass_roadmap_v3');
   if (cached) {
@@ -132,6 +137,7 @@ export class ApiService {
 
   public static async updateMilestone(milestoneId: string, data: { isForceCompleted?: boolean }): Promise<UserRoadmap> {
     try {
+      if (isBackendStale()) throw new Error('Backend stale, forcing local');
       const res = await fetch(`${API_BASE_URL}/roadmap/milestone`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -225,6 +231,90 @@ export class ApiService {
       });
 
       return evaluation;
+    }
+  }
+
+  public static async completeSkill(milestoneId: string, skillId: string): Promise<UserRoadmap> {
+    try {
+      if (isBackendStale()) throw new Error('Backend stale, forcing local');
+      const res = await fetch(`${API_BASE_URL}/roadmap/skill/complete`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ milestoneId, skillId }),
+      });
+      if (!res.ok) throw new Error('API error');
+      const result = await res.json();
+      localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(result.data));
+      return result.data;
+    } catch {
+      setBackendStale();
+      // Fallback local mock update
+      const localData = getLocalMockRoadmap();
+      const milestone = localData.milestones.find((m) => m.id === milestoneId);
+      if (milestone) {
+        let targetSkill: any = null;
+        for (const cat of milestone.categories) {
+          const sk = cat.skills.find((s) => s.id === skillId);
+          if (sk) {
+            targetSkill = sk;
+            break;
+          }
+        }
+        if (targetSkill) {
+          targetSkill.levelPercentage = 100;
+          targetSkill.subTopics.forEach((st: any) => st.isCompleted = true);
+          
+          const allSubTopics = milestone.categories.flatMap((c) => c.skills.flatMap((s) => s.subTopics));
+          const completedCount = allSubTopics.filter((st) => st.isCompleted).length;
+          milestone.overallProgress = Math.round((completedCount / allSubTopics.length) * 100);
+        }
+        saveLocalMockRoadmap(localData);
+      }
+      return localData;
+    }
+  }
+
+  public static async addChecklistTasks(milestoneId: string, skillId: string, tasks: string[]): Promise<UserRoadmap> {
+    try {
+      if (isBackendStale()) throw new Error('Backend stale, forcing local');
+      const res = await fetch(`${API_BASE_URL}/roadmap/skill/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ milestoneId, skillId, tasks }),
+      });
+      if (!res.ok) throw new Error('API error');
+      const result = await res.json();
+      localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(result.data));
+      return result.data;
+    } catch {
+      setBackendStale();
+      const localData = getLocalMockRoadmap();
+      const milestone = localData.milestones.find((m) => m.id === milestoneId);
+      if (milestone) {
+        let targetSkill: any = null;
+        for (const cat of milestone.categories) {
+          const sk = cat.skills.find((s) => s.id === skillId);
+          if (sk) {
+            targetSkill = sk;
+            break;
+          }
+        }
+        if (targetSkill) {
+          const newSubTopics = tasks.map(t => ({
+            id: `st-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+            title: t,
+            isCompleted: false
+          }));
+          targetSkill.subTopics = [...newSubTopics, ...targetSkill.subTopics];
+          
+          const completed = targetSkill.subTopics.filter((st: any) => st.isCompleted).length;
+          let pct = targetSkill.subTopics.length > 0 ? Math.round((completed / targetSkill.subTopics.length) * 100) : 0;
+          if (pct === 0) pct = 50;
+          targetSkill.levelPercentage = pct;
+        }
+        saveLocalMockRoadmap(localData);
+      }
+      return localData;
     }
   }
 

@@ -1317,6 +1317,7 @@ export interface AICourse {
     thumbnailUrl: string;
     tags: string[];
     description: string;
+    syllabus?: { id: number; title: string; duration: string; isCompleted?: boolean }[];
 }
 
 export const generateMockCourses = async (skillName: string, userPrompt: string = ""): Promise<{ chat_response: string, courses: AICourse[] }> => {
@@ -1367,7 +1368,13 @@ export const generateMockCourses = async (skillName: string, userPrompt: string 
             enrolledCount: Math.floor(Math.random() * 500000) + 10000,
             thumbnailUrl: thumbs[Math.floor(Math.random() * thumbs.length)],
             tags: [skillName, lvl, pvd],
-            description: `This comprehensive course will take you from absolute basics to advanced concepts in ${skillName}. Taught by industry expert ${inst}.`
+            description: `This comprehensive course will take you from absolute basics to advanced concepts in ${skillName}. Taught by industry expert ${inst}.`,
+            syllabus: Array.from({ length: Math.floor(Math.random() * 4) + 4 }).map((_, i) => ({
+                id: i,
+                title: `Bài ${i + 1}: ${['Giới thiệu chung', 'Cài đặt môi trường', 'Các khái niệm cơ bản', 'Thực hành dự án nhỏ', 'Kỹ thuật nâng cao', 'Tổng kết & Đánh giá'][i % 6]}`,
+                duration: `${Math.floor(Math.random() * 15) + 5}:${Math.floor(Math.random() * 50) + 10}`,
+                isCompleted: false
+            }))
         };
     };
 

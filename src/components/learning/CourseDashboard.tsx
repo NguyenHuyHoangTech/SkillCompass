@@ -8,18 +8,38 @@ interface CourseDashboardProps {
   course: AICourse;
   onBack: () => void;
   onApplyChecklist: (items: string[]) => void;
+  onCompleteCourse: () => void;
 }
 
-export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course, onBack, onApplyChecklist }) => {
+export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course, onBack, onApplyChecklist, onCompleteCourse }) => {
   const [checklist, setChecklist] = useState<AIChecklistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<{sender: 'ai' | 'user', text: string}[]>([]);
   const [chatInput, setChatInput] = useState('');
-  const [hasApplied, setHasApplied] = useState(false);
+  const [isLearningMode, setIsLearningMode] = useState(false);
+  const [completedSyllabusItems, setCompletedSyllabusItems] = useState<number[]>([]);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const syllabus = course.syllabus || [];
   
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // If the skill is already in progress, restore checklist and bypass planning mode
+    if (skill.levelPercentage > 0 && skill.subTopics && skill.subTopics.length > 0) {
+      setChecklist(skill.subTopics.map(st => ({ id: st.id, title: st.title, isCompleted: st.isCompleted })));
+      
+      const completedIndices: number[] = [];
+      skill.subTopics.forEach((st, i) => {
+        if (st.isCompleted) completedIndices.push(i);
+        if (st.isCompleted) completedIndices.push(i);
+      });
+      // We don't use setCompletedItems here for syllabus, we just set isLearningMode
+      // In a real app, syllabus completion would be saved to DB. For mock, we start at 0.
+      setIsLearningMode(true);
+      setLoading(false);
+      return;
+    }
+
     const fetchInitialChecklist = async () => {
       setLoading(true);
       try {
@@ -33,7 +53,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
       }
     };
     fetchInitialChecklist();
-  }, [skill.name, course.title]);
+  }, [skill.id, skill.name, course.title]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,7 +66,6 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
     setMessages(prev => [...prev, { sender: 'user', text: userMsg }]);
     setChatInput('');
     setLoading(true);
-    setHasApplied(false);
 
     try {
       const { chat_response, checklist: newList } = await generateMockChecklist(skill.name, course.title, userMsg);
@@ -62,7 +81,21 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
 
   const handleApply = () => {
     onApplyChecklist(checklist.map(i => i.title));
-    setHasApplied(true);
+    setIsAnimating(true);
+    setTimeout(() => {
+        setIsLearningMode(true);
+        setIsAnimating(false);
+    }, 800);
+  };
+
+  const handleToggleSyllabusItem = (index: number) => {
+    setCompletedSyllabusItems(prev => 
+        prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+    );
+  };
+
+  const handleFinishCourse = () => {
+      onCompleteCourse();
   };
 
   return (
@@ -77,7 +110,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
                     onClick={onBack}
                     className="hover:bg-slate-800 p-2 rounded-lg text-slate-400 hover:text-white transition-colors"
                 >
-                    ← Quay lại
+                    ← Đóng khóa học
                 </button>
                 <div className="h-6 w-px bg-slate-800"></div>
                 <h1 className="font-bold text-white text-lg flex items-center gap-2">
@@ -129,14 +162,20 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
         </div>
       </div>
 
-      {/* Right Area: AI Checklist Sidebar */}
-      <div className="w-full lg:w-[400px] xl:w-[450px] bg-slate-950 border-l border-slate-800 flex flex-col h-full absolute lg:relative z-20 translate-x-full lg:translate-x-0 transition-transform duration-300">
-        <div className="p-5 border-b border-slate-800 bg-slate-900 flex flex-col gap-1 shrink-0">
-            <h3 className="font-bold text-white flex items-center gap-2">
-                <Bot className="text-emerald-400" /> AI Checklist & Kế hoạch
-            </h3>
-            <p className="text-[12px] text-slate-400">Điều chỉnh lịch học qua chat, sau đó Thêm vào Lộ trình.</p>
-        </div>
+      {/* Right Area: Sidebar */}
+      <div className={`w-full lg:w-[400px] xl:w-[450px] bg-slate-950 border-l border-slate-800 flex flex-col h-full absolute lg:relative z-20 ${
+          isAnimating 
+          ? 'transition-all duration-700 ease-in-out opacity-0 translate-y-3/4 -translate-x-full scale-50' 
+          : 'transition-transform duration-300 translate-x-full lg:translate-x-0'
+      }`}>
+        {!isLearningMode && !isAnimating ? (
+            <>
+                <div className="p-5 border-b border-slate-800 bg-slate-900 flex flex-col gap-1 shrink-0">
+                    <h3 className="font-bold text-white flex items-center gap-2">
+                        <Bot className="text-emerald-400" /> AI Checklist & Kế hoạch
+                    </h3>
+                    <p className="text-[12px] text-slate-400">Điều chỉnh lộ trình khóa học qua chat, sau đó Xác nhận để vào học.</p>
+                </div>
 
         {/* Active Checklist View */}
         <div className="shrink-0 p-5 border-b border-slate-800 bg-slate-900/50">
@@ -160,20 +199,6 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
                 </div>
             )}
             
-            {!loading && checklist.length > 0 && (
-                <button 
-                    onClick={handleApply}
-                    disabled={hasApplied}
-                    className={`w-full mt-4 py-2.5 rounded-lg text-sm font-bold transition-all flex justify-center items-center gap-2 ${
-                        hasApplied 
-                        ? 'bg-emerald-900/50 text-emerald-400 border border-emerald-800 cursor-not-allowed'
-                        : 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/50'
-                    }`}
-                >
-                    {hasApplied ? <CheckCircle2 size={16} /> : <Layers size={16} />}
-                    {hasApplied ? 'Đã thêm vào Lộ trình!' : 'Áp dụng vào Lộ trình của tôi'}
-                </button>
-            )}
         </div>
 
         {/* Chat Interface */}
@@ -221,6 +246,67 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
                 </button>
             </div>
         </div>
+
+        <div className="p-4 border-t border-slate-800 shrink-0 bg-slate-950">
+            <button
+                onClick={handleApply}
+                disabled={checklist.length === 0 || loading}
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+            >
+                <CheckCircle2 size={18} />
+                Xác nhận Lộ trình & Vào học
+            </button>
+        </div>
+            </>
+        ) : isLearningMode ? (
+            // LEARNING MODE SIDEBAR (Syllabus)
+            <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
+                <div className="p-5 border-b border-slate-800 bg-slate-900 flex flex-col gap-1 shrink-0">
+                    <h3 className="font-bold text-white flex items-center gap-2">
+                        <BookOpen className="text-blue-400" /> Danh sách bài giảng
+                    </h3>
+                    <div className="w-full bg-slate-800 rounded-full h-1.5 mt-3 overflow-hidden">
+                        <div className="bg-blue-500 h-1.5 rounded-full transition-all duration-500" style={{width: `${syllabus.length > 0 ? (completedSyllabusItems.length / syllabus.length) * 100 : 0}%`}}></div>
+                    </div>
+                    <p className="text-[12px] text-slate-400 mt-2">{completedSyllabusItems.length} / {syllabus.length} bài đã hoàn thành</p>
+                </div>
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-4 flex flex-col gap-3">
+                    {syllabus.map((item, idx) => {
+                        const isDone = completedSyllabusItems.includes(idx) || item.isCompleted;
+                        return (
+                            <div key={idx} 
+                                onClick={() => handleToggleSyllabusItem(idx)}
+                                className={`p-4 rounded-xl border transition-colors cursor-pointer flex gap-3 ${isDone ? 'bg-emerald-900/20 border-emerald-900/50' : 'bg-slate-900 border-slate-800 hover:border-slate-700'}`}
+                            >
+                                <div className="mt-0.5 shrink-0">
+                                    {isDone ? <CheckCircle2 size={18} className="text-emerald-500" /> : <PlayCircle size={18} className="text-slate-600" />}
+                                </div>
+                                <div className="flex-1">
+                                    <h4 className={`text-sm font-medium ${isDone ? 'text-slate-400' : 'text-slate-200'}`}>{item.title}</h4>
+                                    <p className="text-xs text-slate-500 mt-1 flex items-center gap-1"><Clock size={12} /> {item.duration}</p>
+                                </div>
+                            </div>
+                        );
+                    })}
+                    {syllabus.length === 0 && (
+                        <div className="text-sm text-slate-500 p-4 text-center">Chưa có dữ liệu bài giảng.</div>
+                    )}
+                </div>
+                <div className="p-4 border-t border-slate-800 shrink-0 bg-slate-950">
+                    <button
+                        onClick={handleFinishCourse}
+                        disabled={completedSyllabusItems.length < syllabus.length || syllabus.length === 0}
+                        className="w-full py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <GraduationCap size={20} />
+                        Hoàn thành Khóa học
+                    </button>
+                    {completedSyllabusItems.length < syllabus.length && syllabus.length > 0 && (
+                        <p className="text-xs text-center text-slate-500 mt-2">Bạn cần xem hết video bài giảng để nhận chứng chỉ.</p>
+                    )}
+                </div>
+            </div>
+        ) : null}
       </div>
 
     </div>

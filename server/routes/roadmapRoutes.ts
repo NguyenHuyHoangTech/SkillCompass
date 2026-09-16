@@ -104,6 +104,87 @@ router.put('/subtopic', (req: Request, res: Response) => {
   }
 });
 
+// PUT /api/roadmap/skill/complete - Force complete a skill and update milestone
+router.put('/skill/complete', (req: Request, res: Response) => {
+  try {
+    const { milestoneId, skillId } = req.body;
+    const data = readRoadmapData();
+
+    const milestone = data.milestones.find((m) => m.id === milestoneId);
+    if (!milestone) {
+      return res.status(404).json({ success: false, message: 'Milestone not found' });
+    }
+
+    let targetSkill: any = null;
+
+    for (const cat of milestone.categories) {
+      const sk = cat.skills.find((s) => s.id === skillId);
+      if (sk) {
+        targetSkill = sk;
+        break;
+      }
+    }
+
+    if (!targetSkill) {
+      return res.status(404).json({ success: false, message: 'Skill not found' });
+    }
+
+    targetSkill.levelPercentage = 100;
+    targetSkill.subTopics.forEach((st: any) => {
+      st.isCompleted = true;
+    });
+
+    // Recalculate Milestone overall progress
+    const allSubTopics = milestone.categories.flatMap((c) => c.skills.flatMap((s) => s.subTopics));
+    const completedCount = allSubTopics.filter((st) => st.isCompleted).length;
+    milestone.overallProgress = Math.round((completedCount / allSubTopics.length) * 100);
+
+    saveRoadmapData(data);
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to complete skill' });
+  }
+});
+
+// POST /api/roadmap/skill/tasks - Add checklist tasks to a skill
+router.post('/skill/tasks', (req: Request, res: Response) => {
+  try {
+    const { milestoneId, skillId, tasks } = req.body;
+    const data = readRoadmapData();
+
+    const milestone = data.milestones.find((m) => m.id === milestoneId);
+    if (!milestone) return res.status(404).json({ success: false, message: 'Milestone not found' });
+
+    let targetSkill: any = null;
+    for (const cat of milestone.categories) {
+      const sk = cat.skills.find((s) => s.id === skillId);
+      if (sk) {
+        targetSkill = sk;
+        break;
+      }
+    }
+    if (!targetSkill) return res.status(404).json({ success: false, message: 'Skill not found' });
+
+    const newSubTopics = tasks.map((t: string) => ({
+      id: `st-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+      title: t,
+      isCompleted: false
+    }));
+
+    targetSkill.subTopics = [...newSubTopics, ...targetSkill.subTopics];
+
+    const completed = targetSkill.subTopics.filter((st: any) => st.isCompleted).length;
+    let pct = targetSkill.subTopics.length > 0 ? Math.round((completed / targetSkill.subTopics.length) * 100) : 0;
+    if (pct === 0) pct = 50; // In Progress
+    targetSkill.levelPercentage = pct;
+
+    saveRoadmapData(data);
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to add tasks' });
+  }
+});
+
 // POST /api/roadmap/milestone - Add a new milestone proposed by AI
 router.post('/milestone', (req: Request, res: Response) => {
   try {

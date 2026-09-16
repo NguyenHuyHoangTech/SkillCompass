@@ -4,7 +4,7 @@
   "userName": "John Doe",
   "targetRole": "UI/UX & Frontend Engineer",
   "currentMilestoneId": "ms-stage-1",
-  "updatedAt": "2026-09-16T17:15:25.325Z",
+  "updatedAt": "2026-09-16T20:17:49.973Z",
   "milestones": [
     {
       "id": "ms-stage-1",
@@ -855,7 +855,8 @@
             }
           ]
         }
-      ]
+      ],
+      "isForceCompleted": true
     },
     {
       "id": "ms-stage-6",
@@ -1042,7 +1043,8 @@
             }
           ]
         }
-      ]
+      ],
+      "isForceCompleted": true
     },
     {
       "id": "ms-stage-7",
@@ -1195,7 +1197,8 @@
             }
           ]
         }
-      ]
+      ],
+      "isForceCompleted": true
     },
     {
       "id": "ms-stage-8",
@@ -1450,7 +1453,8 @@
             }
           ]
         }
-      ]
+      ],
+      "isForceCompleted": true
     },
     {
       "id": "ms-stage-9",

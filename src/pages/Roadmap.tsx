@@ -13,6 +13,7 @@ import { EditMilestoneModal } from '../components/roadmap/EditMilestoneModal';
 import { AIRoadmapGeneratorModal } from '../components/roadmap/AIRoadmapGeneratorModal';
 import { AISkillGeneratorModal } from '../components/roadmap/AISkillGeneratorModal';
 import { AddSkillModal } from '../components/roadmap/AddSkillModal';
+import { DailyChecklistModal } from '../components/roadmap/DailyChecklistModal';
 import { AICourseAnalysisModal } from '../components/learning/AICourseAnalysisModal';
 import { AILearningHub } from '../components/learning/AILearningHub';
 import { CourseDashboard } from '../components/learning/CourseDashboard';
@@ -23,6 +24,7 @@ import { AnalyticsPage } from '../components/pages/AnalyticsPage';
 import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
 import { AllSkillsPage } from '../components/pages/AllSkillsPage';
 import { GlobalAnalyticsModal } from '../components/pages/GlobalAnalyticsModal';
+import { CertificateModal } from '../components/learning/CertificateModal';
 import { SettingsPage } from '../components/pages/SettingsPage';
 import { CoursesPage } from './CoursesPage';
 import { Onboarding } from './Onboarding';
@@ -59,6 +61,8 @@ export default function Roadmap() {
   const [isAiSkillGeneratorOpen, setIsAiSkillGeneratorOpen] = useState(false);
   const [isGalaxyModalOpen, setIsGalaxyModalOpen] = useState(false);
   const [isGlobalAnalyticsOpen, setIsGlobalAnalyticsOpen] = useState(false);
+  const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
+  const [isDailyChecklistOpen, setIsDailyChecklistOpen] = useState(false);
 
   // Learning Hub States
   const [learningSkill, setLearningSkill] = useState<Skill | null>(null);
@@ -137,7 +141,32 @@ export default function Roadmap() {
 
   const handleStartLearning = (skill: Skill) => {
     setLearningSkill(skill);
-    setIsAnalyzingCourse(true);
+    if (skill.levelPercentage > 0 && skill.levelPercentage < 100) {
+      if (!selectedCourse) {
+         setSelectedCourse({
+           id: `course-${skill.id}`,
+           title: `Khóa học ${skill.name}`,
+           provider: 'SkillCompass',
+           rating: 5.0,
+           duration: 'Linh hoạt',
+           level: 'Tiếp tục học',
+           instructor: 'AI Expert',
+           description: 'Khóa học được phục hồi từ tiến trình học tập của bạn.',
+           thumbnailUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+           enrolledCount: 1,
+           tags: [skill.name, 'Tiếp tục học'],
+           syllabus: [
+             { id: 1, title: 'Bài 1: Ôn tập cơ bản', duration: '12:00', isCompleted: true },
+             { id: 2, title: 'Bài 2: Thực hành kỹ năng', duration: '25:30', isCompleted: false },
+             { id: 3, title: 'Bài 3: Dự án thực tế', duration: '45:00', isCompleted: false },
+             { id: 4, title: 'Bài 4: Tổng kết', duration: '10:00', isCompleted: false }
+           ]
+         });
+      }
+      setActiveLearningPage('dashboard');
+    } else {
+      setIsAnalyzingCourse(true);
+    }
   };
 
   const handleAnalysisComplete = () => {
@@ -148,35 +177,30 @@ export default function Roadmap() {
   const handleApplyChecklist = async (items: string[]) => {
     if (!roadmap || !learningSkill) return;
     
-    // Convert new tasks to subtopics
-    const newSubTopics: SubTopic[] = items.map(item => ({
-        id: `st-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-        title: item,
-        isCompleted: false
-    }));
-    
-    // Find the skill and update it in the local state for immediate feedback
-    // Real implementation would use an API call
-    const updatedRoadmap = { ...roadmap };
-    
-    for (const ms of updatedRoadmap.milestones) {
-        for (const cat of ms.categories) {
-            const skillIndex = cat.skills.findIndex(s => s.id === learningSkill.id);
-            if (skillIndex !== -1) {
-                cat.skills[skillIndex].subTopics = [
-                    ...cat.skills[skillIndex].subTopics,
-                    ...newSubTopics
-                ];
-                // Recalculate progress
-                const completed = cat.skills[skillIndex].subTopics.filter(st => st.isCompleted).length;
-                cat.skills[skillIndex].levelPercentage = cat.skills[skillIndex].subTopics.length > 0
-                    ? Math.round((completed / cat.skills[skillIndex].subTopics.length) * 100)
-                    : 0;
-            }
-        }
+    try {
+        const updatedRoadmap = await ApiService.addChecklistTasks(activeMilestoneId, learningSkill.id, items);
+        setRoadmap(updatedRoadmap);
+        setIsDailyChecklistOpen(true);
+        
+        // Tự động tắt bảng Task sau 2.5 giây để người dùng vào học
+        setTimeout(() => {
+            setIsDailyChecklistOpen(false);
+        }, 2500);
+    } catch (e) {
+        console.error('Failed to add checklist tasks:', e);
     }
-    
-    setRoadmap(updatedRoadmap);
+  };
+
+  const handleCompleteCourse = async () => {
+    if (!roadmap || !learningSkill) return;
+
+    try {
+      const updatedRoadmap = await ApiService.completeSkill(activeMilestoneId, learningSkill.id);
+      setRoadmap(updatedRoadmap);
+      setIsCertificateModalOpen(true);
+    } catch (err) {
+      console.error('Failed to complete course:', err);
+    }
   };
 
   const handleSuccessEvaluation = async () => {
@@ -188,11 +212,15 @@ export default function Roadmap() {
       setIsAiRoadmapGeneratorOpen(true);
       return;
     }
+    
+    if (tabId === 'view-checklist') {
+      setIsDailyChecklistOpen(true);
+      return;
+    }
 
     setActiveSubTab(tabId);
 
     const targetMap: Record<string, string> = {
-      'view-checklist': 'sec-checklist',
       'view-radar': 'sec-radar',
     };
 
@@ -584,6 +612,27 @@ export default function Roadmap() {
             onConfirm={handleConfirmGeneratedSkills}
           />
           
+          <DailyChecklistModal
+            isOpen={isDailyChecklistOpen}
+            onClose={() => setIsDailyChecklistOpen(false)}
+            milestones={roadmap.milestones}
+            onToggleTask={handleToggleCheck}
+          />
+          
+          {/* Floating Action Button for Daily Checklist */}
+          {activePage === 'page-roadmap' && (
+            <button
+                onClick={() => setIsDailyChecklistOpen(true)}
+                className="fixed bottom-6 left-6 md:left-24 z-50 w-16 h-16 bg-blue-600 hover:bg-blue-500 text-white rounded-full shadow-lg shadow-blue-600/30 flex flex-col items-center justify-center transition-transform hover:scale-110 border-2 border-white/20 group"
+                title="Mở Checklist Hàng Ngày"
+            >
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white"></div>
+                <i className="fa-solid fa-list-check text-xl mb-0.5"></i>
+                <span className="text-[9px] font-bold tracking-wider">TASKS</span>
+            </button>
+          )}
+          
           {isGalaxyModalOpen && (
             <div className="fixed inset-0 z-[100] bg-slate-900">
               <AllSkillsPage 
@@ -610,6 +659,16 @@ export default function Roadmap() {
             skill={learningSkill}
             onAnalysisComplete={handleAnalysisComplete}
           />
+          
+          <CertificateModal
+            isOpen={isCertificateModalOpen}
+            onClose={() => {
+              setIsCertificateModalOpen(false);
+              setActiveLearningPage('none');
+            }}
+            userName={roadmap?.userName || ''}
+            skillName={learningSkill?.name || ''}
+          />
 
           {/* AI Learning Hub Modal */}
           {activePage === 'page-roadmap' && activeLearningPage === 'hub' && learningSkill && (
@@ -634,8 +693,9 @@ export default function Roadmap() {
                  <CourseDashboard 
                    skill={learningSkill}
                    course={selectedCourse}
-                   onBack={() => setActiveLearningPage('hub')}
+                   onBack={() => setActiveLearningPage('none')}
                    onApplyChecklist={handleApplyChecklist}
+                   onCompleteCourse={handleCompleteCourse}
                  />
                </div>
              </div>
