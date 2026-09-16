@@ -28,7 +28,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
     { id: 'view-all', label: 'Full Overview', icon: Layers },
     { id: 'view-checklist', label: 'Skill Checklist', icon: CheckSquare },
     { id: 'view-radar', label: 'Radar Chart', icon: PieChart },
-    { id: 'view-optimizer', label: 'AI Phase Evaluation', icon: Sparkles },
+    { id: 'view-optimizer', label: 'Gợi ý Lộ trình AI', icon: Sparkles },
   ];
 
   // Close dropdown when clicking outside

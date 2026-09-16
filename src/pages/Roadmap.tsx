@@ -10,10 +10,10 @@ import { SkillCategoryList } from '../components/roadmap/SkillCategoryList';
 import { AIQuizModal } from '../components/ai/AIQuizModal';
 import { AICareerChatbot } from '../components/ai/AICareerChatbot';
 import { EditMilestoneModal } from '../components/roadmap/EditMilestoneModal';
-import { AIRoadmapRecommendModal } from '../components/roadmap/AIRoadmapRecommendModal';
+import { AIRoadmapGeneratorModal } from '../components/roadmap/AIRoadmapGeneratorModal';
 import { AISkillGeneratorModal } from '../components/roadmap/AISkillGeneratorModal';
 import { AddSkillModal } from '../components/roadmap/AddSkillModal';
-import type { ChatGeneratedSkill } from '../services/ai';
+import type { ChatGeneratedSkill, ChatGeneratedMilestone } from '../services/ai';
 import type { ManualSkillData } from '../components/roadmap/AddSkillModal';
 import { AnalyticsPage } from '../components/pages/AnalyticsPage';
 import { QuizLibraryPage } from '../components/pages/QuizLibraryPage';
@@ -49,7 +49,7 @@ export default function Roadmap() {
   const [isCareerChatOpen, setIsCareerChatOpen] = useState(false);
   const [isEditMilestoneModalOpen, setIsEditMilestoneModalOpen] = useState(false);
   const [milestoneToEdit, setMilestoneToEdit] = useState<any>(null);
-  const [isAIRecoModalOpen, setIsAIRecoModalOpen] = useState(false);
+  const [isAiRoadmapGeneratorOpen, setIsAiRoadmapGeneratorOpen] = useState(false);
   const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
   const [isAiSkillGeneratorOpen, setIsAiSkillGeneratorOpen] = useState(false);
 
@@ -127,6 +127,11 @@ export default function Roadmap() {
   };
 
   const handleSelectSubTab = (tabId: string) => {
+    if (tabId === 'view-optimizer') {
+      setIsAiRoadmapGeneratorOpen(true);
+      return;
+    }
+
     setActiveSubTab(tabId);
     if (tabId === 'view-all') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -136,7 +141,6 @@ export default function Roadmap() {
     const targetMap: Record<string, string> = {
       'view-checklist': 'sec-checklist',
       'view-radar': 'sec-radar',
-      'view-optimizer': 'sec-optimizer',
     };
 
     const targetId = targetMap[tabId];
@@ -216,12 +220,12 @@ export default function Roadmap() {
     }
   };
 
-  const handleApplyAIReco = (newMilestonesData: any[]) => {
+  const handleConfirmGeneratedRoadmap = (newMilestonesData: ChatGeneratedMilestone[], replaceFuture: boolean) => {
     if (!roadmap) return;
-    const startIdx = roadmap.milestones.findIndex((m: Milestone) => m.overallProgress < 100);
-    const keepIdx = startIdx === -1 ? roadmap.milestones.length : startIdx;
-
-    // Keep only completed milestones
+    const activeMsIndex = roadmap.milestones.findIndex((m: Milestone) => m.id === activeMilestoneId);
+    
+    // Keep milestones up to active (or all if not replaceFuture)
+    const keepIdx = replaceFuture && activeMsIndex !== -1 ? activeMsIndex + 1 : roadmap.milestones.length;
     const keptMilestones = roadmap.milestones.slice(0, keepIdx);
 
     const mapped = newMilestonesData.map((d, i) => ({
@@ -239,13 +243,17 @@ export default function Roadmap() {
     }));
 
     const newMilestones = [...keptMilestones, ...mapped];
-    setRoadmap({ ...roadmap, milestones: newMilestones });
-    if (mapped.length > 0) {
+    const updatedRoadmap = { ...roadmap, milestones: newMilestones };
+    setRoadmap(updatedRoadmap);
+    localStorage.setItem('skill_compass_roadmap', JSON.stringify(updatedRoadmap));
+    setIsAiRoadmapGeneratorOpen(false);
+
+    if (replaceFuture && mapped.length > 0) {
       setActiveMilestoneId(mapped[0].id);
-    } else if (newMilestones.length > 0) {
-      setActiveMilestoneId(newMilestones[newMilestones.length - 1].id);
     }
-  };  const handleAIReplaceSkills = async () => {
+  };
+
+  const handleAIReplaceSkills = async () => {
     setIsAiSkillGeneratorOpen(true);
   };
 
@@ -433,7 +441,7 @@ export default function Roadmap() {
                     milestones={roadmap.milestones}
                     activeMilestoneId={activeMilestoneId}
                     onSelectMilestone={handleSelectMilestone}
-                    onOpenCareerChat={() => setIsAIRecoModalOpen(true)}
+                    onOpenCareerChat={() => setIsCareerChatOpen(true)}
                     onEditMilestone={handleOpenEditMilestone}
                     onDeleteMilestone={handleDeleteMilestone}
                     onAddMilestone={handleOpenAddMilestone}
@@ -509,10 +517,12 @@ export default function Roadmap() {
             onSave={handleSaveMilestone}
           />
 
-          <AIRoadmapRecommendModal
-            isOpen={isAIRecoModalOpen}
-            onClose={() => setIsAIRecoModalOpen(false)}
-            onApply={handleApplyAIReco}
+          <AIRoadmapGeneratorModal
+            isOpen={isAiRoadmapGeneratorOpen}
+            onClose={() => setIsAiRoadmapGeneratorOpen(false)}
+            targetRole={roadmap.targetRole || roadmap.milestones[roadmap.milestones.length - 1]?.title || ''}
+            currentMilestones={roadmap.milestones}
+            onConfirm={handleConfirmGeneratedRoadmap}
           />
 
           <AddSkillModal

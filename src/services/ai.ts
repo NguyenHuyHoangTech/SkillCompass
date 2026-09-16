@@ -1084,3 +1084,115 @@ TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc:
         };
     }
 };
+
+export interface ChatGeneratedMilestone {
+    title: string;
+    description: string;
+    categoriesCount: number;
+}
+
+export interface ChatGenerateRoadmapResponse {
+    chat_response: string;
+    proposed_milestones: ChatGeneratedMilestone[];
+}
+
+export const generateAndChatRoadmap = async (
+    targetRole: string,
+    currentMilestones: any[],
+    userMessage: string,
+    chatHistory: { sender: string; text: string }[]
+): Promise<ChatGenerateRoadmapResponse | null> => {
+    const prompt = `Bạn là một Chuyên gia Cố vấn Nghề nghiệp (Career Advisor).
+Bối cảnh: Người dùng đang hướng tới mục tiêu "${targetRole}" và đang xem xét lộ trình hiện tại của họ.
+Các chặng đường (milestones) hiện tại: ${JSON.stringify(currentMilestones)}
+Lịch sử chat gần đây: ${JSON.stringify(chatHistory)}
+Tin nhắn hiện tại của người dùng: "${userMessage}"
+
+NHIỆM VỤ:
+1. Trả lời người dùng dưới vai trò cố vấn, đưa ra lời khuyên về lộ trình học tập, các chặng đường tiếp theo nên bổ sung hoặc thay đổi.
+2. Dựa trên lịch sử trò chuyện và yêu cầu, đề xuất một danh sách các chặng (milestones) mới.
+
+TRẢ VỀ ĐÚNG MỘT JSON OBJECT theo cấu trúc:
+{
+    "chat_response": "Câu trả lời gửi cho người dùng...",
+    "proposed_milestones": [
+        {
+            "title": "Tên chặng",
+            "description": "Mô tả ngắn gọn",
+            "categoriesCount": 3
+        }
+    ]
+}`;
+
+    try {
+        const responseText = await executeWithFallback(prompt);
+        let rawText = responseText;
+        const match = rawText.match(/\{.*\}/s);
+        if (match) rawText = match[0];
+        rawText = rawText.replace(/\`\`\`json/g, '').replace(/\`\`\`/g, '').trim();
+        return JSON.parse(rawText) as ChatGenerateRoadmapResponse;
+    } catch (error) {
+        console.error("AI Error:", error);
+        
+        // Mock fallback responses for Demo
+        let mockResponse = "Tôi đã điều chỉnh lộ trình theo định hướng mới của bạn!";
+        let mockMilestones: ChatGeneratedMilestone[] = [
+            {
+                title: "Advanced React & Next.js",
+                description: "Master server-side rendering, routing, and full-stack capabilities with Next.js.",
+                categoriesCount: 3
+            },
+            {
+                title: "AI & Tools Integration",
+                description: "Learn to integrate generative AI models and utilize Cursor/Copilot effectively.",
+                categoriesCount: 2
+            },
+            {
+                title: "System Architecture & Scaling",
+                description: "Design scalable front-end architectures and micro-frontends.",
+                categoriesCount: 4
+            }
+        ];
+
+        const lowerMsg = userMessage.toLowerCase();
+        if (!userMessage) {
+            mockResponse = "Dựa trên định hướng của bạn, tôi đề xuất các chặng đường tiếp theo. Bạn có muốn đổi sang định hướng khác như DevOps, Mobile, hay Data không?";
+        } else if (lowerMsg.includes("devops")) {
+            mockResponse = "Tuyệt vời, chuyển sang hướng DevOps. Tôi đã lên lộ trình bao gồm Docker, Kubernetes và CI/CD.";
+            mockMilestones = [
+                { title: "Containerization with Docker", description: "Learn to build and run containers efficiently.", categoriesCount: 3 },
+                { title: "Orchestration with Kubernetes", description: "Deploy and manage containerized applications at scale.", categoriesCount: 4 },
+                { title: "CI/CD Pipelines", description: "Automate testing and deployment workflows.", categoriesCount: 2 }
+            ];
+        } else if (lowerMsg.includes("mobile")) {
+            mockResponse = "Chuyển sang hướng Mobile Development. Tôi đề xuất React Native hoặc Flutter cho nền tảng di động đa hệ.";
+            mockMilestones = [
+                { title: "Mobile UI/UX Design", description: "Understand mobile-first design principles and components.", categoriesCount: 2 },
+                { title: "React Native Framework", description: "Build cross-platform applications using React.", categoriesCount: 4 },
+                { title: "App Store Deployment", description: "Learn how to publish apps to Google Play and App Store.", categoriesCount: 2 }
+            ];
+        } else if (lowerMsg.includes("data") || lowerMsg.includes("ai")) {
+            mockResponse = "Theo hướng Data & AI. Các chặng này tập trung vào Data Engineering và Machine Learning Models.";
+            mockMilestones = [
+                { title: "Python for Data Science", description: "Master Pandas, NumPy and Data Visualization.", categoriesCount: 3 },
+                { title: "Machine Learning Foundations", description: "Learn core ML algorithms and Scikit-Learn.", categoriesCount: 3 },
+                { title: "Deep Learning & LLMs", description: "Integrate large language models into applications.", categoriesCount: 3 }
+            ];
+        } else if (lowerMsg.includes("thêm")) {
+            mockResponse = "Tôi đã thêm một chặng đặc biệt vào cuối lộ trình theo ý bạn.";
+            mockMilestones.push({
+                title: "Specialization & Soft Skills",
+                description: "Improve leadership, communication, and specialized domains.",
+                categoriesCount: 2
+            });
+        } else if (lowerMsg.includes("xóa") || lowerMsg.includes("bớt")) {
+            mockResponse = "Tôi đã rút gọn lộ trình lại cho tinh gọn hơn.";
+            mockMilestones = mockMilestones.slice(0, 2);
+        }
+
+        return {
+            chat_response: mockResponse,
+            proposed_milestones: mockMilestones
+        };
+    }
+};
