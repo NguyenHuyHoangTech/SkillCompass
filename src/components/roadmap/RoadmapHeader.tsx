@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import type { Milestone } from '../../types/roadmap';
 
 interface RoadmapHeaderProps {
@@ -30,9 +30,45 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
     return `${format(start)} - ${format(end)}`;
   };
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="pt-6 px-6 md:pt-8 md:px-8 bg-white pb-2">
-        <div className="overflow-x-auto pb-4 custom-scrollbar relative">
+    <div className="pt-6 px-6 md:pt-8 md:px-8 bg-white pb-2 relative group">
+        
+        {/* Left Scroll Button */}
+        <button 
+            onClick={scrollLeft}
+            className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white border border-slate-200 shadow-md rounded-full items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-300 z-10 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0"
+            title="Cuộn sang trái"
+        >
+            <i className="fa-solid fa-chevron-left text-xs"></i>
+        </button>
+
+        {/* Right Scroll Button */}
+        <button 
+            onClick={scrollRight}
+            className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white border border-slate-200 shadow-md rounded-full items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-300 z-10 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0"
+            title="Cuộn sang phải"
+        >
+            <i className="fa-solid fa-chevron-right text-xs"></i>
+        </button>
+
+        <div 
+            ref={scrollContainerRef}
+            className="overflow-x-auto pb-4 custom-scrollbar relative"
+        >
             <div className="flex items-stretch gap-4 min-w-max px-2 py-2">
                 {milestones.map((ms, idx) => {
                     const firstUncompletedIndex = milestones.findIndex(m => m.overallProgress < 100 && !m.isForceCompleted);
