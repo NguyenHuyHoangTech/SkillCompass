@@ -4,7 +4,7 @@
   "userName": "John Doe",
   "targetRole": "Backend Developer (.NET)",
   "currentMilestoneId": "ms-future-ai-1789617270827",
-  "updatedAt": "2026-09-17T04:01:42.181Z",
+  "updatedAt": "2026-09-17T04:02:22.675Z",
   "milestones": [
     {
       "id": "m1_1",
@@ -204,7 +204,7 @@
       "roleName": "Backend Developer (.NET)",
       "description": "Deploy a complete backend application to a cloud service and showcase skills in a portfolio.",
       "badge": "Stage 4",
-      "overallProgress": 0,
+      "overallProgress": 71,
       "categories": [
         {
           "id": "cat-3",
@@ -215,20 +215,35 @@
               "id": "sk-3-0",
               "name": "Cloud Deployment (Azure App Service Free Tier)",
               "icon": "Book",
-              "levelPercentage": 0,
+              "levelPercentage": 100,
               "subTopics": [
+                {
+                  "id": "st-1789617732043-jumqb",
+                  "title": "30 minutes/day: Watch two lessons on Cloud Deployment (Azure App Service Free Tier)",
+                  "isCompleted": true
+                },
+                {
+                  "id": "st-1789617732043-trypz",
+                  "title": "Weekend: Complete one scheduled system assessment",
+                  "isCompleted": true
+                },
+                {
+                  "id": "st-1789617732043-br3wv",
+                  "title": "Find one in-depth Medium article for further reading",
+                  "isCompleted": true
+                },
                 {
                   "id": "sub-3-0-0",
                   "title": "Create a free Azure account and an Azure App Service instance.",
                   "description": "Study content",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-3-0-1",
                   "title": "Deploy your ASP.NET Core API to Azure App Service using Visual Studio or GitHub Actions (free tier).",
                   "description": "Study content",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ]
