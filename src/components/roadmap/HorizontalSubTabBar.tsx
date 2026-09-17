@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, CheckSquare, PieChart, Sparkles } from 'lucide-react';
+import { Layers, CheckSquare, Sparkles } from 'lucide-react';
 
 interface HorizontalSubTabBarProps {
   activeSubTab: string;
