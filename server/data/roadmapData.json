@@ -4,7 +4,7 @@
   "userName": "John Doe",
   "targetRole": "Backend Developer (.NET)",
   "currentMilestoneId": "ms-future-ai-1789617270827",
-  "updatedAt": "2026-09-17T03:59:10.550Z",
+  "updatedAt": "2026-09-17T04:01:42.181Z",
   "milestones": [
     {
       "id": "m1_1",
@@ -265,7 +265,7 @@
       "roleName": "AI Native Fullstack Lead",
       "description": "AI-suggested future milestone: Integrate AI LLM engines (Gemini/OpenAI), vector databases, RAG systems, and AWS serverless or Docker cloud infrastructure.",
       "badge": "🤖 AI Cloud Master",
-      "overallProgress": 83,
+      "overallProgress": 73,
       "categories": [
         {
           "id": "cat-ai-integration",
@@ -320,8 +320,33 @@
               "id": "sk-aws-docker",
               "name": "Docker Containers & AWS Deploy",
               "icon": "Server",
-              "levelPercentage": 0,
+              "levelPercentage": 50,
               "subTopics": [
+                {
+                  "id": "st-1789617692977-x1enx",
+                  "title": "Day 1: Watch the introduction and set up the environment for Docker Containers & AWS Deploy",
+                  "isCompleted": true
+                },
+                {
+                  "id": "st-1789617692977-ufwwz",
+                  "title": "Day 2: Read chapter 1 and complete course quiz 1",
+                  "isCompleted": true
+                },
+                {
+                  "id": "st-1789617692977-d4jce",
+                  "title": "Day 3: Code along with the first lab video",
+                  "isCompleted": true
+                },
+                {
+                  "id": "st-1789617692977-0q6ss",
+                  "title": "Day 4: Complete the week 1 assignment",
+                  "isCompleted": false
+                },
+                {
+                  "id": "st-1789617692977-0hfb5",
+                  "title": "Day 5: Review and read additional external references",
+                  "isCompleted": false
+                },
                 {
                   "id": "sub-docker-compose",
                   "title": "Dockerizing React & Node.js Express",
