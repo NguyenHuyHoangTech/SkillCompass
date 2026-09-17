@@ -75,8 +75,7 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
                     const isSelected = ms.id === activeMilestoneId;
                     const isCompleted = ms.overallProgress === 100 || ms.isForceCompleted;
                     const isRunning = idx === (firstUncompletedIndex === -1 ? milestones.length - 1 : firstUncompletedIndex);
-                    const isFuture = !isCompleted && !isRunning;
-                    const progress = isFuture ? 0 : ms.overallProgress;
+                    const progress = ms.overallProgress || 0;
                     
                     let statusColors = '';
                     let iconClass = '';
@@ -93,7 +92,7 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
                     } else {
                         statusColors = 'bg-white border-slate-200 text-slate-400 opacity-80';
                         iconClass = 'fa-regular fa-calendar-check text-slate-300';
-                        statusText = '0%';
+                        statusText = `${progress}%`;
                     }
 
                     const ringClass = isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : '';
@@ -109,7 +108,7 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
                         >
                             {/* Action Buttons Overlay */}
                             <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                                {(isRunning && onForceCompleteMilestone) && (
+                                {(!isCompleted && onForceCompleteMilestone) && (
                                     <button 
                                       onClick={(e) => { e.stopPropagation(); onForceCompleteMilestone(ms.id); }}
                                       className="w-7 h-7 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center text-emerald-600 border border-emerald-100 transition-colors"
@@ -127,7 +126,7 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
                                       <i className="fa-solid fa-pen text-[10px]"></i>
                                     </button>
                                 )}
-                                {(isFuture && onDeleteMilestone) && (
+                                {(!isCompleted && !isRunning && onDeleteMilestone) && (
                                     <button 
                                       onClick={(e) => { e.stopPropagation(); onDeleteMilestone(ms.id); }}
                                       className="w-7 h-7 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center text-red-500 border border-red-100 transition-colors"

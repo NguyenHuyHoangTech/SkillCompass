@@ -137,7 +137,7 @@ export class ApiService {
 
         const allSubTopics = milestone.categories.flatMap((c) => c.skills.flatMap((s) => s.subTopics));
         const completedCount = allSubTopics.filter((st) => st.isCompleted).length;
-        milestone.overallProgress = Math.round((completedCount / allSubTopics.length) * 100);
+        milestone.overallProgress = allSubTopics.length > 0 ? Math.round((completedCount / allSubTopics.length) * 100) : 0;
 
         saveLocalMockRoadmap(data);
       }
@@ -299,7 +299,7 @@ export class ApiService {
           
           const allSubTopics = milestone.categories.flatMap((c) => c.skills.flatMap((s) => s.subTopics));
           const completedCount = allSubTopics.filter((st) => st.isCompleted).length;
-          milestone.overallProgress = Math.round((completedCount / allSubTopics.length) * 100);
+          milestone.overallProgress = allSubTopics.length > 0 ? Math.round((completedCount / allSubTopics.length) * 100) : 0;
         }
         saveLocalMockRoadmap(localData);
       }

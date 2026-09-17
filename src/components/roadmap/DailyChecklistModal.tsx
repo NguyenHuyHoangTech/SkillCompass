@@ -6,7 +6,13 @@ interface DailyChecklistModalProps {
   isOpen: boolean;
   onClose: () => void;
   milestones: Milestone[];
-  onToggleTask: (skill: Skill, subTopic: SubTopic, completed: boolean) => void;
+  onToggleTask: (skill: Skill, subTopic: SubTopic, completed: boolean, milestoneId?: string) => void;
+}
+
+interface TaskItem {
+  milestoneId: string;
+  skill: Skill;
+  subTopic: SubTopic;
 }
 
 export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
@@ -15,7 +21,7 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
   milestones,
   onToggleTask,
 }) => {
-  const [tasks, setTasks] = useState<{skill: Skill, subTopic: SubTopic}[]>([]);
+  const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<{sender: 'ai' | 'user', text: string}[]>([]);
   const [chatInput, setChatInput] = useState('');
@@ -24,14 +30,14 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       // Gather all incomplete SubTopics from skills that are In Progress (levelPercentage > 0 && < 100)
-      const gatheredTasks: {skill: Skill, subTopic: SubTopic}[] = [];
+      const gatheredTasks: TaskItem[] = [];
       milestones.forEach(ms => {
           ms.categories.forEach(cat => {
               cat.skills.forEach(skill => {
                   if (skill.levelPercentage > 0 && skill.levelPercentage < 100) {
                       skill.subTopics.forEach(st => {
                           if (!st.isCompleted) {
-                              gatheredTasks.push({ skill: skill, subTopic: st });
+                              gatheredTasks.push({ milestoneId: ms.id, skill: skill, subTopic: st });
                           }
                       });
                   }
@@ -169,22 +175,32 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
                            <p className="text-slate-500 mt-2">You have no unfinished lessons.</p>
                        </div>
                    ) : (
-                       <div className="space-y-4">
-                           {tasks.map((task) => (
-                               <div key={task.subTopic.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex items-start gap-4">
-                                   <button 
-                                        onClick={() => {
-                                            onToggleTask(task.skill, task.subTopic, true);
-                                            // Optimistically remove from view
-                                            setTasks(prev => prev.filter(t => t.subTopic.id !== task.subTopic.id));
-                                        }}
-                                        className="mt-1 text-slate-400 hover:text-emerald-500 transition-colors shrink-0"
-                                    >
-                                       <Circle size={24} />
-                                   </button>
-                                   <div>
-                                       <h4 className="font-bold text-slate-800 text-lg">{task.subTopic.title}</h4>
-                                       <p className="text-sm text-blue-600 font-medium mt-1">From course: {task.skill.name}</p>
+                       <div className="space-y-8">
+                           {Array.from({ length: Math.ceil(tasks.length / 3) }).map((_, dayIndex) => (
+                               <div key={dayIndex} className="day-group">
+                                   <h3 className="text-lg font-bold text-slate-700 mb-3 border-b border-slate-200 pb-2">
+                                       Day {dayIndex + 1} {dayIndex === 0 ? '(Today)' : ''}
+                                   </h3>
+                                   <div className="space-y-4">
+                                       {tasks.slice(dayIndex * 3, dayIndex * 3 + 3).map((task) => (
+                                           <div 
+                                               key={task.subTopic.id} 
+                                               onClick={() => {
+                                                   onToggleTask(task.skill, task.subTopic, true, task.milestoneId);
+                                                   // Optimistically remove from view
+                                                   setTasks(prev => prev.filter(t => t.subTopic.id !== task.subTopic.id));
+                                               }}
+                                               className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex items-start gap-4 cursor-pointer hover:border-blue-300"
+                                           >
+                                               <div className="mt-1 text-slate-400 hover:text-emerald-500 transition-colors shrink-0">
+                                                   <Circle size={24} />
+                                               </div>
+                                               <div>
+                                                   <h4 className="font-bold text-slate-800 text-lg">{task.subTopic.title}</h4>
+                                                   <p className="text-sm text-blue-600 font-medium mt-1">From course: {task.skill.name}</p>
+                                               </div>
+                                           </div>
+                                       ))}
                                    </div>
                                </div>
                            ))}

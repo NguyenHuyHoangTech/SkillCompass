@@ -117,12 +117,12 @@ export default function Roadmap() {
     setIsQuizModalOpen(true);
   };
 
-  const handleToggleCheck = async (skill: Skill, subTopic: SubTopic, completed: boolean) => {
+  const handleToggleCheck = async (skill: Skill, subTopic: SubTopic, completed: boolean, specificMilestoneId?: string) => {
     if (!roadmap) return;
 
     try {
       const updatedData = await ApiService.updateSubTopic({
-        milestoneId: activeMilestoneId,
+        milestoneId: specificMilestoneId || activeMilestoneId,
         skillId: skill.id,
         subTopicId: subTopic.id,
         isCompleted: completed,

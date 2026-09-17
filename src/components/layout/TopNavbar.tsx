@@ -30,7 +30,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
   const roadmapSubTabs = [
     { id: 'view-checklist', label: 'Skill Checklist', icon: CheckSquare },
-    { id: 'view-radar', label: 'Radar Chart', icon: PieChart },
     { id: 'view-optimizer', label: 'AI Roadmap Suggestions', icon: Sparkles },
   ];
 

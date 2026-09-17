@@ -13,7 +13,6 @@ export const HorizontalSubTabBar: React.FC<HorizontalSubTabBarProps> = ({
   const tabs = [
     { id: 'view-all', label: 'Full Overview', icon: Layers },
     { id: 'view-checklist', label: 'Lesson List & Checklist', icon: CheckSquare },
-    { id: 'view-radar', label: 'Capability Spider Chart', icon: PieChart },
     { id: 'view-optimizer', label: 'AI Optimization & Evaluation', icon: Sparkles },
   ];
 

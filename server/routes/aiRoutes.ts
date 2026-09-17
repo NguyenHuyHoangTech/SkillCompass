@@ -72,9 +72,9 @@ router.post('/evaluate-answer', async (req: Request, res: Response) => {
       }
 
       // Update milestone progress
-      const allSub = milestone.categories.flatMap((c) => c.skills.flatMap((s) => s.subTopics));
-      const compCount = allSub.filter((st) => st.isCompleted).length;
-      milestone.overallProgress = Math.round((compCount / allSub.length) * 100);
+      const allSub = milestone.categories.flatMap((c: any) => c.skills.flatMap((s: any) => s.subTopics));
+      const compCount = allSub.filter((st: any) => st.isCompleted).length;
+      milestone.overallProgress = allSub.length > 0 ? Math.round((compCount / allSub.length) * 100) : 0;
 
       saveRoadmapData(data);
     }

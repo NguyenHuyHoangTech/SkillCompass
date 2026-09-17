@@ -117,7 +117,7 @@ router.put('/subtopic', (req: Request, res: Response) => {
     // Recalculate Milestone overall progress
     const allSubTopics = milestone.categories.flatMap((c) => c.skills.flatMap((s) => s.subTopics));
     const completedCount = allSubTopics.filter((st) => st.isCompleted).length;
-    milestone.overallProgress = Math.round((completedCount / allSubTopics.length) * 100);
+    milestone.overallProgress = allSubTopics.length > 0 ? Math.round((completedCount / allSubTopics.length) * 100) : 0;
 
     saveRoadmapData(data);
     res.json({ success: true, data, updatedSubTopic: targetSubTopic });
@@ -159,7 +159,7 @@ router.put('/skill/complete', (req: Request, res: Response) => {
     // Recalculate Milestone overall progress
     const allSubTopics = milestone.categories.flatMap((c) => c.skills.flatMap((s) => s.subTopics));
     const completedCount = allSubTopics.filter((st) => st.isCompleted).length;
-    milestone.overallProgress = Math.round((completedCount / allSubTopics.length) * 100);
+    milestone.overallProgress = allSubTopics.length > 0 ? Math.round((completedCount / allSubTopics.length) * 100) : 0;
 
     saveRoadmapData(data);
     res.json({ success: true, data });
