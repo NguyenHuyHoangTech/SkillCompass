@@ -4,7 +4,7 @@
   "userName": "John Doe",
   "targetRole": "Backend Developer (.NET)",
   "currentMilestoneId": "m1_1",
-  "updatedAt": "2026-09-16T22:47:10.906Z",
+  "updatedAt": "2026-09-17T02:57:15.342Z",
   "milestones": [
     {
       "id": "m1_1",
@@ -73,7 +73,7 @@
       "roleName": "Backend Developer (.NET)",
       "description": "Integrate a database with the API using Entity Framework Core for data storage and retrieval.",
       "badge": "Stage 2",
-      "overallProgress": 0,
+      "overallProgress": 60,
       "categories": [
         {
           "id": "cat-1",
@@ -84,27 +84,27 @@
               "id": "sk-1-0",
               "name": "Entity Framework Core",
               "icon": "Book",
-              "levelPercentage": 0,
+              "levelPercentage": 99,
               "subTopics": [
                 {
                   "id": "sub-1-0-0",
                   "title": "Configure EF Core with a local SQLite database provider.",
                   "description": "Study content",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-1-0-1",
                   "title": "Define data models (entities) and a DbContext class.",
                   "description": "Study content",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-1-0-2",
                   "title": "Perform database migrations to create and update the database schema.",
                   "description": "Study content",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ]
@@ -141,7 +141,7 @@
       "roleName": "Backend Developer (.NET)",
       "description": "Secure the API with authentication and authorization, and ensure its reliability through unit testing.",
       "badge": "Stage 3",
-      "overallProgress": 0,
+      "overallProgress": 100,
       "categories": [
         {
           "id": "cat-2",
@@ -152,20 +152,20 @@
               "id": "sk-2-0",
               "name": "JWT Authentication",
               "icon": "Book",
-              "levelPercentage": 0,
+              "levelPercentage": 99,
               "subTopics": [
                 {
                   "id": "sub-2-0-0",
                   "title": "Configure JWT bearer authentication in an ASP.NET Core application.",
                   "description": "Study content",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-2-0-1",
                   "title": "Implement user registration and login endpoints that issue JWT tokens.",
                   "description": "Study content",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ]
@@ -174,20 +174,20 @@
               "id": "sk-2-1",
               "name": "Unit Testing (xUnit/NUnit)",
               "icon": "Book",
-              "levelPercentage": 0,
+              "levelPercentage": 99,
               "subTopics": [
                 {
                   "id": "sub-2-1-0",
                   "title": "Set up a unit testing project using xUnit or NUnit.",
                   "description": "Study content",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-2-1-1",
                   "title": "Write unit tests for a service class or controller method, using mocking (e.g., Moq) for dependencies.",
                   "description": "Study content",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ]
