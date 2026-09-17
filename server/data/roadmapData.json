@@ -3,8 +3,8 @@
   "userId": "usr-1001",
   "userName": "John Doe",
   "targetRole": "Backend Developer (.NET)",
-  "currentMilestoneId": "ms-future-ai-1789617111230",
-  "updatedAt": "2026-09-17T03:51:53.394Z",
+  "currentMilestoneId": "ms-future-ai-1789617270827",
+  "updatedAt": "2026-09-17T03:55:31.054Z",
   "milestones": [
     {
       "id": "m1_1",
@@ -290,6 +290,87 @@
                   "title": "Vector Database & Embeddings (Pinecone / Chroma)",
                   "description": "Build an enterprise semantic retrieval system with RAG",
                   "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cat-cloud-devops",
+          "name": "4.2. Containerization & DevOps Cloud",
+          "description": "Automate cloud infrastructure deployment",
+          "skills": [
+            {
+              "id": "sk-aws-docker",
+              "name": "Docker Containers & AWS Deploy",
+              "icon": "Server",
+              "levelPercentage": 0,
+              "subTopics": [
+                {
+                  "id": "sub-docker-compose",
+                  "title": "Dockerizing React & Node.js Express",
+                  "description": "Package the full-stack application in a Docker container",
+                  "isCompleted": false,
+                  "assessmentScore": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ms-future-ai-1789617270827",
+      "title": "Stage 4: Fullstack AI Native & Cloud Architect",
+      "roleName": "AI Native Fullstack Lead",
+      "description": "AI-suggested future milestone: Integrate AI LLM engines (Gemini/OpenAI), vector databases, RAG systems, and AWS serverless or Docker cloud infrastructure.",
+      "badge": "🤖 AI Cloud Master",
+      "overallProgress": 86,
+      "categories": [
+        {
+          "id": "cat-ai-integration",
+          "name": "4.1. AI Model & Vector DB Integration",
+          "description": "Build intelligent AI-native applications",
+          "skills": [
+            {
+              "id": "sk-ai-llm-api",
+              "name": "Gemini AI API & RAG Architecture",
+              "icon": "Zap",
+              "levelPercentage": 99,
+              "subTopics": [
+                {
+                  "id": "st-1789617293670-v2koo",
+                  "title": "First month: Complete module 1 of Introduction to Gemini AI API & RAG Architecture",
+                  "isCompleted": true
+                },
+                {
+                  "id": "st-1789617293670-6r71c",
+                  "title": "Practice: Build a mini-project applying Gemini AI API & RAG Architecture",
+                  "isCompleted": true
+                },
+                {
+                  "id": "st-1789617293670-7fi4l",
+                  "title": "Review: Examine other learners' code on the forum",
+                  "isCompleted": true
+                },
+                {
+                  "id": "st-1789617293670-u6ubf",
+                  "title": "Stay current: Attend a webinar or Q&A session when available",
+                  "isCompleted": true
+                },
+                {
+                  "id": "sub-ai-prompting",
+                  "title": "Prompt Engineering & Structured JSON Outputs",
+                  "description": "Design robust prompts that make AI return structured data",
+                  "isCompleted": true,
+                  "assessmentScore": 0
+                },
+                {
+                  "id": "sub-vector-db",
+                  "title": "Vector Database & Embeddings (Pinecone / Chroma)",
+                  "description": "Build an enterprise semantic retrieval system with RAG",
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ]

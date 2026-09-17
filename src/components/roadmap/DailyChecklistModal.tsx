@@ -182,25 +182,33 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
                                        Day {dayIndex + 1} {dayIndex === 0 ? '(Today)' : ''}
                                    </h3>
                                    <div className="space-y-4">
-                                       {tasks.slice(dayIndex * 3, dayIndex * 3 + 3).map((task) => (
+                                       {tasks.slice(dayIndex * 3, dayIndex * 3 + 3).map((task) => {
+                                           const isDone = task.subTopic.isCompleted;
+                                           return (
                                            <div 
                                                key={task.subTopic.id} 
                                                onClick={() => {
-                                                   onToggleTask(task.skill, task.subTopic, true, task.milestoneId);
-                                                   // Optimistically remove from view
-                                                   setTasks(prev => prev.filter(t => t.subTopic.id !== task.subTopic.id));
+                                                   const newStatus = !task.subTopic.isCompleted;
+                                                   onToggleTask(task.skill, task.subTopic, newStatus, task.milestoneId);
+                                                   // Optimistically update view
+                                                   setTasks(prev => prev.map(t => 
+                                                       t.subTopic.id === task.subTopic.id 
+                                                       ? { ...t, subTopic: { ...t.subTopic, isCompleted: newStatus } }
+                                                       : t
+                                                   ));
                                                }}
-                                               className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex items-start gap-4 cursor-pointer hover:border-blue-300"
+                                               className={`bg-white p-5 rounded-2xl border ${isDone ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200'} shadow-sm hover:shadow-md transition-all flex items-start gap-4 cursor-pointer ${isDone ? 'hover:border-emerald-300' : 'hover:border-blue-300'}`}
                                            >
-                                               <div className="mt-1 text-slate-400 hover:text-emerald-500 transition-colors shrink-0">
-                                                   <Circle size={24} />
+                                               <div className={`mt-1 transition-colors shrink-0 ${isDone ? 'text-emerald-500' : 'text-slate-400 hover:text-emerald-500'}`}>
+                                                   {isDone ? <CheckCircle2 size={24} /> : <Circle size={24} />}
                                                </div>
                                                <div>
-                                                   <h4 className="font-bold text-slate-800 text-lg">{task.subTopic.title}</h4>
-                                                   <p className="text-sm text-blue-600 font-medium mt-1">From course: {task.skill.name}</p>
+                                                   <h4 className={`font-bold text-lg ${isDone ? 'text-slate-400 line-through' : 'text-slate-800'}`}>{task.subTopic.title}</h4>
+                                                   <p className={`text-sm font-medium mt-1 ${isDone ? 'text-emerald-600/70' : 'text-blue-600'}`}>From course: {task.skill.name}</p>
                                                </div>
                                            </div>
-                                       ))}
+                                           );
+                                       })}
                                    </div>
                                </div>
                            ))}
