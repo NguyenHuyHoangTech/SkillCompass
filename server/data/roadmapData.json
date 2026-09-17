@@ -4,7 +4,7 @@
   "userName": "John Doe",
   "targetRole": "Backend Developer (.NET)",
   "currentMilestoneId": "ms-future-ai-1789617270827",
-  "updatedAt": "2026-09-17T03:55:31.054Z",
+  "updatedAt": "2026-09-17T03:59:10.550Z",
   "milestones": [
     {
       "id": "m1_1",
@@ -265,7 +265,7 @@
       "roleName": "AI Native Fullstack Lead",
       "description": "AI-suggested future milestone: Integrate AI LLM engines (Gemini/OpenAI), vector databases, RAG systems, and AWS serverless or Docker cloud infrastructure.",
       "badge": "🤖 AI Cloud Master",
-      "overallProgress": 0,
+      "overallProgress": 83,
       "categories": [
         {
           "id": "cat-ai-integration",
@@ -276,20 +276,35 @@
               "id": "sk-ai-llm-api",
               "name": "Gemini AI API & RAG Architecture",
               "icon": "Zap",
-              "levelPercentage": 0,
+              "levelPercentage": 99,
               "subTopics": [
+                {
+                  "id": "st-1789617516007-7w55p",
+                  "title": "30 minutes/day: Watch two lessons on Gemini AI API & RAG Architecture",
+                  "isCompleted": true
+                },
+                {
+                  "id": "st-1789617516007-7pgh4",
+                  "title": "Weekend: Complete one scheduled system assessment",
+                  "isCompleted": true
+                },
+                {
+                  "id": "st-1789617516007-gkpnj",
+                  "title": "Find one in-depth Medium article for further reading",
+                  "isCompleted": true
+                },
                 {
                   "id": "sub-ai-prompting",
                   "title": "Prompt Engineering & Structured JSON Outputs",
                   "description": "Design robust prompts that make AI return structured data",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 },
                 {
                   "id": "sub-vector-db",
                   "title": "Vector Database & Embeddings (Pinecone / Chroma)",
                   "description": "Build an enterprise semantic retrieval system with RAG",
-                  "isCompleted": false,
+                  "isCompleted": true,
                   "assessmentScore": 0
                 }
               ]

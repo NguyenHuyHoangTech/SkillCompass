@@ -27,8 +27,15 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
   const [chatInput, setChatInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  const initializedRef = useRef(false);
+
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) {
+        initializedRef.current = false;
+        return;
+    }
+
+    if (isOpen && !initializedRef.current) {
       // Gather all incomplete SubTopics from skills that are In Progress (levelPercentage > 0 && < 100)
       const gatheredTasks: TaskItem[] = [];
       milestones.forEach(ms => {
@@ -45,6 +52,7 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
           });
       });
       setTasks(gatheredTasks);
+      initializedRef.current = true;
 
       // Initial AI Message
       if (gatheredTasks.length > 0 && messages.length === 0) {
