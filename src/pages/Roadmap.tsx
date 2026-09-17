@@ -623,7 +623,7 @@ export default function Roadmap() {
           {activePage === 'page-roadmap' && (
             <button
                 onClick={() => setIsDailyChecklistOpen(true)}
-                className="fixed bottom-6 left-6 md:left-24 z-50 w-16 h-16 bg-blue-600 hover:bg-blue-500 text-white rounded-full shadow-lg shadow-blue-600/30 flex flex-col items-center justify-center transition-transform hover:scale-110 border-2 border-white/20 group"
+                className="fixed bottom-24 right-6 z-50 w-16 h-16 bg-blue-600 hover:bg-blue-500 text-white rounded-full shadow-lg shadow-blue-600/30 flex flex-col items-center justify-center transition-transform hover:scale-110 border-2 border-white/20 group"
                 title="Open Daily Checklist"
             >
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
