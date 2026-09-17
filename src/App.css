@@ -98,7 +98,7 @@ body {
   width: 100%;
 }
 
-/* 1. TOP NAVBAR FIXED (CỐ ĐỊNH Ở TRÊN CÙNG) */
+/* 1. TOP NAVBAR FIXED (FIXED AT THE TOP) */
 .top-navbar-fixed {
   position: sticky;
   top: 0;
@@ -543,7 +543,7 @@ body {
   width: 100%;
 }
 
-/* BACKDROP OVERLAY LÀM MỜ Ở DƯỚI KHỦNG VÀ MƯỢT KHI MENU DỌC ĐẨY RA */
+/* BACKDROP OVERLAY WITH A SMOOTH BLUR WHEN THE VERTICAL MENU OPENS */
 .sidebar-backdrop-overlay {
   position: fixed;
   inset: 0;
@@ -561,7 +561,7 @@ body {
   pointer-events: auto;
 }
 
-/* OVERLAY DRAWER SIDEBAR DỌC ĐẨY RA */
+/* VERTICAL SIDEBAR DRAWER OVERLAY */
 .app-sidebar-nav-drawer {
   position: fixed;
   top: 0;
@@ -821,7 +821,7 @@ body {
   margin-top: 2px;
 }
 
-/* HORIZONTAL SUB-TAB BAR (THANH TAB NGANG TRONG TRANG LỘ TRÌNH) */
+/* HORIZONTAL SUB-TAB BAR (HORIZONTAL TAB BAR ON THE ROADMAP PAGE) */
 .horizontal-sub-tab-bar {
   margin-bottom: 20px;
   padding: 8px 12px;
@@ -2108,7 +2108,7 @@ body {
   transform: translateY(0) scale(0.98);
 }
 
-/* Button 1: Đề Xuất Mốc Tương Lai (Sleek Outline) */
+/* Button 1: Suggest a Future Milestone (Sleek Outline) */
 .btn-ai-propose {
   background: #ffffff;
   color: #334155;
@@ -2124,7 +2124,7 @@ body {
   box-shadow: 0 3px 8px rgba(2, 132, 199, 0.12);
 }
 
-/* Button 2: AI Tối Ưu Lộ Trình (Soft Tint Blue) */
+/* Button 2: AI Roadmap Optimization (Soft Tint Blue) */
 .btn-ai-optimize {
   background: #f0f9ff;
   color: #0369a1;
@@ -2140,7 +2140,7 @@ body {
   box-shadow: 0 3px 8px rgba(2, 132, 199, 0.15);
 }
 
-/* Button 3: Đánh Giá Lại Giai Đoạn (Primary Solid Accent) */
+/* Button 3: Reassess the Stage (Primary Solid Accent) */
 .btn-ai-re-evaluate {
   background: #0284c7;
   color: #ffffff;
@@ -3515,11 +3515,11 @@ body {
 }
 
 /* ==========================================================================
-   MOBILE & TABLET RESPONSIVE DESIGN (Màn hình điện thoại & Máy tính bảng)
+   MOBILE & TABLET RESPONSIVE DESIGN (Phone & Tablet Screens)
    ========================================================================== */
 
 @media (max-width: 768px) {
-  /* 1. Navbar & Page Container Padding trên di động */
+  /* 1. Navbar & Page Container Padding on mobile */
   .top-nav-container {
     padding: 0 12px;
   }
@@ -3569,7 +3569,7 @@ body {
     margin-top: 4px;
   }
 
-  /* 3. Milestone Timeline Grid trên di động */
+  /* 3. Milestone Timeline Grid on mobile */
   .milestone-nav-row {
     flex-direction: column;
     gap: 10px;
@@ -3698,7 +3698,7 @@ body {
     justify-content: center;
   }
 
-  /* 6. Modals trên di động */
+  /* 6. Modals on mobile */
   .modal-container {
     padding: 16px;
     width: 95vw;
@@ -3732,7 +3732,7 @@ body {
 }
 
 /* ==========================================================================
-   7. 3D STAR SPHERE & STAR SKILL MODAL STYLES (TRANG TẤT CẢ KỸ NĂNG VŨ TRỤ)
+   7. 3D STAR SPHERE & STAR SKILL MODAL STYLES (ALL SKILLS UNIVERSE PAGE)
    ========================================================================== */
 
 .all-skills-pure-space-page {
@@ -4342,7 +4342,7 @@ body {
 }
 
 /* ==========================================================================
-   STAR SKILL MODAL STYLES (HIỆN RA KHI ĐÚP CHUỘT VÀO NGÔI SAO)
+   STAR SKILL MODAL STYLES (SHOWN WHEN A STAR IS DOUBLE-CLICKED)
    ========================================================================== */
 
 .star-modal-backdrop {

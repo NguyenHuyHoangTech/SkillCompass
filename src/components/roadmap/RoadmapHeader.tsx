@@ -51,7 +51,7 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
         <button 
             onClick={scrollLeft}
             className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white border border-slate-200 shadow-md rounded-full items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-300 z-10 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0"
-            title="Cuộn sang trái"
+            title="Scroll Left"
         >
             <i className="fa-solid fa-chevron-left text-xs"></i>
         </button>
@@ -60,7 +60,7 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
         <button 
             onClick={scrollRight}
             className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white border border-slate-200 shadow-md rounded-full items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-300 z-10 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0"
-            title="Cuộn sang phải"
+            title="Scroll Right"
         >
             <i className="fa-solid fa-chevron-right text-xs"></i>
         </button>
@@ -99,7 +99,7 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
                     const ringClass = isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : '';
                     
                     // Clean title from existing Stage/Milestone prefixes if any
-                    const cleanTitle = ms.title.replace(/^(Stage|Giai đoạn|Mốc|Milestone)\s*\d+[:\-]?\s*/i, '');
+                    const cleanTitle = ms.title.replace(/^(Stage|Stage|Milestone|Milestone)\s*\d+[:\-]?\s*/i, '');
                     
                     return (
                         <div 
@@ -113,7 +113,7 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
                                     <button 
                                       onClick={(e) => { e.stopPropagation(); onForceCompleteMilestone(ms.id); }}
                                       className="w-7 h-7 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center text-emerald-600 border border-emerald-100 transition-colors"
-                                      title="Đánh dấu hoàn thành mốc này"
+                                      title="Mark this milestone complete"
                                     >
                                       <i className="fa-solid fa-check-double text-[10px]"></i>
                                     </button>
@@ -122,7 +122,7 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
                                     <button 
                                       onClick={(e) => { e.stopPropagation(); onEditMilestone(ms); }}
                                       className="w-7 h-7 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center text-blue-600 border border-blue-100 transition-colors"
-                                      title="Sửa chặng"
+                                      title="Edit Milestone"
                                     >
                                       <i className="fa-solid fa-pen text-[10px]"></i>
                                     </button>
@@ -131,7 +131,7 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
                                     <button 
                                       onClick={(e) => { e.stopPropagation(); onDeleteMilestone(ms.id); }}
                                       className="w-7 h-7 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center text-red-500 border border-red-100 transition-colors"
-                                      title="Xóa chặng"
+                                      title="Delete Milestone"
                                     >
                                       <i className="fa-solid fa-trash text-[10px]"></i>
                                     </button>
@@ -179,12 +179,12 @@ export const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
                         <div 
                             onClick={onAddMilestone}
                             className="shrink-0 w-32 flex-1 rounded-xl border border-dashed border-slate-300 bg-white p-4 cursor-pointer transition-all hover:-translate-y-1 hover:border-blue-400 hover:bg-blue-50/30 flex flex-col justify-center items-center group min-h-[140px]"
-                            title="Thêm chặng thủ công"
+                            title="Add a Milestone Manually"
                         >
                             <div className="w-8 h-8 rounded-full bg-slate-100 group-hover:bg-blue-100 group-hover:text-blue-500 text-slate-400 flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
                                 <i className="fa-solid fa-plus"></i>
                             </div>
-                            <h3 className="font-bold text-[11px] text-slate-500 group-hover:text-blue-600">Thêm thủ công</h3>
+                            <h3 className="font-bold text-[11px] text-slate-500 group-hover:text-blue-600">Add Manually</h3>
                         </div>
                     </div>
                 )}

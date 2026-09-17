@@ -112,7 +112,7 @@ router.post('/career-chat', async (req: Request, res: Response) => {
     const milestone = data.milestones.find((m) => m.id === milestoneId) || data.milestones[0];
 
     const result = await SmartAiEngine.chatCareerAdvisor(
-      userMessage || 'Tư vấn cho tôi',
+      userMessage || 'Advise me',
       milestone.title,
       data
     );

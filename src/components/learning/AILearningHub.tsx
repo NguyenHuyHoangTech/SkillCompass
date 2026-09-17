@@ -51,7 +51,7 @@ export const AILearningHub: React.FC<AILearningHubProps> = ({ skill, onSelectCou
       setMessages(prev => [...prev, { sender: 'ai', text: chat_response }]);
     } catch (e) {
       console.error(e);
-      setMessages(prev => [...prev, { sender: 'ai', text: "Xin lỗi, đã có lỗi xảy ra. Hãy thử lại." }]);
+      setMessages(prev => [...prev, { sender: 'ai', text: "Sorry, an error occurred. Please try again." }]);
     } finally {
       setLoading(false);
     }
@@ -68,14 +68,14 @@ export const AILearningHub: React.FC<AILearningHubProps> = ({ skill, onSelectCou
                 onClick={onBack}
                 className="absolute top-4 left-4 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
             >
-                ← Trở lại
+                ← Back
             </button>
             <div className="max-w-4xl mx-auto mt-4 text-center">
                 <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight mb-3">
-                  Không gian học tập <span className="text-amber-300">{skill.name}</span>
+                  Learning Hub <span className="text-amber-300">{skill.name}</span>
                 </h1>
                 <p className="text-blue-100 max-w-2xl mx-auto">
-                  AI đã phân tích kỹ năng và đề xuất các khóa học tối ưu nhất cho bạn. Khám phá các khóa học dưới đây hoặc trò chuyện với trợ lý AI để điều chỉnh.
+                  AI analyzed the skill and selected the best courses for you. Explore them below or chat with the AI assistant to refine the results.
                 </p>
             </div>
         </div>
@@ -84,7 +84,7 @@ export const AILearningHub: React.FC<AILearningHubProps> = ({ skill, onSelectCou
         <div className="flex-1 overflow-y-auto p-6 bg-slate-100">
             <div className="max-w-5xl mx-auto">
                 <h3 className="font-bold text-slate-800 text-xl mb-4 flex items-center gap-2">
-                    <Sparkles size={20} className="text-amber-500" /> Các Khóa học Đề xuất
+                    <Sparkles size={20} className="text-amber-500" /> Recommended Courses
                 </h3>
                 
                 {loading && courses.length === 0 ? (
@@ -135,7 +135,7 @@ export const AILearningHub: React.FC<AILearningHubProps> = ({ skill, onSelectCou
                                         onClick={() => onSelectCourse(course)}
                                         className="w-full bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white border border-blue-200 py-2.5 rounded-lg font-bold transition-colors flex justify-center items-center gap-2"
                                     >
-                                        <PlayCircle size={18} /> Vào Học Ngay
+                                        <PlayCircle size={18} /> Start Learning
                                     </button>
                                 </div>
                             </div>
@@ -154,8 +154,8 @@ export const AILearningHub: React.FC<AILearningHubProps> = ({ skill, onSelectCou
                 {loading && <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></span>}
             </div>
             <div>
-                <h3 className="font-bold text-sm">Cố vấn Học tập AI</h3>
-                <p className="text-[11px] text-slate-400">Tùy chỉnh danh sách khóa học</p>
+                <h3 className="font-bold text-sm">AI Learning Advisor</h3>
+                <p className="text-[11px] text-slate-400">Customize the course list</p>
             </div>
         </div>
 
@@ -190,7 +190,7 @@ export const AILearningHub: React.FC<AILearningHubProps> = ({ skill, onSelectCou
                     value={chatInput}
                     onChange={e => setChatInput(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="Ví dụ: Tìm khóa cơ bản hơn..."
+                    placeholder="Example: Find a more beginner-friendly course..."
                     className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                     disabled={loading}
                 />
@@ -202,7 +202,7 @@ export const AILearningHub: React.FC<AILearningHubProps> = ({ skill, onSelectCou
                     <Send size={16} />
                 </button>
             </div>
-            <p className="text-[10px] text-slate-400 text-center mt-2">AI có thể điều chỉnh danh sách khóa học theo ý bạn.</p>
+            <p className="text-[10px] text-slate-400 text-center mt-2">AI can adjust the course list to your preferences.</p>
         </div>
       </div>
 

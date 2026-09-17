@@ -15,46 +15,46 @@ export class SmartAiEngine {
   ): Promise<QuizQuestionResponse> {
     const questionDatabase: Record<string, { question: string; hint: string; keyConcepts: string[] }> = {
       "Don't Make Me Think": {
-        question: "Hãy giải thích triết lý 'Don't Make Me Think' của Steve Krug trong thiết kế UX? Cho một ví dụ về một nút bấm hoặc form đăng nhập vi phạm nguyên tắc này.",
-        hint: "Gợi ý: Tập trung vào việc giảm tải tư duy (cognitive load), tính rõ ràng và sự quen thuộc (mental models) của người dùng.",
+        question: "Explain Steve Krug's 'Don't Make Me Think' philosophy in UX design. Give an example of a button or login form that violates this principle.",
+        hint: "Hint: Focus on reducing cognitive load, clarity, and familiar user mental models.",
         keyConcepts: ["Cognitive Load", "UX Intuition", "Mental Model", "Simplicity"]
       },
       "Consistency": {
-        question: "Tính nhất quán (Consistency) trong thiết kế UI/UX mang lại lợi ích gì cho người dùng? Hãy nêu cách bạn duy trì tính nhất quán về Nút bấm (Button) và Typography trên toàn dự án React.",
-        hint: "Gợi ý: Nói về Design System, UI Tokens, Reusable Components và khả năng dự đoán (predictability) của giao diện.",
+        question: "How does consistency in UI/UX design benefit users? Explain how you maintain consistent buttons and typography across a React project.",
+        hint: "Hint: Discuss design systems, UI tokens, reusable components, and interface predictability.",
         keyConcepts: ["Design System", "UI Tokens", "Predictability", "Brand Uniformity"]
       },
       "Visual Hierarchy": {
-        question: "Phân cấp thị giác (Visual Hierarchy) là gì? Bạn sẽ kết hợp Kích thước (Size), Màu sắc (Color) và Vị trí (Position) như thế nào để làm cho nút Call To Action (CTA) thu hút ánh nhìn đầu tiên?",
-        hint: "Gợi ý: Áp dụng quy tắc tương phản (Contrast), điểm nhấn (Focal point) và quy luật đọc F-pattern / Z-pattern.",
+        question: "What is visual hierarchy? How would you combine size, color, and position to make a call-to-action button attract attention first?",
+        hint: "Hint: Apply contrast, focal points, and F-pattern or Z-pattern reading behavior.",
         keyConcepts: ["Visual Hierarchy", "Focal Point", "Call To Action", "Contrast", "F-pattern"]
       },
       "Whitespace": {
-        question: "Tại sao Khoảng trắng (Whitespace / Negative Space) không phải là 'khoảng trống lãng phí'? Khoảng trắng giúp ích gì cho khả năng đọc (Readability) và vẻ sang trọng của UI?",
-        hint: "Gợi ý: Khoảng trắng tạo nhịp thở cho mắt, nhóm các thành phần liên quan (Proximity) và giảm sự rối mắt (Clutter).",
+        question: "Why is whitespace not wasted space? How does it improve readability and the visual quality of a UI?",
+        hint: "Hint: Whitespace gives the eye room to breathe, groups related elements through proximity, and reduces clutter.",
         keyConcepts: ["Negative Space", "Law of Proximity", "Readability", "Visual Breathing"]
       },
       "Tailwind CSS": {
-        question: "Phương pháp Utility-First của Tailwind CSS giúp ích gì cho tốc độ phát triển và tính đồng nhất so với viết file CSS/SCSS riêng biệt?",
-        hint: "Gợi ý: Đề cập tới việc tránh đặt tên class thừa vãi, quản lý Design Tokens tập trung trong tailwind.config và tối ưu nén CSS bằng Purge/JIT.",
+        question: "How does Tailwind CSS's utility-first approach improve development speed and consistency compared with separate CSS/SCSS files?",
+        hint: "Hint: Discuss avoiding unnecessary class names, centralizing design tokens in tailwind.config, and optimizing CSS with Purge/JIT.",
         keyConcepts: ["Utility-First", "No Custom Class Overheads", "JIT Compiler", "Consistent Spacing Scale"]
       },
       "Responsive": {
-        question: "Sự khác nhau cốt lõi giữa tư duy thiết kế Mobile-First và Desktop-First là gì? Tại sao xu hướng hiện đại luôn ưu tiên Mobile-First?",
-        hint: "Gợi ý: Mobile-first bắt buộc tối giản nội dung cốt lõi trên màn hình nhỏ trước, sau đó dùng min-width media queries để mở rộng cho màn hình lớn.",
+        question: "What is the core difference between mobile-first and desktop-first design? Why do modern products often prioritize mobile-first?",
+        hint: "Hint: Mobile-first starts with essential content on small screens, then uses min-width media queries to expand for larger screens.",
         keyConcepts: ["Mobile-First", "Min-Width Queries", "Progressive Enhancement", "Touch Friendly"]
       },
       "Accessibility": {
-        question: "Làm thế nào để đảm bảo website của bạn đạt chuẩn Accessibility (A11y / WCAG)? Hãy nêu 3 yếu tố quan trọng về Semantic HTML, Keyboard Navigation và Độ tương phản màu.",
-        hint: "Gợi ý: Dùng tag HTML ngữ nghĩa (<main>, <nav>), attribute aria-label, hỗ trợ tab/focus state và tỷ lệ tương phản tối thiểu 4.5:1.",
+        question: "How do you ensure a website meets accessibility standards (A11y/WCAG)? Name three important factors involving semantic HTML, keyboard navigation, and color contrast.",
+        hint: "Hint: Use semantic HTML tags, aria-label attributes, keyboard focus states, and a minimum 4.5:1 contrast ratio.",
         keyConcepts: ["WCAG Standards", "Semantic HTML", "Keyboard Focus", "Color Contrast 4.5:1", "Screen Readers"]
       }
     };
 
     const key = Object.keys(questionDatabase).find((k) => subTopicTitle.toLowerCase().includes(k.toLowerCase()));
     const template = key ? questionDatabase[key] : {
-      question: `Hãy giải thích khái niệm, tầm quan trọng và cách áp dụng thực tế của "${subTopicTitle}" thuộc kỹ năng ${skillName}?`,
-      hint: `Gợi ý: Phân tích lý thuyết cốt lõi, lợi ích mang lại cho UX và ví dụ minh họa.`,
+      question: `Explain the concept, importance, and practical application of "${subTopicTitle}" within the skill ${skillName}?`,
+      hint: `Hint: Analyze the core theory, its UX benefits, and an illustrative example.`,
       keyConcepts: [skillName, subTopicTitle, "UI/UX Best Practices"]
     };
 
@@ -82,9 +82,9 @@ export class SmartAiEngine {
       return {
         score: 40,
         isPassed: false,
-        feedback: "Câu trả lời quá ngắn. Hãy phân tích sâu hơn nguyên lý và cho ví dụ thực tế.",
-        strengths: "Đã phản hồi ban đầu.",
-        improvements: "Nên bổ sung thuật ngữ chuyên môn (Visual Hierarchy, Accessibility, Responsiveness...).",
+        feedback: "The answer is too short. Analyze the principle in more depth and provide a real-world example.",
+        strengths: "Provided an initial response.",
+        improvements: "Add relevant technical terms such as visual hierarchy, accessibility, and responsiveness.",
         updatedSkillLevel: 50
       };
     }
@@ -109,10 +109,10 @@ export class SmartAiEngine {
       score: finalScore,
       isPassed: finalScore >= 70,
       feedback: finalScore >= 80
-        ? `Xuất sắc! Bạn đã nắm vững tư duy và kỹ thuật thực hành cho "${subTopicTitle}".`
-        : `Tốt! Bạn hiểu bản chất vấn đề. Hãy thực hành thêm ví dụ code hoặc demo giao diện.`,
-      strengths: `Thể hiện góc nhìn đúng đắn và am hiểu thuật ngữ (${matched.join(", ") || "nền tảng tốt"}).`,
-      improvements: "Nên áp dụng ngay vào các bài toán thiết kế giao diện thực tế.",
+        ? `Excellent! You have mastered the reasoning and practical techniques for "${subTopicTitle}".`
+        : `Good! You understand the core issue. Practice with more code examples or interface demos.`,
+      strengths: `Shows sound reasoning and knowledge of relevant terminology (${matched.join(", ") || "strong fundamentals"}).`,
+      improvements: "Apply this knowledge to real-world interface design problems.",
       updatedSkillLevel: finalScore
     };
   }
@@ -143,19 +143,19 @@ export class SmartAiEngine {
 
     return {
       score: readinessScore,
-      readinessLabel: `${readinessScore}% Thành thạo ${milestone.roleName}`,
-      summary: `Bạn đã hoàn thành ${completedSub}/${totalSub} tiêu chuẩn chuyên môn thuộc "${milestone.title}". Điểm đánh giá năng lực đạt ${avgScore}/100.`,
+      readinessLabel: `${readinessScore}% proficient in ${milestone.roleName}`,
+      summary: `You have completed ${completedSub}/${totalSub} professional criteria in "${milestone.title}". The competency assessment score is ${avgScore}/100.`,
       strengths: [
-        "Thấu hiểu tư duy UI/UX trực quan và nguyên tắc phân cấp thị giác",
-        "Có khả năng áp dụng các công cụ hiện đại và chuẩn hóa trải nghiệm người dùng"
+        "Understands visual UI/UX reasoning and visual hierarchy principles",
+        "Can apply modern tools and standardize the user experience"
       ],
       weaknesses: [
-        `Cần hoàn thiện thêm các hạng mục thực hành chưa đạt 100% trong mốc này`
+        `Complete the remaining practice items in this milestone`
       ],
       actionItems: [
-        "Luyện tập bài test AI Quiz cho các mục còn lại",
-        "Áp dụng chuẩn Mobile-First và kiểm tra độ tương phản màu WCAG",
-        "Tối ưu hóa hiệu năng ứng dụng bằng Lazy Loading & WebP"
+        "Practice the AI quizzes for the remaining items",
+        "Apply mobile-first standards and verify WCAG color contrast",
+        "Optimize application performance with lazy loading and WebP"
       ],
       evaluatedAt: new Date().toISOString()
     };
@@ -172,19 +172,19 @@ export class SmartAiEngine {
     const query = userMessage.toLowerCase();
 
     // Proposed Milestone 4: Fullstack AI Native & Cloud Architect
-    if (query.includes("giai đoạn 4") || query.includes("ai native") || query.includes("cloud") || (query.includes("mốc") && query.includes("ai"))) {
+    if (query.includes("stage 4") || query.includes("ai native") || query.includes("cloud") || (query.includes("milestone") && query.includes("ai"))) {
       const milestone: Milestone = {
         id: `ms-future-ai-${Date.now()}`,
-        title: "Giai Đoạn 4: Fullstack AI Native & Cloud Architect",
+        title: "Stage 4: Fullstack AI Native & Cloud Architect",
         roleName: "AI Native Fullstack Lead",
-        description: "Mốc tương lai do AI đề xuất: Tích hợp mô hình AI LLM Engine (Gemini/OpenAI), Vector Database, RAG Systems và Điện toán Đám mây AWS Serverless/Docker Container.",
+        description: "AI-suggested future milestone: Integrate AI LLM engines (Gemini/OpenAI), vector databases, RAG systems, and AWS serverless or Docker cloud infrastructure.",
         badge: "🤖 AI Cloud Master",
         overallProgress: 0,
         categories: [
           {
             id: "cat-ai-integration",
-            name: "4.1. Tích Hợp Mô Hình AI & Vector DB",
-            description: "Xây dựng ứng dụng AI Native thông minh",
+            name: "4.1. AI Model & Vector DB Integration",
+            description: "Build intelligent AI-native applications",
             skills: [
               {
                 id: "sk-ai-llm-api",
@@ -195,14 +195,14 @@ export class SmartAiEngine {
                   {
                     id: "sub-ai-prompting",
                     title: "Prompt Engineering & Structured JSON Outputs",
-                    description: "Thiết kế prompt chuẩn tối ưu cho AI trả về dữ liệu cấu trúc",
+                    description: "Design robust prompts that make AI return structured data",
                     isCompleted: false,
                     assessmentScore: 0
                   },
                   {
                     id: "sub-vector-db",
                     title: "Vector Database & Embeddings (Pinecone / Chroma)",
-                    description: "Xây dựng hệ thống tra cứu ngữ nghĩa RAG cho doanh nghiệp",
+                    description: "Build an enterprise semantic retrieval system with RAG",
                     isCompleted: false,
                     assessmentScore: 0
                   }
@@ -213,7 +213,7 @@ export class SmartAiEngine {
           {
             id: "cat-cloud-devops",
             name: "4.2. Containerization & DevOps Cloud",
-            description: "Tự động hóa triển khai hạ tầng đám mây",
+            description: "Automate cloud infrastructure deployment",
             skills: [
               {
                 id: "sk-aws-docker",
@@ -224,7 +224,7 @@ export class SmartAiEngine {
                   {
                     id: "sub-docker-compose",
                     title: "Dockerizing React & Node.js Express",
-                    description: "Đóng gói toàn bộ ứng dụng Fullstack vào Docker Container",
+                    description: "Package the full-stack application in a Docker container",
                     isCompleted: false,
                     assessmentScore: 0
                   }
@@ -235,25 +235,25 @@ export class SmartAiEngine {
         ]
       };
       return {
-        text: `Dựa trên phân tích xu hướng tuyển dụng IT hiện tại, tôi đề xuất bạn mở rộng lộ trình sang **Giai Đoạn 4: Fullstack AI Native & Cloud Architect** (tích hợp Gemini AI Engine, Vector Database & Docker AWS Cloud). \n\nBạn có muốn tự động thêm mốc này vào Lộ Trình của bạn ngay bây giờ không? 👇`,
+        text: `Based on current IT hiring trends, I suggest extending your roadmap to **Stage 4: Fullstack AI Native & Cloud Architect** (integrating Gemini AI, vector databases, Docker, and AWS cloud services). \n\nWould you like to add this milestone to your roadmap now? 👇`,
         proposedMilestone: milestone
       };
     }
 
     // Proposed Milestone 5: UI/UX Design System Lead & Micro-frontends
-    if (query.includes("giai đoạn 5") || query.includes("design system") || query.includes("micro-frontend")) {
+    if (query.includes("stage 5") || query.includes("design system") || query.includes("micro-frontend")) {
       const milestone: Milestone = {
         id: `ms-future-ds-${Date.now()}`,
-        title: "Giai Đoạn 5: Design System Architect & Micro-frontends",
+        title: "Stage 5: Design System Architect & Micro-frontends",
         roleName: "Design System & Micro-frontend Lead",
-        description: "Mốc tương lai do AI đề xuất: Chuẩn hóa hệ thống UI Tokens, Storybook Design System doanh nghiệp và kiến trúc Micro-frontends Module Federation.",
+        description: "AI-suggested future milestone: Standardize UI tokens, an enterprise Storybook design system, and a Module Federation micro-frontends architecture.",
         badge: "🎨 Design System Lead",
         overallProgress: 0,
         categories: [
           {
             id: "cat-design-system",
             name: "5.1. Enterprise Design System & Tokens",
-            description: "Xây dựng thư viện UI tái sử dụng quy mô lớn",
+            description: "Build a large-scale reusable UI library",
             skills: [
               {
                 id: "sk-storybook-tokens",
@@ -264,14 +264,14 @@ export class SmartAiEngine {
                   {
                     id: "sub-ui-tokens",
                     title: "Design Tokens (Colors, Typography, Spacing Scale)",
-                    description: "Đồng bộ design token giữa Figma và codebase React",
+                    description: "Synchronize design tokens between Figma and the React codebase",
                     isCompleted: false,
                     assessmentScore: 0
                   },
                   {
                     id: "sub-storybook-docs",
                     title: "Storybook Component Documentation & Testing",
-                    description: "Tự động hóa testing và viết tài liệu UI components",
+                    description: "Automate testing and document UI components",
                     isCompleted: false,
                     assessmentScore: 0
                   }
@@ -282,25 +282,25 @@ export class SmartAiEngine {
         ]
       };
       return {
-        text: `Tôi đề xuất bạn mở rộng sang **Giai Đoạn 5: Design System Architect & Micro-frontends** (Quản lý Design Tokens, Storybook UI Library và chia nhỏ hệ thống thành Micro-frontends). \n\nBạn bấm nút bên dưới để thêm mốc này vào Lộ Trình nhé! 👇`,
+        text: `I suggest expanding into **Stage 5: Design System Architect & Micro-frontends** (managing design tokens, a Storybook UI library, and splitting the system into micro-frontends). \n\nUse the button below to add this milestone to your roadmap. 👇`,
         proposedMilestone: milestone
       };
     }
 
-    // General "Thêm mốc" request -> Default to Next Level Milestone
-    if (query.includes("giai đoạn") || query.includes("lộ trình") || query.includes("thêm mốc") || query.includes("mốc mới") || query.includes("tương lai") || query.includes("đề xuất mốc")) {
+    // General "Add milestone" request -> Default to Next Level Milestone
+    if (query.includes("stage") || query.includes("roadmap") || query.includes("add milestone") || query.includes("new milestone") || query.includes("future") || query.includes("suggest milestone")) {
       const milestone: Milestone = {
         id: `ms-future-techlead-${Date.now()}`,
-        title: "Giai Đoạn 4: Fullstack AI Native & Cloud Architect",
+        title: "Stage 4: Fullstack AI Native & Cloud Architect",
         roleName: "AI Native Fullstack Lead",
-        description: "Mốc tương lai do AI đề xuất: Tích hợp mô hình AI LLM Engine (Gemini/OpenAI), Vector Database, RAG Systems và Điện toán Đám mây AWS Serverless/Docker Container.",
+        description: "AI-suggested future milestone: Integrate AI LLM engines (Gemini/OpenAI), vector databases, RAG systems, and AWS serverless or Docker cloud infrastructure.",
         badge: "🤖 AI Cloud Master",
         overallProgress: 0,
         categories: [
           {
             id: "cat-ai-integration",
-            name: "4.1. Tích Hợp Mô Hình AI & Vector DB",
-            description: "Xây dựng ứng dụng AI Native thông minh",
+            name: "4.1. AI Model & Vector DB Integration",
+            description: "Build intelligent AI-native applications",
             skills: [
               {
                 id: "sk-ai-llm-api",
@@ -311,14 +311,14 @@ export class SmartAiEngine {
                   {
                     id: "sub-ai-prompting",
                     title: "Prompt Engineering & Structured JSON Outputs",
-                    description: "Thiết kế prompt chuẩn tối ưu cho AI trả về dữ liệu cấu trúc",
+                    description: "Design robust prompts that make AI return structured data",
                     isCompleted: false,
                     assessmentScore: 0
                   },
                   {
                     id: "sub-vector-db",
                     title: "Vector Database & Embeddings (Pinecone / Chroma)",
-                    description: "Xây dựng hệ thống tra cứu ngữ nghĩa RAG cho doanh nghiệp",
+                    description: "Build an enterprise semantic retrieval system with RAG",
                     isCompleted: false,
                     assessmentScore: 0
                   }
@@ -329,7 +329,7 @@ export class SmartAiEngine {
           {
             id: "cat-cloud-devops",
             name: "4.2. Containerization & DevOps Cloud",
-            description: "Tự động hóa triển khai hạ tầng đám mây",
+            description: "Automate cloud infrastructure deployment",
             skills: [
               {
                 id: "sk-aws-docker",
@@ -340,7 +340,7 @@ export class SmartAiEngine {
                   {
                     id: "sub-docker-compose",
                     title: "Dockerizing React & Node.js Express",
-                    description: "Đóng gói toàn bộ ứng dụng Fullstack vào Docker Container",
+                    description: "Package the full-stack application in a Docker container",
                     isCompleted: false,
                     assessmentScore: 0
                   }
@@ -351,19 +351,19 @@ export class SmartAiEngine {
         ]
       };
       return {
-        text: `Dựa trên tiến độ tuyệt vời của bạn ở mốc **${currentMilestoneTitle}**, tôi xin đề xuất mốc tương lai tiếp theo: **Giai Đoạn 4: Fullstack AI Native & Cloud Architect**! \n\nBạn có thể nhấn nút "Thêm Mốc Này Vào Lộ Trình" ngay bên dưới để đưa mốc này vào hệ thống thanh mốc lộ trình của mình! 🚀`,
+        text: `Based on your strong progress in **${currentMilestoneTitle}**, I suggest the next future milestone: **Stage 4: Fullstack AI Native & Cloud Architect**! \n\nUse the "Add This Milestone to the Roadmap" button below to add it to your roadmap. 🚀`,
         proposedMilestone: milestone
       };
     }
 
-    if (query.includes("mobile") || query.includes("responsive") || query.includes("tối ưu")) {
+    if (query.includes("mobile") || query.includes("responsive") || query.includes("optimize")) {
       return {
-        text: `Để tối ưu theo tiêu chuẩn **Giai đoạn 3**, hãy luôn áp dụng **Mobile-First Approach** (viết CSS cho màn hình điện thoại trước) kết hợp với **Lazy Loading ảnh WebP** và kiểm tra độ tương phản màu chuẩn **WCAG A11y**! ✨`
+        text: `To optimize for **Stage 3**, always apply **Mobile-First Approach** (write CSS for phone screens first) combined with **lazy-loading WebP images** and verify color contrast against **WCAG A11y**! ✨`
       };
     }
 
     return {
-      text: `Tôi là AI Advisor của bạn! Tôi có thể giúp bạn giải đáp các thắc mắc về **Tư duy UI/UX**, **Kỹ thuật Frontend (Tailwind/React)** và đặc biệt là **Đề Xuất Các Mốc Lộ Trình Tương Lai Mới** (Giai đoạn 4 AI Native Lead, Giai đoạn 5 Design System Master...). Bạn muốn tôi đề xuất mốc mới không? 😊`
+      text: `I am your AI advisor. I can answer questions about **UI/UX reasoning**, **frontend engineering (Tailwind/React)** and especially **suggesting new future roadmap milestones** (Stage 4 AI Native Lead, Stage 5 Design System Master...). Would you like me to suggest a new milestone? 😊`
     };
   }
 }

@@ -25,20 +25,20 @@ data.milestones.forEach((ms) => {
       
       const defaultTasks = [
         {
-          title: `Nghiên cứu lý thuyết lõi về ${skill.name}`,
-          description: "Tìm hiểu và nắm vững các khái niệm cơ bản, quy tắc thực hành chuẩn xác."
+          title: `Study the core theory of ${skill.name}`,
+          description: "Learn and master the fundamental concepts and established best practices."
         },
         {
-          title: `Thực hành xây dựng dự án mini ứng dụng ${skill.name}`,
-          description: "Áp dụng kiến thức vừa học vào một project thu nhỏ để hiểu rõ cách thức hoạt động."
+          title: `Build a mini project applying ${skill.name}`,
+          description: "Apply what you learned in a small project to understand how it works."
         },
         {
-          title: `Kiểm tra và review mã nguồn (Code/Design Review)`,
-          description: "Chấm điểm và đánh giá lỗi, tìm phương pháp tối ưu hóa hiệu suất và chất lượng."
+          title: `Review the source code (Code/Design Review)`,
+          description: "Evaluate issues and identify ways to improve performance and quality."
         },
         {
-          title: `Thực hành tình huống thực tế do AI giả lập`,
-          description: "Giải quyết bài toán mô phỏng các vấn đề thường gặp ở môi trường doanh nghiệp."
+          title: `Practice an AI-simulated real-world scenario`,
+          description: "Solve a simulated problem based on common workplace scenarios."
         }
       ];
 

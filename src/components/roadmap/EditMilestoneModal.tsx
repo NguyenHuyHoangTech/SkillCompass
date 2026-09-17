@@ -59,7 +59,7 @@ export const EditMilestoneModal: React.FC<EditMilestoneModalProps> = ({
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up">
         <div className="flex justify-between items-center p-6 border-b border-slate-100">
           <h2 className="text-xl font-bold text-slate-800">
-            {milestoneToEdit ? 'Chỉnh sửa chặng' : 'Thêm chặng mới'}
+            {milestoneToEdit ? 'Edit Milestone' : 'Add New Milestone'}
           </h2>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
             <i className="fa-solid fa-xmark text-xl"></i>
@@ -69,7 +69,7 @@ export const EditMilestoneModal: React.FC<EditMilestoneModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6">
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1">Tên chặng</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1">Milestone Name</label>
               <input 
                 type="text" 
                 value={title}
@@ -82,11 +82,11 @@ export const EditMilestoneModal: React.FC<EditMilestoneModalProps> = ({
             </div>
             
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1">Mục tiêu (Mô tả)</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1">Goal (Description)</label>
               <textarea 
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Mô tả mục tiêu đạt được..."
+                placeholder="Describe the goal to achieve..."
                 className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-h-[100px] resize-none"
                 required
               />
@@ -94,7 +94,7 @@ export const EditMilestoneModal: React.FC<EditMilestoneModalProps> = ({
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">Ngày bắt đầu</label>
+                <label className="block text-sm font-bold text-slate-700 mb-1">Start Date</label>
                 <input 
                   type="date" 
                   value={startDate}
@@ -103,7 +103,7 @@ export const EditMilestoneModal: React.FC<EditMilestoneModalProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">Ngày kết thúc</label>
+                <label className="block text-sm font-bold text-slate-700 mb-1">End Date</label>
                 <input 
                   type="date" 
                   value={endDate}
@@ -120,14 +120,14 @@ export const EditMilestoneModal: React.FC<EditMilestoneModalProps> = ({
               onClick={onClose}
               className="px-5 py-2 font-semibold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
             >
-              Hủy
+              Cancel
             </button>
             <button 
               type="submit" 
               disabled={!title.trim()}
               className="px-5 py-2 font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50"
             >
-              Lưu
+              Save
             </button>
           </div>
         </form>

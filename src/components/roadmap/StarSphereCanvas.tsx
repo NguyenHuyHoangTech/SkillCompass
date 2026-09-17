@@ -511,17 +511,17 @@ export const StarSphereCanvas: React.FC<StarSphereCanvasProps> = ({
           title={isAutoRotate ? 'Pause auto-rotate' : 'Enable 3D auto-rotate'}
         >
           {isAutoRotate ? <Pause size={18} className="text-amber-400" /> : <Play size={18} className="text-emerald-400" />}
-          <span>{isAutoRotate ? 'Dừng Xoay' : 'Tiếp tục Xoay'}</span>
+          <span>{isAutoRotate ? 'Stop Rotation' : 'Resume Rotation'}</span>
         </button>
 
         {onClose && (
             <button
                 className="hud-btn close-btn"
                 onClick={onClose}
-                title="Đóng Vũ Trụ"
+                title="Close Universe"
             >
                 <X size={18} className="text-rose-400" />
-                <span>Đóng Vũ Trụ</span>
+                <span>Close Universe</span>
             </button>
         )}
       </div>

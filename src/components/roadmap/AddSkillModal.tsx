@@ -56,7 +56,7 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
               <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
                 <i className="fa-solid fa-plus text-lg"></i>
               </div>
-              <h3 className="text-xl font-bold text-slate-800">Thêm kỹ năng mới</h3>
+              <h3 className="text-xl font-bold text-slate-800">Add a New Skill</h3>
             </div>
             <button
               onClick={onClose}
@@ -69,7 +69,7 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
           <div className="p-6 space-y-5 overflow-y-auto max-h-[70vh]">
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">
-                Tên kỹ năng <span className="text-red-500">*</span>
+                Skill Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -82,7 +82,7 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">
-                Danh mục <span className="text-red-500">*</span>
+                Category <span className="text-red-500">*</span>
               </label>
               {!isCustomCategory ? (
                 <div className="flex gap-2">
@@ -91,7 +91,7 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
                     onChange={(e) => setCategoryName(e.target.value)}
                     className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all appearance-none"
                   >
-                    <option value="" disabled>Chọn danh mục...</option>
+                    <option value="" disabled>Select a category...</option>
                     {existingCategories.map((cat, idx) => (
                       <option key={idx} value={cat}>{cat}</option>
                     ))}
@@ -100,7 +100,7 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
                     onClick={() => { setIsCustomCategory(true); setCategoryName(''); }}
                     className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-sm font-bold transition-colors whitespace-nowrap"
                   >
-                    Tạo mới
+                    Create New
                   </button>
                 </div>
               ) : (
@@ -109,14 +109,14 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
                     type="text"
                     value={categoryName}
                     onChange={(e) => setCategoryName(e.target.value)}
-                    placeholder="Nhập tên danh mục mới..."
+                    placeholder="Enter a new category name..."
                     className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
                   />
                   <button 
                     onClick={() => { setIsCustomCategory(false); setCategoryName(existingCategories[0] || ''); }}
                     className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-sm font-bold transition-colors whitespace-nowrap"
                   >
-                    Chọn lại
+                    Choose Again
                   </button>
                 </div>
               )}
@@ -124,12 +124,12 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">
-                Mô tả ngắn
+                Short Description
               </label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Mô tả kỹ năng này dùng để làm gì..."
+                placeholder="Describe what this skill is used for..."
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all min-h-[80px]"
               ></textarea>
             </div>
@@ -137,14 +137,14 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-slate-700">
-                  Các Mục nhỏ (Subtopics) để bắt đầu học
+                  Subtopics to Start Learning
                 </label>
                 <button
                   type="button"
                   onClick={() => setSubtopics([...subtopics, ''])}
                   className="text-xs font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
                 >
-                  <i className="fa-solid fa-plus"></i> Thêm mục nhỏ
+                  <i className="fa-solid fa-plus"></i> Add Subtopic
                 </button>
               </div>
               <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
@@ -158,7 +158,7 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
                         newSubtopics[index] = e.target.value;
                         setSubtopics(newSubtopics);
                       }}
-                      placeholder={`Nhập mục nhỏ thứ ${index + 1}...`}
+                      placeholder={`Enter subtopic ${index + 1}...`}
                       className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
                     />
                     {subtopics.length > 1 && (
@@ -169,7 +169,7 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
                           setSubtopics(newSubtopics);
                         }}
                         className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors"
-                        title="Xóa mục này"
+                        title="Delete this item"
                       >
                         <i className="fa-solid fa-trash-can"></i>
                       </button>
@@ -181,7 +181,7 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
             
             <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-xl flex gap-3 text-indigo-700 text-sm">
                 <i className="fa-solid fa-circle-info mt-0.5"></i>
-                <p>Kỹ năng mới sẽ được tạo với 0% tiến độ và các mục nhỏ bạn vừa nhập để bạn bắt đầu.</p>
+                <p>The new skill will start at 0% progress with the subtopics you entered.</p>
             </div>
           </div>
 
@@ -190,14 +190,14 @@ export const AddSkillModal: React.FC<AddSkillModalProps> = ({ isOpen, onClose, o
               onClick={onClose}
               className="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors"
             >
-              Hủy
+              Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={!title.trim() || !categoryName.trim()}
               className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-indigo-200"
             >
-              <i className="fa-solid fa-check mr-2"></i> Tạo kỹ năng
+              <i className="fa-solid fa-check mr-2"></i> Create Skill
             </button>
           </div>
         </motion.div>

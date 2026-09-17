@@ -40,6 +40,28 @@ router.get('/', (req: Request, res: Response) => {
   }
 });
 
+// PUT /api/roadmap - Replace the current roadmap with the one selected in onboarding
+router.put('/', (req: Request, res: Response) => {
+  try {
+    const { roadmap } = req.body as { roadmap?: UserRoadmap };
+    if (
+      !roadmap ||
+      typeof roadmap.id !== 'string' ||
+      typeof roadmap.targetRole !== 'string' ||
+      !roadmap.targetRole.trim() ||
+      !Array.isArray(roadmap.milestones) ||
+      roadmap.milestones.length === 0
+    ) {
+      return res.status(400).json({ success: false, message: 'Invalid roadmap data' });
+    }
+
+    saveRoadmapData(roadmap);
+    res.json({ success: true, data: roadmap });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to save roadmap data' });
+  }
+});
+
 // PUT /api/roadmap/subtopic - Toggle / update completion & score of a subtopic
 router.put('/subtopic', (req: Request, res: Response) => {
   try {
@@ -228,4 +250,3 @@ router.put('/milestone', (req: Request, res: Response) => {
 });
 
 export default router;
-

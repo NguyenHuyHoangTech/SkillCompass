@@ -91,6 +91,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({
     : [{ id: 'empty', name: 'No skills', value: 0 }];
 
   const numAxes = chartSkills.length;
+  const canRenderRadar = displaySkills.length >= 3;
   const center = 185;
   const radius = 92;
   const levels = [0.2, 0.4, 0.6, 0.8, 1.0];
@@ -134,6 +135,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({
     <div className="flex flex-col w-full h-full overflow-hidden">
         {/* SVG Radar Chart Wrapper (Fixed Height) */}
         <div className="mb-6 h-64 shrink-0 relative w-full flex items-center justify-center bg-slate-50/50 rounded-2xl border border-slate-100 p-2 overflow-hidden">
+           {canRenderRadar ? (
            <svg 
              viewBox="0 0 370 370" 
              className="w-full h-full max-w-[280px]"
@@ -257,6 +259,43 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({
              })}
            {/* End of SVG */}
            </svg>
+           ) : (
+             <div className="w-full max-w-[330px] px-4 py-3 space-y-6">
+               <div className="text-center">
+                 <p className="text-xs font-bold text-slate-700">Skill comparison</p>
+                 <p className="text-[10px] text-slate-400 mt-1">Radar chart requires at least 3 skills</p>
+               </div>
+               {displaySkills.map((skill, index) => {
+                 const benchmark = currentMarket.benchmarks[index % currentMarket.benchmarks.length] || 80;
+                 return (
+                   <div key={`compact-${skill.id}`} className="space-y-2">
+                     <div className="flex items-start justify-between gap-4 text-[10px] font-bold">
+                       <span className="text-slate-600 leading-tight max-w-[65%]">{skill.name.replace('\n', ' ')}</span>
+                       <span className="whitespace-nowrap">
+                         <span className="text-blue-600">You {skill.value}%</span>
+                         <span className="text-slate-300 mx-1">/</span>
+                         <span style={{ color: currentMarket.color }}>Market {benchmark}%</span>
+                       </span>
+                     </div>
+                     <div className="relative h-3 rounded-full bg-slate-100 overflow-hidden">
+                       <div
+                         className="absolute inset-y-0 left-0 opacity-25 rounded-full"
+                         style={{ width: `${benchmark}%`, backgroundColor: currentMarket.color }}
+                       />
+                       <div
+                         className="absolute inset-y-0 left-0 rounded-full bg-blue-500 transition-all duration-500"
+                         style={{ width: `${skill.value}%` }}
+                       />
+                       <div
+                         className="absolute inset-y-0 w-0.5 bg-emerald-600/70"
+                         style={{ left: `calc(${benchmark}% - 1px)` }}
+                       />
+                     </div>
+                   </div>
+                 );
+               })}
+             </div>
+           )}
          </div>
 
          {!hideUI && (
@@ -291,6 +330,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({
         </div>
 
         {/* Data List */}
+        {canRenderRadar && (
         <div className="space-y-3 mb-6 w-full pr-1 overflow-y-auto flex-1 hide-scrollbar">
             {displaySkills.map((sk, idx) => {
                 const benchVal = currentMarket.benchmarks[idx % currentMarket.benchmarks.length] || 80;
@@ -307,6 +347,7 @@ export const SpiderChart: React.FC<SpiderChartProps> = ({
                 );
             })}
         </div>
+        )}
 
         {/* Market Match Overview */}
         <div className="bg-blue-50/50 rounded-xl p-4 flex items-center justify-between border border-blue-100 w-full mt-auto shrink-0">

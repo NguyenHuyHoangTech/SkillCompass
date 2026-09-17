@@ -109,8 +109,8 @@ export const AIRoadmapGeneratorModal: React.FC<AIRoadmapGeneratorModalProps> = (
               <Map size={20} />
             </div>
             <div>
-              <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>Gợi ý Lộ trình AI</h3>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Trò chuyện với cố vấn AI để điều chỉnh định hướng tương lai</p>
+              <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>AI Roadmap Suggestions</h3>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Chat with the AI advisor to adjust your future direction</p>
             </div>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}>
@@ -168,7 +168,7 @@ export const AIRoadmapGeneratorModal: React.FC<AIRoadmapGeneratorModalProps> = (
                   type="text" 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ví dụ: Đổi hướng sang DevOps..."
+                  placeholder="Example: Switch to DevOps..."
                   style={{ flex: 1, padding: '12px 16px', borderRadius: '24px', border: '1px solid var(--border-color)', outline: 'none' }}
                   disabled={loading}
                 />
@@ -192,7 +192,7 @@ export const AIRoadmapGeneratorModal: React.FC<AIRoadmapGeneratorModalProps> = (
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'white' }}>
             <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-color)', background: '#f8fafc' }}>
               <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle size={18} color="var(--accent-primary)" /> Danh sách chặng mới ({proposedMilestones.length})
+                <CheckCircle size={18} color="var(--accent-primary)" /> New Milestone List ({proposedMilestones.length})
               </h4>
             </div>
             <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -204,7 +204,7 @@ export const AIRoadmapGeneratorModal: React.FC<AIRoadmapGeneratorModalProps> = (
                     </div>
                     <div>
                       <h5 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-primary)' }}>{ms.title}</h5>
-                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{ms.categoriesCount} Hạng mục kỹ năng</p>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{ms.categoriesCount} skill categories</p>
                     </div>
                   </div>
                   <p style={{ margin: '8px 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
@@ -215,7 +215,7 @@ export const AIRoadmapGeneratorModal: React.FC<AIRoadmapGeneratorModalProps> = (
               {proposedMilestones.length === 0 && !loading && (
                 <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-tertiary)' }}>
                   <Sparkles size={32} style={{ opacity: 0.2, marginBottom: '12px' }} />
-                  <p>AI đang phân tích và chuẩn bị đề xuất...</p>
+                  <p>AI is analyzing and preparing suggestions...</p>
                 </div>
               )}
             </div>
@@ -229,7 +229,7 @@ export const AIRoadmapGeneratorModal: React.FC<AIRoadmapGeneratorModalProps> = (
                   onChange={(e) => setReplaceFuture(e.target.checked)}
                   style={{ width: '16px', height: '16px', accentColor: 'var(--accent-primary)' }}
                 />
-                Thay thế các lộ trình tương lai (sau chặng hiện tại)
+                Replace future roadmap stages (after the current stage)
               </label>
               
               <div style={{ display: 'flex', gap: '12px' }}>
@@ -237,14 +237,14 @@ export const AIRoadmapGeneratorModal: React.FC<AIRoadmapGeneratorModalProps> = (
                   onClick={onClose}
                   style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'white', color: 'var(--text-secondary)', fontWeight: 600, cursor: 'pointer' }}
                 >
-                  Hủy
+                  Cancel
                 </button>
                 <button 
                   onClick={() => onConfirm(proposedMilestones, replaceFuture)}
                   disabled={proposedMilestones.length === 0 || loading}
                   style={{ flex: 2, padding: '12px', borderRadius: '8px', border: 'none', background: 'var(--accent-primary)', color: 'white', fontWeight: 600, cursor: 'pointer', opacity: (proposedMilestones.length === 0 || loading) ? 0.5 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
-                  <CheckCircle size={18} /> Xác nhận & Cập nhật lộ trình
+                  <CheckCircle size={18} /> Confirm & Update Roadmap
                 </button>
               </div>
             </div>

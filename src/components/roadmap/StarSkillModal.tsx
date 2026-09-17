@@ -167,7 +167,7 @@ export const StarSkillModal: React.FC<StarSkillModalProps> = ({
                 onClick={() => onLearnSkill(skill)}
                 className="w-full sm:flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-colors shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2"
             >
-                <i className="fa-solid fa-graduation-cap"></i> Tìm Khóa Học AI
+                <i className="fa-solid fa-graduation-cap"></i> Find AI Courses
             </button>
           )}
           <button className="btn-secondary w-full sm:w-auto" onClick={onClose}>

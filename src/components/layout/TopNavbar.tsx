@@ -31,7 +31,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
   const roadmapSubTabs = [
     { id: 'view-checklist', label: 'Skill Checklist', icon: CheckSquare },
     { id: 'view-radar', label: 'Radar Chart', icon: PieChart },
-    { id: 'view-optimizer', label: 'Gợi ý Lộ trình AI', icon: Sparkles },
+    { id: 'view-optimizer', label: 'AI Roadmap Suggestions', icon: Sparkles },
   ];
 
   // Close dropdown when clicking outside
@@ -96,10 +96,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             <button 
               onClick={onOpenGlobalAnalytics}
               className="hidden md:flex items-center gap-2 px-3 py-1.5 mr-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-all shadow-sm border border-indigo-200 group"
-              title="Xem Thống kê Tổng thể"
+              title="Xem Overall Analytics"
             >
               <PieChart size={14} className="group-hover:scale-110 transition-transform" />
-              <span className="text-xs font-semibold tracking-wide">Thống kê Tổng thể</span>
+              <span className="text-xs font-semibold tracking-wide">Overall Analytics</span>
             </button>
           )}
 
@@ -107,10 +107,10 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
             <button 
               onClick={onOpenGalaxy}
               className="hidden md:flex items-center gap-2 px-3 py-1.5 mr-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition-all shadow-sm border border-slate-700 group"
-              title="Khám phá vũ trụ kỹ năng"
+              title="Explore the skill universe"
             >
               <Sparkles size={14} className="text-amber-300 group-hover:scale-110 transition-transform" />
-              <span className="text-xs font-semibold tracking-wide">Vũ trụ Kỹ năng</span>
+              <span className="text-xs font-semibold tracking-wide">Skill Universe</span>
             </button>
           )}
 

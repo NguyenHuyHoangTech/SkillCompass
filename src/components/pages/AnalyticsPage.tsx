@@ -38,14 +38,14 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ milestone }) => {
                 <div className="eval-col-title" style={{ color: 'var(--text-primary)' }}><Award size={16} /> {t('completedSkills')}</div>
                 <ul style={{ color: 'var(--text-secondary)' }}>
                   <li>UI/UX Mindset & Don't Make Me Think (Score: 90%)</li>
-                  <li>Chuyên Sâu Flexbox & CSS Grid (Score: 90%)</li>
+                  <li>Advanced Flexbox & CSS Grid (Score: 90%)</li>
                 </ul>
               </div>
               <div className="eval-col actions">
                 <div className="eval-col-title" style={{ color: 'var(--text-primary)' }}><CheckCircle2 size={16} /> {t('totalExercises')}</div>
                 <ul style={{ color: 'var(--text-secondary)' }}>
-                  <li>Tối ưu hóa hình ảnh WebP & CDN</li>
-                  <li>Chuẩn hóa Accessibility (A11y / WCAG)</li>
+                  <li>Optimize WebP Images & CDN</li>
+                  <li>Standardize Accessibility (A11y / WCAG)</li>
                 </ul>
               </div>
             </div>

@@ -47,6 +47,18 @@ function saveLocalMockRoadmap(data: UserRoadmap): void {
 
 export class ApiService {
   public static async getRoadmap(): Promise<UserRoadmap> {
+    const pendingRoadmap = localStorage.getItem('skill_compass_roadmap');
+    if (pendingRoadmap) {
+      try {
+        const parsed = JSON.parse(pendingRoadmap) as UserRoadmap;
+        if (parsed?.targetRole && Array.isArray(parsed.milestones) && parsed.milestones.length > 0) {
+          return await ApiService.replaceRoadmap(parsed);
+        }
+      } catch {
+        console.warn('Pending onboarding roadmap is invalid; loading the saved backend roadmap instead');
+      }
+    }
+
     try {
       const res = await fetch(`${API_BASE_URL}/roadmap`);
       if (!res.ok) throw new Error('API server unavailable');
@@ -56,6 +68,27 @@ export class ApiService {
     } catch (err) {
       console.warn('Backend not available, using local mock data');
       return getLocalMockRoadmap();
+    }
+  }
+
+  public static async replaceRoadmap(roadmap: UserRoadmap): Promise<UserRoadmap> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/roadmap`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ roadmap }),
+      });
+      if (!res.ok) throw new Error('Failed to save generated roadmap');
+
+      const result = await res.json();
+      localStorage.setItem('skill_compass_roadmap_v3', JSON.stringify(result.data));
+      localStorage.removeItem('skill_compass_roadmap');
+      return result.data;
+    } catch (error) {
+      console.warn('Backend not available; keeping generated roadmap locally', error);
+      saveLocalMockRoadmap(roadmap);
+      localStorage.setItem('skill_compass_roadmap', JSON.stringify(roadmap));
+      return roadmap;
     }
   }
 

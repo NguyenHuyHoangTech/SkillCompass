@@ -24,9 +24,9 @@ data.milestones.forEach((ms) => {
     c.skills.forEach(skill => {
       // Add realistic sounding requirements based on the skill name
       skill.requirements = [
-        `Hoàn thành 100% bài tập thực hành về ${skill.name}`,
-        `Vượt qua bài test đánh giá năng lực nội bộ (điểm > 80)`,
-        `Áp dụng thành công vào ít nhất 1 dự án thực tế`
+        `Complete 100% of the practical exercises for ${skill.name}`,
+        `Pass the internal competency assessment (score > 80)`,
+        `Successfully apply the skill in at least one real-world project`
       ];
     });
   });

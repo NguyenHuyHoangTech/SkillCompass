@@ -74,7 +74,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             }}
           >
             <Wand2 size={20} className="menu-btn-icon" style={{ color: 'var(--primary)' }} />
-            <span className="menu-btn-label">Tạo Lộ Trình AI</span>
+            <span className="menu-btn-label">Generate AI Roadmap</span>
             <span className="menu-btn-badge" style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)' }}>New</span>
           </button>
 

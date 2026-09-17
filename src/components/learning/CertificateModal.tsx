@@ -75,16 +75,16 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                 </div>
                 
                 <h1 className="text-3xl md:text-5xl font-serif text-slate-800 tracking-tight mb-2 uppercase" style={{ letterSpacing: '0.1em' }}>
-                    Giấy Chứng Nhận
+                    Certificate of Completion
                 </h1>
                 <p className="text-slate-500 font-serif italic mb-10 tracking-widest uppercase text-sm">Certificate of Completion</p>
                 
-                <p className="text-slate-600 mb-2 font-medium">Được trao tặng cho</p>
+                <p className="text-slate-600 mb-2 font-medium">Awarded to</p>
                 <h2 className="text-4xl md:text-5xl font-serif text-blue-900 mb-8 pb-4 border-b-2 border-amber-200 inline-block px-12 capitalize">
-                    {userName || 'Học Viên Xuất Sắc'}
+                    {userName || 'Outstanding Learner'}
                 </h2>
                 
-                <p className="text-slate-600 mb-2 font-medium">Đã hoàn thành xuất sắc khóa học kỹ năng</p>
+                <p className="text-slate-600 mb-2 font-medium">Has successfully completed the skill course</p>
                 <h3 className="text-2xl font-bold text-slate-800 mb-12">
                     {skillName}
                 </h3>
@@ -92,7 +92,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                 <div className="flex justify-between items-end mt-16 px-8 md:px-20 border-t border-slate-200 pt-8">
                     <div className="text-center">
                         <p className="font-bold text-slate-800 text-lg border-b border-slate-400 pb-1 px-4 mb-2">Skill Compass</p>
-                        <p className="text-sm text-slate-500 uppercase tracking-widest">Nền tảng</p>
+                        <p className="text-sm text-slate-500 uppercase tracking-widest">Platform</p>
                     </div>
                     <div className="w-24 h-24 rounded-full bg-amber-500/20 border-4 border-amber-500 flex items-center justify-center rotate-12 relative -top-8 shadow-lg shadow-amber-500/20">
                         <div className="w-20 h-20 rounded-full border border-dashed border-amber-600 flex items-center justify-center text-amber-700 font-bold text-xs text-center uppercase tracking-tighter">
@@ -103,7 +103,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                         <p className="font-bold text-slate-800 text-lg border-b border-slate-400 pb-1 px-4 mb-2">
                             {new Date().toLocaleDateString('vi-VN')}
                         </p>
-                        <p className="text-sm text-slate-500 uppercase tracking-widest">Ngày cấp</p>
+                        <p className="text-sm text-slate-500 uppercase tracking-widest">Issue Date</p>
                     </div>
                 </div>
             </div>
@@ -112,11 +112,11 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
         <div className="bg-slate-50 p-6 flex justify-center gap-4 border-t border-slate-200">
             <button className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition-colors shadow-sm">
                 <Download size={18} />
-                Tải về PDF
+                Download PDF
             </button>
             <button className="flex items-center gap-2 px-6 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-medium transition-colors shadow-sm">
                 <Share2 size={18} />
-                Chia sẻ lên LinkedIn
+                Share on LinkedIn
             </button>
         </div>
       </div>

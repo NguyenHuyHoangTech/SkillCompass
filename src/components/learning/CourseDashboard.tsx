@@ -73,7 +73,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
       setMessages(prev => [...prev, { sender: 'ai', text: chat_response }]);
     } catch (e) {
       console.error(e);
-      setMessages(prev => [...prev, { sender: 'ai', text: "Xin lỗi, đã có lỗi xảy ra." }]);
+      setMessages(prev => [...prev, { sender: 'ai', text: "Sorry, an error occurred." }]);
     } finally {
       setLoading(false);
     }
@@ -110,7 +110,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
                     onClick={onBack}
                     className="hover:bg-slate-800 p-2 rounded-lg text-slate-400 hover:text-white transition-colors"
                 >
-                    ← Đóng khóa học
+                    ← Close Course
                 </button>
                 <div className="h-6 w-px bg-slate-800"></div>
                 <h1 className="font-bold text-white text-lg flex items-center gap-2">
@@ -119,7 +119,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
                 </h1>
             </div>
             <div className="text-xs bg-slate-800 px-3 py-1.5 rounded-full text-slate-400 font-medium border border-slate-700">
-                Kỹ năng: <span className="text-amber-400">{skill.name}</span>
+                Skill: <span className="text-amber-400">{skill.name}</span>
             </div>
         </div>
 
@@ -131,7 +131,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
             <button className="relative z-10 w-20 h-20 bg-blue-600/90 hover:bg-blue-500 text-white rounded-full flex items-center justify-center transition-transform hover:scale-110 shadow-lg shadow-blue-900/50">
                 <PlayCircle size={40} className="ml-1" />
             </button>
-            <p className="relative z-10 mt-4 text-sm text-slate-300 font-medium">Bấm để bắt đầu bài học đầu tiên</p>
+            <p className="relative z-10 mt-4 text-sm text-slate-300 font-medium">Click to start the first lesson</p>
             
             <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center z-10">
                 <h2 className="text-white font-bold text-xl drop-shadow-md">1. Introduction to {skill.name}</h2>
@@ -154,7 +154,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
             </div>
             
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <BookOpen size={20} className="text-blue-400" /> Tổng quan khóa học
+                <BookOpen size={20} className="text-blue-400" /> Course Overview
             </h3>
             <p className="text-slate-400 leading-relaxed max-w-3xl">
                 {course.description}
@@ -172,16 +172,16 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
             <>
                 <div className="p-5 border-b border-slate-800 bg-slate-900 flex flex-col gap-1 shrink-0">
                     <h3 className="font-bold text-white flex items-center gap-2">
-                        <Bot className="text-emerald-400" /> AI Checklist & Kế hoạch
+                        <Bot className="text-emerald-400" /> AI Checklist & Plan
                     </h3>
-                    <p className="text-[12px] text-slate-400">Điều chỉnh lộ trình khóa học qua chat, sau đó Xác nhận để vào học.</p>
+                    <p className="text-[12px] text-slate-400">Adjust the course plan in chat, then confirm to start learning.</p>
                 </div>
 
         {/* Active Checklist View */}
         <div className="shrink-0 p-5 border-b border-slate-800 bg-slate-900/50">
             <div className="flex justify-between items-center mb-4">
-                <h4 className="text-sm font-bold text-slate-300">Nhiệm vụ đề xuất:</h4>
-                <span className="text-xs text-blue-400 font-medium">{checklist.length} mục</span>
+                <h4 className="text-sm font-bold text-slate-300">Suggested Tasks:</h4>
+                <span className="text-xs text-blue-400 font-medium">{checklist.length} items</span>
             </div>
             
             {loading && checklist.length === 0 ? (
@@ -233,7 +233,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
                     value={chatInput}
                     onChange={e => setChatInput(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="Vd: Chia nhỏ checklist thành 7 ngày..."
+                    placeholder="Example: Split the checklist into 7 days..."
                     className="flex-1 bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-slate-500"
                     disabled={loading}
                 />
@@ -254,7 +254,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
                 className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50"
             >
                 <CheckCircle2 size={18} />
-                Xác nhận Lộ trình & Vào học
+                Confirm Plan & Start Learning
             </button>
         </div>
             </>
@@ -263,12 +263,12 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
                 <div className="p-5 border-b border-slate-800 bg-slate-900 flex flex-col gap-1 shrink-0">
                     <h3 className="font-bold text-white flex items-center gap-2">
-                        <BookOpen className="text-blue-400" /> Danh sách bài giảng
+                        <BookOpen className="text-blue-400" /> Lesson List
                     </h3>
                     <div className="w-full bg-slate-800 rounded-full h-1.5 mt-3 overflow-hidden">
                         <div className="bg-blue-500 h-1.5 rounded-full transition-all duration-500" style={{width: `${syllabus.length > 0 ? (completedSyllabusItems.length / syllabus.length) * 100 : 0}%`}}></div>
                     </div>
-                    <p className="text-[12px] text-slate-400 mt-2">{completedSyllabusItems.length} / {syllabus.length} bài đã hoàn thành</p>
+                    <p className="text-[12px] text-slate-400 mt-2">{completedSyllabusItems.length} / {syllabus.length} lessons completed</p>
                 </div>
                 <div className="flex-1 overflow-y-auto custom-scrollbar p-4 flex flex-col gap-3">
                     {syllabus.map((item, idx) => {
@@ -289,7 +289,7 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
                         );
                     })}
                     {syllabus.length === 0 && (
-                        <div className="text-sm text-slate-500 p-4 text-center">Chưa có dữ liệu bài giảng.</div>
+                        <div className="text-sm text-slate-500 p-4 text-center">No lesson data available.</div>
                     )}
                 </div>
                 <div className="p-4 border-t border-slate-800 shrink-0 bg-slate-950">
@@ -299,10 +299,10 @@ export const CourseDashboard: React.FC<CourseDashboardProps> = ({ skill, course,
                         className="w-full py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <GraduationCap size={20} />
-                        Hoàn thành Khóa học
+                        Complete Course
                     </button>
                     {completedSyllabusItems.length < syllabus.length && syllabus.length > 0 && (
-                        <p className="text-xs text-center text-slate-500 mt-2">Bạn cần xem hết video bài giảng để nhận chứng chỉ.</p>
+                        <p className="text-xs text-center text-slate-500 mt-2">You need to watch all lesson videos to receive the certificate.</p>
                     )}
                 </div>
             </div>

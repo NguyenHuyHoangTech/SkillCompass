@@ -42,9 +42,9 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
 
       // Initial AI Message
       if (gatheredTasks.length > 0 && messages.length === 0) {
-          setMessages([{ sender: 'ai', text: `Chào bạn, bạn đang có ${gatheredTasks.length} nhiệm vụ cần hoàn thành từ các khóa học đang học. Bạn muốn tôi gợi ý kế hoạch học tập cho hôm nay thế nào?` }]);
+          setMessages([{ sender: 'ai', text: `Hello, you have ${gatheredTasks.length} tasks to complete from your active courses. How would you like me to plan today's study session?` }]);
       } else if (gatheredTasks.length === 0 && messages.length === 0) {
-          setMessages([{ sender: 'ai', text: `Bạn hiện chưa có khóa học nào đang học dở hoặc đã hoàn thành hết các nhiệm vụ. Hãy chọn một khóa học mới nhé!` }]);
+          setMessages([{ sender: 'ai', text: `You have no active courses with unfinished tasks. Choose a new course to continue learning.` }]);
       }
     }
   }, [isOpen, milestones]);
@@ -67,13 +67,13 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
       await new Promise(r => setTimeout(r, 1500));
       setMessages(prev => [...prev, { 
           sender: 'ai', 
-          text: "Tôi đã sắp xếp lại các nhiệm vụ theo yêu cầu của bạn. Hãy tập trung vào những mục trên cùng trước nhé!" 
+          text: "I reordered the tasks as requested. Focus on the items at the top first." 
       }]);
       // Shuffle tasks as a mock "reorganization"
       setTasks(prev => [...prev].sort(() => Math.random() - 0.5));
     } catch (e) {
       console.error(e);
-      setMessages(prev => [...prev, { sender: 'ai', text: "Xin lỗi, đã có lỗi xảy ra." }]);
+      setMessages(prev => [...prev, { sender: 'ai', text: "Sorry, an error occurred." }]);
     } finally {
       setLoading(false);
     }
@@ -99,7 +99,7 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
                         <Sparkles className="text-amber-400" /> AI Organizer
                     </h2>
                     <p className="text-sm text-slate-400 mt-2">
-                        Trợ lý AI giúp bạn sắp xếp kế hoạch học tập mỗi ngày một cách hiệu quả nhất.
+                        The AI assistant helps you organize an effective daily learning plan.
                     </p>
                </div>
                
@@ -134,7 +134,7 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
                             value={chatInput}
                             onChange={e => setChatInput(e.target.value)}
                             onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
-                            placeholder="Vd: Chọn cho tôi 3 task quan trọng nhất hôm nay"
+                            placeholder="Example: Choose the three most important tasks for me today"
                             className="flex-1 bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-slate-500"
                             disabled={loading}
                         />
@@ -154,9 +154,9 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
                <div className="p-6 md:p-8 border-b border-slate-200 bg-white">
                    <h1 className="text-2xl md:text-3xl font-bold text-slate-800 flex items-center gap-3">
                        <CalendarDays className="text-blue-600 w-8 h-8" />
-                       Checklist Hàng Ngày
+                       Daily Checklist
                    </h1>
-                   <p className="text-slate-500 mt-2">Tổng hợp các bài học bạn đang theo đuổi.</p>
+                   <p className="text-slate-500 mt-2">A summary of the lessons you are currently following.</p>
                </div>
                
                <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
@@ -165,8 +165,8 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
                            <div className="w-20 h-20 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
                                <CheckCircle2 className="text-slate-400 w-10 h-10" />
                            </div>
-                           <h3 className="text-lg font-bold text-slate-700">Tất cả đã hoàn thành!</h3>
-                           <p className="text-slate-500 mt-2">Bạn không có bài học nào đang dở dang.</p>
+                           <h3 className="text-lg font-bold text-slate-700">Everything is complete!</h3>
+                           <p className="text-slate-500 mt-2">You have no unfinished lessons.</p>
                        </div>
                    ) : (
                        <div className="space-y-4">
@@ -184,7 +184,7 @@ export const DailyChecklistModal: React.FC<DailyChecklistModalProps> = ({
                                    </button>
                                    <div>
                                        <h4 className="font-bold text-slate-800 text-lg">{task.subTopic.title}</h4>
-                                       <p className="text-sm text-blue-600 font-medium mt-1">Từ khóa học: {task.skill.name}</p>
+                                       <p className="text-sm text-blue-600 font-medium mt-1">From course: {task.skill.name}</p>
                                    </div>
                                </div>
                            ))}

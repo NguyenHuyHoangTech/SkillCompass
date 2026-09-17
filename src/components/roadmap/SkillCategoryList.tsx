@@ -26,7 +26,7 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
         <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
-            <i className="fa-solid fa-layer-group text-blue-500"></i> Các Kỹ năng Cần thiết
+            <i className="fa-solid fa-layer-group text-blue-500"></i> Required Skills
         </h3>
         
         <div className="flex items-center gap-2">
@@ -34,9 +34,9 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
             <button 
               onClick={onAIReplace}
               className="px-3 py-1.5 bg-purple-100 hover:bg-purple-200 text-purple-700 text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 border border-purple-200 shadow-sm"
-              title="Tạo mới hoặc thay thế các kỹ năng 0% bằng AI"
+              title="Create or replace 0% skills with AI"
             >
-              <i className="fa-solid fa-wand-magic-sparkles"></i> Tạo bằng AI
+              <i className="fa-solid fa-wand-magic-sparkles"></i> Generate with AI
             </button>
           )}
           {onManualAdd && (
@@ -44,7 +44,7 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
               onClick={onManualAdd}
               className="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 border border-slate-200 shadow-sm"
             >
-              <i className="fa-solid fa-plus"></i> Tạo thủ công
+              <i className="fa-solid fa-plus"></i> Create Manually
             </button>
           )}
         </div>
@@ -70,7 +70,7 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
                     </span>
                     <div className="flex flex-col items-end gap-1.5 mt-1">
                       <span className={`text-[11px] font-semibold ${isSkillCompleted ? 'text-emerald-500' : (isSkillInProgress ? 'text-blue-600' : 'text-slate-400')}`}>
-                          {isSkillCompleted ? 'Chứng chỉ 100%' : (skill.levelPercentage > 0 ? `Hoàn thành ${skill.levelPercentage}%` : '0%')}
+                          {isSkillCompleted ? 'Certificate 100%' : (skill.levelPercentage > 0 ? `Completed ${skill.levelPercentage}%` : '0%')}
                       </span>
                       <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                         <div 
@@ -105,14 +105,14 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
                               </span>
                               {st.isCompleted && (
                                 <p className="text-[11px] text-emerald-600 mt-0.5 font-medium">
-                                  <i className="fa-solid fa-check-double mr-1"></i>Đã thực hành
+                                  <i className="fa-solid fa-check-double mr-1"></i>Practiced
                                 </p>
                               )}
                           </div>
                       </div>
                     ))}
                     {skill.subTopics.length === 0 && (
-                      <span className="text-sm text-slate-400 italic">Chưa có nhiệm vụ cụ thể</span>
+                      <span className="text-sm text-slate-400 italic">No specific tasks yet</span>
                     )}
                 </div>
 
@@ -129,7 +129,7 @@ export const SkillCategoryList: React.FC<SkillCategoryListProps> = ({
                     }`}
                   >
                     <i className={`fa-solid group-hover:scale-110 transition-transform ${isSkillCompleted ? 'fa-certificate' : (isSkillInProgress ? 'fa-play' : 'fa-graduation-cap')}`}></i> 
-                    {isSkillCompleted ? 'Đã nhận Chứng Chỉ' : (isSkillInProgress ? 'Tiếp tục Khóa học' : 'Tìm Khóa Học AI')}
+                    {isSkillCompleted ? 'Certificate Earned' : (isSkillInProgress ? 'Continue Course' : 'Find AI Courses')}
                   </button>
                 )}
             </div>

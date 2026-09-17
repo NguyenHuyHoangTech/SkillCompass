@@ -4,7 +4,7 @@ import { updateAIConfig, getAvailableModels } from '../../services/ai';
 export const AiConfigMenu: React.FC = () => {
     const [showApiConfig, setShowApiConfig] = useState(false);
     const [tempApiKey, setTempApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
-    const [tempModel, setTempModel] = useState(localStorage.getItem('gemini_model_name') || 'gemini-flash-latest');
+    const [tempModel, setTempModel] = useState(localStorage.getItem('gemini_model_name') || 'gemini-2.5-flash');
     
     const [isKeyValid, setIsKeyValid] = useState(!!localStorage.getItem('gemini_api_key'));
     const [keyTestResult, setKeyTestResult] = useState<{success: boolean, message: string} | null>(null);
@@ -27,7 +27,7 @@ export const AiConfigMenu: React.FC = () => {
         setIsTestingKey(true);
         setKeyTestResult(null);
         const res = await getAvailableModels(tempApiKey);
-        setKeyTestResult({ success: res.success, message: res.success ? `Kết nối thành công! Đã tải ${res.models.length} models.` : res.message });
+        setKeyTestResult({ success: res.success, message: res.success ? `Connection successful! Loaded ${res.models.length} models.` : res.message });
         setIsKeyValid(res.success);
         if (res.success && res.models.length > 0) {
             setAvailableModels(res.models);
@@ -49,7 +49,7 @@ export const AiConfigMenu: React.FC = () => {
                 onClick={() => setShowApiConfig(!showApiConfig)}
                 className="top-header-ai-featured-btn"
                 style={{ background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border-glass)' }}
-                title="Cấu hình AI"
+                title="AI Settings"
             >
                 <i className="fa-solid fa-gear"></i>
                 <span>AI Config</span>
@@ -60,7 +60,7 @@ export const AiConfigMenu: React.FC = () => {
                     className="absolute right-0 mt-2 w-80 rounded-xl shadow-xl p-4 z-50 glass-panel"
                     style={{ background: 'var(--bg-card)', border: '1px solid var(--border-glass)', top: '100%' }}
                 >
-                    <h3 className="text-sm font-bold mb-3" style={{ color: 'var(--text-main)' }}>Cấu hình Gemini API</h3>
+                    <h3 className="text-sm font-bold mb-3" style={{ color: 'var(--text-main)' }}>Gemini API Settings</h3>
                     
                     <div className="space-y-4" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                         <div>
@@ -94,7 +94,7 @@ export const AiConfigMenu: React.FC = () => {
                         
                         {isKeyValid && (
                             <div style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '12px' }}>
-                                <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Chọn Model</label>
+                                <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Select Model</label>
                                 <select 
                                     value={tempModel}
                                     onChange={(e) => {

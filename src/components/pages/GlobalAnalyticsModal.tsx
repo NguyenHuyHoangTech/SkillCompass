@@ -51,7 +51,7 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
     if (avgCategoryList.length > 0) {
       pseudoCategories.push({
         id: 'global-cat',
-        name: 'Toàn cầu',
+        name: 'Global',
         skills: avgCategoryList.map((c, idx) => ({
           id: `global-skill-${idx}`,
           name: c.name,
@@ -94,8 +94,8 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
               <Activity className="text-white" size={24} />
             </div>
             <div>
-              <h2 className="text-2xl font-bold">Thống kê Tổng thể (Global Analytics)</h2>
-              <p className="text-blue-100 font-medium">Bức tranh toàn cảnh về hành trình phát triển kỹ năng của bạn</p>
+              <h2 className="text-2xl font-bold">Overall Analytics (Global Analytics)</h2>
+              <p className="text-blue-100 font-medium">A complete view of your skill development journey</p>
             </div>
           </div>
           <button 
@@ -113,20 +113,20 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
           <div className="w-full shrink-0 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
             <div className="flex items-center gap-2 mb-6 z-10 relative">
                 <Target className="text-blue-500" size={20} />
-                <h3 className="font-bold text-lg text-slate-800">Biểu đồ Phân tích Năng lực (Theo Mảng)</h3>
+                <h3 className="font-bold text-lg text-slate-800">Skill Analysis Chart (by Category)</h3>
             </div>
             
             <div className="w-full min-h-[400px] flex items-center justify-center relative z-10 py-8 overflow-hidden" id="global-spider-chart">
                 
                 {/* Zoom Controls */}
                 <div className="absolute top-2 right-2 flex flex-col gap-2 z-50 bg-white/80 p-2 rounded-xl border border-slate-200 shadow-sm backdrop-blur-sm">
-                    <button onClick={handleZoomIn} className="p-2 hover:bg-slate-100 rounded-lg text-slate-700 transition-colors" title="Phóng to">
+                    <button onClick={handleZoomIn} className="p-2 hover:bg-slate-100 rounded-lg text-slate-700 transition-colors" title="Zoom In">
                         <ZoomIn size={18} />
                     </button>
-                    <button onClick={handleResetZoom} className="p-2 hover:bg-slate-100 rounded-lg text-slate-700 transition-colors" title="Đặt lại">
+                    <button onClick={handleResetZoom} className="p-2 hover:bg-slate-100 rounded-lg text-slate-700 transition-colors" title="Reset">
                         <RotateCcw size={18} />
                     </button>
-                    <button onClick={handleZoomOut} className="p-2 hover:bg-slate-100 rounded-lg text-slate-700 transition-colors" title="Thu nhỏ">
+                    <button onClick={handleZoomOut} className="p-2 hover:bg-slate-100 rounded-lg text-slate-700 transition-colors" title="Zoom Out">
                         <ZoomOut size={18} />
                     </button>
                 </div>
@@ -135,13 +135,13 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
                     <div className="w-full max-w-2xl mx-auto flex justify-center">
                         <SpiderChart 
                             categories={pseudoCategories} 
-                            milestoneTitle="Tất cả chặng đường"
+                            milestoneTitle="All Milestones"
                             zoomLevel={zoomLevel}
                             hideUI={true}
                         />
                     </div>
                 ) : (
-                    <div className="text-slate-400">Chưa có dữ liệu kỹ năng để vẽ biểu đồ.</div>
+                    <div className="text-slate-400">No skill data available for the chart.</div>
                 )}
             </div>
 
@@ -166,8 +166,8 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
                     <span className="text-xl font-bold text-slate-800">{overallProgress}%</span>
                 </div>
                 <div className="flex-1">
-                    <h3 className="font-bold text-lg text-slate-800 mb-1">Tiến độ Toàn lộ trình</h3>
-                    <p className="text-slate-500 text-sm mb-3">Bạn đã hoàn thành <strong>{completedSkills}</strong> trên tổng số <strong>{totalSkills}</strong> kỹ năng trong toàn bộ kế hoạch.</p>
+                    <h3 className="font-bold text-lg text-slate-800 mb-1">Overall Roadmap Progress</h3>
+                    <p className="text-slate-500 text-sm mb-3">You have completed <strong>{completedSkills}</strong> out of <strong>{totalSkills}</strong> skills across the full plan.</p>
                     <div className="flex gap-2">
                         <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-lg border border-emerald-100">
                             {completedSkills} Mastered
@@ -185,7 +185,7 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                     <div className="flex items-center gap-2 mb-4 text-emerald-600">
                         <Award size={20} />
-                        <h4 className="font-bold">Mảng mạnh nhất</h4>
+                        <h4 className="font-bold">Strongest Area</h4>
                     </div>
                     <div className="space-y-4">
                         {topSkills.map((cat, idx) => (
@@ -199,7 +199,7 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
                                 </div>
                             </div>
                         ))}
-                        {topSkills.length === 0 && <p className="text-sm text-slate-400">Chưa có dữ liệu</p>}
+                        {topSkills.length === 0 && <p className="text-sm text-slate-400">No Data</p>}
                     </div>
                 </div>
 
@@ -207,7 +207,7 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                     <div className="flex items-center gap-2 mb-4 text-amber-500">
                         <TrendingUp size={20} />
-                        <h4 className="font-bold">Cần tập trung thêm</h4>
+                        <h4 className="font-bold">Needs More Focus</h4>
                     </div>
                     <div className="space-y-4">
                         {bottomSkills.map((cat, idx) => (
@@ -221,7 +221,7 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
                                 </div>
                             </div>
                         ))}
-                        {bottomSkills.length === 0 && <p className="text-sm text-slate-400">Chưa có dữ liệu</p>}
+                        {bottomSkills.length === 0 && <p className="text-sm text-slate-400">No Data</p>}
                     </div>
                 </div>
             </div>
@@ -231,7 +231,7 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                 <div className="flex items-center gap-2 mb-4 text-blue-600">
                     <Layers size={20} />
-                    <h4 className="font-bold">Tổng quan tất cả các mảng kỹ năng</h4>
+                    <h4 className="font-bold">Overview of All Skill Areas</h4>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4">
                     {avgCategoryList.map((cat, idx) => (
@@ -245,7 +245,7 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
                             </div>
                         </div>
                     ))}
-                    {avgCategoryList.length === 0 && <p className="text-sm text-slate-400 col-span-full">Chưa có dữ liệu</p>}
+                    {avgCategoryList.length === 0 && <p className="text-sm text-slate-400 col-span-full">No Data</p>}
                 </div>
             </div>
 
@@ -253,11 +253,11 @@ export const GlobalAnalyticsModal: React.FC<GlobalAnalyticsModalProps> = ({
             <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl border border-purple-100 p-6 mt-auto">
                 <div className="flex items-center gap-2 mb-2 text-purple-700">
                     <BrainCircuit size={20} />
-                    <h4 className="font-bold">AI Nhận xét</h4>
+                    <h4 className="font-bold">AI Insights</h4>
                 </div>
                 <p className="text-sm text-purple-800 leading-relaxed">
-                    "Dựa trên biểu đồ Radar, bạn đang có thiên hướng phát triển mạnh về <strong>{topSkills[0]?.name || 'N/A'}</strong>. 
-                    Để cân bằng và trở thành một Full-stack hoàn thiện, hãy ưu tiên các khóa học liên quan đến <strong>{bottomSkills[0]?.name || 'N/A'}</strong> trong chặng tiếp theo nhé!"
+                    "Based on the radar chart, your strongest development area is <strong>{topSkills[0]?.name || 'N/A'}</strong>. 
+                    To build a balanced full-stack profile, prioritize courses related to <strong>{bottomSkills[0]?.name || 'N/A'}</strong> in the next milestone."
                 </p>
             </div>
 

@@ -15,6 +15,8 @@ import type {
     CareerGoalResponse 
 } from '../services/ai';
 import { initialMockRoadmap } from '../data/mockRoadmapData';
+import { ApiService } from '../services/apiService';
+import type { UserRoadmap } from '../types/roadmap';
 
 interface OnboardingProps {
     onFinish?: () => void;
@@ -133,9 +135,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onFinish }) => {
         setIsRefining(false);
     };
 
-    const selectGoal = (goal: CareerGoalResponse) => {
-        initialMockRoadmap.targetRole = goal.title;
-        initialMockRoadmap.milestones = goal.milestones.map((m: any, i: number) => ({
+    const selectGoal = async (goal: CareerGoalResponse) => {
+        const generatedRoadmap: UserRoadmap = {
+            ...initialMockRoadmap,
+            id: `roadmap-${Date.now()}`,
+            targetRole: goal.title,
+            milestones: goal.milestones.map((m: any, i: number) => ({
             id: m.id,
             title: m.title,
             roleName: goal.title,
@@ -163,9 +168,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onFinish }) => {
                     }))
                 }
             ]
-        })) as any;
-        initialMockRoadmap.currentMilestoneId = goal.milestones[0]?.id || "";
-        localStorage.setItem('skill_compass_roadmap', JSON.stringify(initialMockRoadmap));
+            })) as any,
+            currentMilestoneId: goal.milestones[0]?.id || "",
+            updatedAt: new Date().toISOString(),
+        };
+
+        localStorage.setItem('skill_compass_roadmap', JSON.stringify(generatedRoadmap));
+        await ApiService.replaceRoadmap(generatedRoadmap);
         if (onFinish) {
             onFinish();
         } else {

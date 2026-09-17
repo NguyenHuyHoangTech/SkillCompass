@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillPath AI - Lộ Trình Milestone</title>
+    <title>SkillPath AI - Milestone Roadmap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -37,11 +37,11 @@
         <div class="p-6 overflow-y-auto flex-1 hide-scrollbar">
             <!-- Dynamic Country Input -->
             <div class="mb-6">
-                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">Thị trường Mục tiêu</label>
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">Target Market</label>
                 <div class="bg-slate-100 rounded-lg p-1.5 border border-slate-200 shadow-inner">
                     <div class="bg-white rounded-md flex items-center px-3 py-2 border border-slate-200 shadow-sm focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
                         <i class="fa-solid fa-location-dot text-blue-500 mr-2"></i>
-                        <input type="text" id="targetCountry" placeholder="Nhập quốc gia..." value="Việt Nam" class="bg-transparent text-sm font-bold text-slate-700 outline-none w-full placeholder-slate-400">
+                        <input type="text" id="targetCountry" placeholder="Enter a country..." value="Vietnam" class="bg-transparent text-sm font-bold text-slate-700 outline-none w-full placeholder-slate-400">
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     <canvas id="skillGapChart"></canvas>
                 </div>
                 <p class="text-xs text-slate-500 text-center mt-3 leading-relaxed">
-                    Đường nét đứt thể hiện chuẩn năng lực tại <span id="lblCountry" class="font-semibold text-slate-700">Việt Nam</span>. AI sẽ tự động tạo lộ trình để lấp đầy khoảng trống (Skill Gap) này.
+                    The dashed line shows the competency benchmark in <span id="lblCountry" class="font-semibold text-slate-700">Vietnam</span>. AI will automatically create a roadmap to close this skill gap.
                 </p>
             </div>
         </div>
@@ -69,11 +69,11 @@
             <div class="flex justify-between items-end mb-6">
                 <div>
                     <h2 class="text-xl font-bold text-slate-800">Career Milestone Pathway</h2>
-                    <p class="text-sm text-slate-500 mt-1">Lộ trình dựa trên năng lực. Vượt qua từng mốc để thăng tiến.</p>
+                    <p class="text-sm text-slate-500 mt-1">A competency-based roadmap. Complete each milestone to progress.</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <button onclick="openOptimizerModal()" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold px-4 py-2 rounded-lg border border-amber-600 flex items-center gap-2 shadow-sm shadow-orange-200 transition-all hover:-translate-y-0.5">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Tối ưu Lộ trình
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Roadmap Optimization
                     </button>
                     <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-2 rounded-lg border border-indigo-200 flex items-center gap-1.5 shadow-sm">
                         <i class="fa-solid fa-graduation-cap"></i> Competency-Based
@@ -92,12 +92,12 @@
             <!-- Skills rendered here via JS -->
             <div class="flex flex-col items-center justify-center h-full text-slate-400">
                 <i class="fa-solid fa-route text-5xl mb-4 text-slate-300"></i>
-                <p>Chọn một Mốc sự nghiệp ở trên để xem chi tiết.</p>
+                <p>Select a career milestone above to view details.</p>
             </div>
         </div>
     </div>
 
-    <!-- Modal Thực hành AI (AI Practice Scenario) -->
+    <!-- AI Practice Modal -->
     <div id="aiPracticeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[90vh]">
             <div class="bg-gradient-to-r from-indigo-600 to-blue-700 p-6 text-white shrink-0">
@@ -105,79 +105,79 @@
                     <span class="bg-white/20 text-blue-50 text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">AI Scenario Assesment</span>
                     <button onclick="closeSkillPractice()" class="text-white/70 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
                 </div>
-                <h3 id="apTitle" class="text-xl font-bold">Thực hành Kỹ năng</h3>
+                <h3 id="apTitle" class="text-xl font-bold">Skill Practice</h3>
             </div>
             
             <div class="p-6 overflow-y-auto flex-1">
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5">
-                    <h4 class="font-bold text-slate-700 mb-2"><i class="fa-solid fa-robot text-indigo-500 mr-2"></i>Tình huống từ AI Mentor:</h4>
+                    <h4 class="font-bold text-slate-700 mb-2"><i class="fa-solid fa-robot text-indigo-500 mr-2"></i>Scenario from the AI Mentor:</h4>
                     <p id="apScenario" class="text-sm text-slate-600 leading-relaxed font-medium"></p>
                 </div>
 
                 <div class="mb-2">
-                    <h4 class="font-bold text-slate-700 text-sm mb-2">Cách giải quyết của bạn:</h4>
-                    <textarea id="apAnswer" rows="5" class="w-full border border-slate-300 rounded-xl p-4 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all" placeholder="Nhập mã code hoặc hướng giải quyết của bạn vào đây..."></textarea>
+                    <h4 class="font-bold text-slate-700 text-sm mb-2">Your Solution:</h4>
+                    <textarea id="apAnswer" rows="5" class="w-full border border-slate-300 rounded-xl p-4 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all" placeholder="Enter your code or proposed solution here..."></textarea>
                 </div>
-                <p class="text-[11px] text-slate-400 mb-5"><i class="fa-solid fa-shield-halved mr-1"></i>Hệ thống sử dụng mô hình LLM để đánh giá tư duy, không chỉ xét đúng/sai của cú pháp.</p>
+                <p class="text-[11px] text-slate-400 mb-5"><i class="fa-solid fa-shield-halved mr-1"></i>The system uses an LLM to evaluate reasoning, beyond syntax correctness.</p>
 
-                <!-- Kết quả (ẩn mặc định) -->
+                <!-- Result (hidden by default) -->
                 <div id="apResult" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-5">
                     <div class="flex items-start gap-3">
                         <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-check"></i></div>
                         <div>
-                            <h4 class="font-bold text-emerald-800 text-sm">Đánh giá xuất sắc!</h4>
-                            <p class="text-sm text-emerald-700 mt-1">Cách xử lý state của bạn rất tối ưu. AI xác nhận bạn đã nắm vững tư duy kỹ năng này.</p>
+                            <h4 class="font-bold text-emerald-800 text-sm">Excellent Assessment!</h4>
+                            <p class="text-sm text-emerald-700 mt-1">Your state-management approach is efficient. AI confirms that you understand the reasoning behind this skill.</p>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="border-t border-slate-100 p-5 bg-slate-50 flex justify-end gap-3 shrink-0">
-                <button onclick="closeSkillPractice()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Đóng</button>
+                <button onclick="closeSkillPractice()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Close</button>
                 <button id="apSubmitBtn" onclick="submitSkillPractice()" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-lg shadow-indigo-200">
-                    <span>Nộp bài cho AI</span>
+                    <span>Submit to AI</span>
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal AI Tối ưu Lộ trình (Optimizer) -->
+    <!-- AI Roadmap Optimizer Modal -->
     <div id="aiOptimizerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[90vh]">
             <div class="bg-gradient-to-r from-amber-500 to-orange-600 p-6 text-white shrink-0 relative overflow-hidden">
                 <div class="absolute right-0 top-0 opacity-20 text-8xl transform translate-x-1/4 -translate-y-1/4"><i class="fa-solid fa-bolt"></i></div>
-                <h3 class="text-xl font-bold mb-1 relative z-10">AI Điều chỉnh Lộ trình Tương lai</h3>
-                <p class="text-orange-100 text-sm relative z-10">Sử dụng dữ liệu lịch sử để cập nhật các mốc chưa học</p>
+                <h3 class="text-xl font-bold mb-1 relative z-10">AI Future Roadmap Adjustment</h3>
+                <p class="text-orange-100 text-sm relative z-10">Use historical data to update unstarted milestones</p>
             </div>
             
             <div class="p-8 overflow-y-auto flex-1 flex flex-col gap-6" id="optLoading">
                 <div class="flex flex-col items-center justify-center py-6">
                     <i class="fa-solid fa-circle-notch fa-spin text-4xl text-orange-500 mb-4"></i>
-                    <p class="text-sm font-medium text-slate-600 text-center">Đang phân tích điểm số hiện tại và so khớp với xu hướng việc làm tại <br/><span id="optTargetCountryLabel" class="font-bold text-slate-800"></span>...</p>
+                    <p class="text-sm font-medium text-slate-600 text-center">Analyzing current scores and comparing them with job trends in <br/><span id="optTargetCountryLabel" class="font-bold text-slate-800"></span>...</p>
                 </div>
             </div>
 
             <div class="p-6 overflow-y-auto flex-1 hidden flex-col gap-5" id="optResult">
                 <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
-                    <h4 class="font-bold text-blue-800 text-sm mb-1"><i class="fa-solid fa-database mr-2"></i>Phân tích Dữ liệu:</h4>
-                    <p class="text-xs text-blue-700">Người dùng đạt kết quả cực tốt ở Giai đoạn 1. Tuy nhiên, thị trường <span id="optTargetCountryRes" class="font-bold"></span> đang khát nhân sự biết về Generative UI.</p>
+                    <h4 class="font-bold text-blue-800 text-sm mb-1"><i class="fa-solid fa-database mr-2"></i>Data Analysis:</h4>
+                    <p class="text-xs text-blue-700">The user performed very well in Stage 1. However, the market in <span id="optTargetCountryRes" class="font-bold"></span> has strong demand for Generative UI talent.</p>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-                    <h4 class="font-bold text-slate-800 text-sm mb-3"><i class="fa-solid fa-code-merge text-orange-500 mr-2"></i>Đề xuất cập nhật Mốc 3:</h4>
+                    <h4 class="font-bold text-slate-800 text-sm mb-3"><i class="fa-solid fa-code-merge text-orange-500 mr-2"></i>Suggested Milestone 3 Update:</h4>
                     <ul class="space-y-3">
                         <li class="flex gap-3 items-start border-b border-slate-100 pb-3">
                             <i class="fa-solid fa-clock-rotate-left text-emerald-500 mt-0.5"></i>
                             <div>
-                                <span class="font-semibold text-sm text-slate-700 block">Rút ngắn khóa "LLM API Integration"</span>
-                                <span class="text-xs text-slate-500">Giảm thời gian do nền tảng lập trình đã vững.</span>
+                                <span class="font-semibold text-sm text-slate-700 block">Shorten the LLM API Integration course</span>
+                                <span class="text-xs text-slate-500">Reduce the time because the programming foundation is already strong.</span>
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <i class="fa-solid fa-folder-plus text-blue-500 mt-0.5"></i>
                             <div>
-                                <span class="font-semibold text-sm text-slate-700 block">Bổ sung khóa "Generative UI (UI Động)"</span>
-                                <span class="text-xs text-slate-500">Kỹ năng AI-Era mới nhất để đáp ứng nhu cầu thị trường.</span>
+                                <span class="font-semibold text-sm text-slate-700 block">Add a Generative UI (Dynamic UI) course</span>
+                                <span class="text-xs text-slate-500">A current AI-era skill that meets market demand.</span>
                             </div>
                         </li>
                     </ul>
@@ -185,119 +185,119 @@
             </div>
             
             <div class="border-t border-slate-100 p-5 bg-slate-50 flex justify-end gap-3 shrink-0">
-                <button onclick="closeOptimizerModal()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Bỏ qua</button>
+                <button onclick="closeOptimizerModal()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Skip</button>
                 <button id="optApplyBtn" onclick="applyOptimizerChanges()" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 transition-colors flex items-center gap-2 shadow-md hidden">
-                    <span>Cập nhật Lộ trình</span>
+                    <span>Update Roadmap</span>
                     <i class="fa-solid fa-check"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Tổng kết Mốc -->
+    <!-- Milestone Summary Modal -->
     <div id="milestoneTestModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col">
             <div class="p-8 text-center bg-purple-50">
                 <i class="fa-solid fa-ranking-star text-5xl text-purple-600 mb-4"></i>
-                <h3 class="text-2xl font-bold text-slate-800">Chứng nhận Hoàn thành Mốc</h3>
-                <p class="text-slate-500 mt-2 text-sm">AI đã phân tích quá trình thực hành các kỹ năng trong mốc này của bạn.</p>
+                <h3 class="text-2xl font-bold text-slate-800">Milestone Completion Certificate</h3>
+                <p class="text-slate-500 mt-2 text-sm">AI analyzed your skill practice throughout this milestone.</p>
             </div>
             <div class="p-8">
                 <div class="bg-white border border-slate-200 rounded-xl p-5 mb-4 shadow-sm">
-                    <h4 class="font-bold text-slate-800 mb-2">Đánh giá chung:</h4>
-                    <p class="text-sm text-slate-600">Bạn đã hoàn thành xuất sắc Mốc này. Khả năng tư duy UI và áp dụng AI để gỡ lỗi vượt mức trung bình 20% so với thị trường.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">Overall Assessment:</h4>
+                    <p class="text-sm text-slate-600">You completed this milestone with excellent results. Your UI reasoning and use of AI for debugging are 20% above the market average.</p>
                 </div>
                 <div class="bg-blue-50 border border-blue-100 rounded-xl p-5">
-                    <h4 class="font-bold text-blue-800 mb-2"><i class="fa-solid fa-arrow-trend-up mr-2"></i>Đề xuất Tiếp theo:</h4>
-                    <p class="text-sm text-blue-700">Bạn đã sẵn sàng để ứng tuyển vị trí Thực tập sinh. Hãy mở khóa Giai đoạn 2 để bắt đầu học sâu về ReactJS.</p>
+                    <h4 class="font-bold text-blue-800 mb-2"><i class="fa-solid fa-arrow-trend-up mr-2"></i>Next Recommendation:</h4>
+                    <p class="text-sm text-blue-700">You are ready to apply for an internship. Unlock Stage 2 to begin advanced ReactJS learning.</p>
                 </div>
             </div>
             <div class="border-t border-slate-100 p-5 bg-slate-50 flex justify-end gap-3">
-                <button onclick="closeMilestoneTest()" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 shadow-md">Tuyệt vời, Đóng lại</button>
+                <button onclick="closeMilestoneTest()" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 shadow-md">Great, Close</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- DATA CONTRACT (JSON CHUẨN) ---
+        // --- DATA CONTRACT (STANDARD JSON) ---
         const milestoneData = [
             {
                 id: 'm1',
-                title: 'Mốc 1: Sẵn sàng Thực tập',
+                title: 'Milestone 1: Internship Ready',
                 status: 'completed', // completed, in-progress, planned
                 progress: 100,
                 start_date: '01/09/2026',
                 end_date: '15/11/2026',
-                goal: 'Nắm vững nền tảng Web & Tư duy xử lý lỗi.',
-                user_notes: 'Đã hoàn thành xuất sắc!',
+                goal: 'Master web fundamentals and debugging reasoning.',
+                user_notes: 'Completed with excellent results!',
                 skills: [
                     {
                         id: 's1', title: 'HTML/CSS & UI Layout', category: 'Core Tech',
-                        status: 'completed', goal: 'Dựng được mọi giao diện tĩnh.',
-                        user_notes: 'Grid hơi khó, cần ôn lại', 
-                        ai_practice_scenario: 'Bạn được yêu cầu tạo một form đăng ký responsive 3 cột chuyển thành 1 cột trên mobile. Hãy viết hướng xử lý CSS.',
+                        status: 'completed', goal: 'Build any static interface.',
+                        user_notes: 'Grid is challenging; review it', 
+                        ai_practice_scenario: 'Create a responsive registration form that changes from three columns to one on mobile. Explain the CSS approach.',
                         sub_tasks: [
-                            { id: 'st1_1', text: 'Thành thạo Flexbox/Grid', is_completed: true, completion_note: 'Làm Landing Page' },
-                            { id: 'st1_2', text: 'Responsive Design (Tailwind)', is_completed: true, completion_note: 'Đã tối ưu Mobile' }
+                            { id: 'st1_1', text: 'Master Flexbox/Grid', is_completed: true, completion_note: 'Build a Landing Page' },
+                            { id: 'st1_2', text: 'Responsive Design (Tailwind)', is_completed: true, completion_note: 'Optimized for Mobile' }
                         ]
                     },
                     {
                         id: 's2', title: 'AI Debugging Assistant', category: 'AI-Era Competency',
-                        status: 'completed', goal: 'Biết dùng AI (Gemini/ChatGPT) gỡ lỗi.',
+                        status: 'completed', goal: 'Use AI tools such as Gemini or ChatGPT for debugging.',
                         user_notes: '', 
-                        ai_practice_scenario: 'Màn hình bị lỗi tràn ngang (horizontal scroll) nhưng không tìm được thẻ nào gây ra. Bạn sẽ viết Prompt gì để nhờ AI tìm lỗi?',
+                        ai_practice_scenario: 'The page has unwanted horizontal scrolling, but you cannot identify the element causing it. What prompt would you use to ask AI for help?',
                         sub_tasks: [
-                            { id: 'st2_1', text: 'Kỹ năng mô tả lỗi bằng text', is_completed: true, completion_note: 'Pass' }
+                            { id: 'st2_1', text: 'Describe bugs clearly in text', is_completed: true, completion_note: 'Pass' }
                         ]
                     }
                 ]
             },
             {
                 id: 'm2',
-                title: 'Mốc 2: Junior Frontend',
+                title: 'Milestone 2: Junior Frontend',
                 status: 'in-progress',
                 progress: 35,
                 start_date: '16/11/2026',
                 end_date: '15/03/2027',
-                goal: 'Làm chủ framework React và State Management.',
-                user_notes: 'Đang cày React Hooks.',
+                goal: 'Master React and state management.',
+                user_notes: 'Currently studying React Hooks.',
                 skills: [
                     {
                         id: 's3', title: 'ReactJS & State', category: 'Core Tech',
-                        status: 'in-progress', goal: 'Biết chia component và truyền props.',
+                        status: 'in-progress', goal: 'Split interfaces into components and pass props correctly.',
                         user_notes: '', 
-                        ai_practice_scenario: 'Tình huống: Giao diện giật lag do component con bị re-render liên tục mỗi khi người dùng gõ vào ô tìm kiếm. Xử lý sao?',
+                        ai_practice_scenario: 'Scenario: The interface lags because a child component re-renders whenever the user types in the search field. How would you fix it?',
                         sub_tasks: [
-                            { id: 'st3_1', text: 'Vòng đời & Hooks (useState, useEffect)', is_completed: true, completion_note: 'Đã hiểu' },
-                            { id: 'st3_2', text: 'Tối ưu Memo & Callback', is_completed: false, completion_note: '' }
+                            { id: 'st3_1', text: 'Lifecycle & Hooks (useState, useEffect)', is_completed: true, completion_note: 'Understood' },
+                            { id: 'st3_2', text: 'Optimize Memo & Callback', is_completed: false, completion_note: '' }
                         ]
                     },
                     {
                         id: 's4', title: 'AI-Assisted Coding (Copilot)', category: 'AI-Era Competency',
-                        status: 'planned', goal: 'Biết dùng công cụ sinh code tự động để tăng tốc.',
+                        status: 'planned', goal: 'Use code-generation tools to work faster.',
                         user_notes: '', 
-                        ai_practice_scenario: 'Sử dụng Cursor hoặc Copilot để sinh ra Unit Test cho một hàm phức tạp.',
+                        ai_practice_scenario: 'Use Cursor or Copilot to generate unit tests for a complex function.',
                         sub_tasks: [
-                            { id: 'st4_1', text: 'Thiết lập AI Code Editor', is_completed: false, completion_note: '' }
+                            { id: 'st4_1', text: 'Set Up an AI Code Editor', is_completed: false, completion_note: '' }
                         ]
                     }
                 ]
             },
             {
                 id: 'm3',
-                title: 'Mốc 3: Kỹ sư Thời đại AI',
+                title: 'Milestone 3: AI-Era Engineer',
                 status: 'planned',
                 progress: 0,
                 start_date: '16/03/2027',
                 end_date: '15/08/2027',
-                goal: 'Xây dựng ứng dụng tích hợp LLM và tự động hóa.',
-                user_notes: 'Cần cập nhật theo thị trường.',
+                goal: 'Build applications with LLM integration and automation.',
+                user_notes: 'Needs updating based on market demand.',
                 skills: [
                     {
                         id: 's5', title: 'LLM API Integration', category: 'Core Tech',
-                        status: 'planned', goal: 'Gắn Gemini API vào web app.',
+                        status: 'planned', goal: 'Integrate the Gemini API into a web app.',
                         user_notes: '', 
-                        ai_practice_scenario: 'Làm sao để xử lý luồng dữ liệu dạng Stream từ LLM để hiển thị từng chữ một (typing effect)?',
+                        ai_practice_scenario: 'How would you process an LLM data stream to display text incrementally with a typing effect?',
                         sub_tasks: [
                             { id: 'st5_1', text: 'Rest API & Streaming', is_completed: false, completion_note: '' }
                         ]
@@ -320,7 +320,7 @@
                     labels: ['UI/UX', 'JS Frameworks', 'API & Backend', 'Problem Solving', 'Prompting', 'AI Coding Tools'],
                     datasets: [
                         {
-                            label: 'Năng lực Hiện tại',
+                            label: 'Current Skill Level',
                             data: [85, 40, 30, 75, 80, 20],
                             backgroundColor: 'rgba(59, 130, 246, 0.25)',
                             borderColor: 'rgba(59, 130, 246, 1)',
@@ -328,7 +328,7 @@
                             pointBackgroundColor: 'rgba(59, 130, 246, 1)'
                         },
                         {
-                            label: 'Tiêu chuẩn Thị trường',
+                            label: 'Market Benchmark',
                             data: [90, 85, 60, 85, 90, 80],
                             backgroundColor: 'rgba(236, 72, 153, 0.1)',
                             borderColor: 'rgba(236, 72, 153, 1)',
@@ -425,7 +425,7 @@
                         <div class="flex justify-between items-start mb-3">
                             <span class="text-[10px] font-bold px-2 py-1 rounded-md border uppercase tracking-wider ${badgeClass}">${skill.category}</span>
                             <span class="text-xs font-semibold ${skill.status === 'completed' ? 'text-emerald-500' : (skill.status === 'in-progress' ? 'text-blue-500' : 'text-slate-400')}">
-                                ${skill.status === 'completed' ? 'Đã xong' : (skill.status === 'in-progress' ? 'Đang học' : 'Kế hoạch')}
+                                ${skill.status === 'completed' ? 'Completed' : (skill.status === 'in-progress' ? 'In Progress' : 'Planned')}
                             </span>
                         </div>
                         <h4 class="font-bold text-slate-800 text-lg mb-1">${skill.title}</h4>
@@ -449,17 +449,17 @@
                             <i class="fa-solid fa-bullseye"></i>
                         </div>
                         <div class="flex-1 relative z-10">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Mục tiêu Giai đoạn</label>
-                            <input type="text" value="${m.goal}" class="w-full text-lg font-bold text-slate-800 outline-none bg-transparent border-b border-transparent hover:border-slate-300 focus:border-blue-500 transition-colors" title="Click để sửa">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Stage Goal</label>
+                            <input type="text" value="${m.goal}" class="w-full text-lg font-bold text-slate-800 outline-none bg-transparent border-b border-transparent hover:border-slate-300 focus:border-blue-500 transition-colors" title="Click to edit">
                         </div>
                         <div class="w-full md:w-1/3 relative z-10">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Ghi chú Cá nhân</label>
-                            <input type="text" value="${m.user_notes}" placeholder="Thêm ghi chú..." class="w-full text-sm font-medium text-slate-600 outline-none bg-slate-50 border border-slate-200 p-2 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Personal Notes</label>
+                            <input type="text" value="${m.user_notes}" placeholder="Add a note..." class="w-full text-sm font-medium text-slate-600 outline-none bg-slate-50 border border-slate-200 p-2 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
                         </div>
                     </div>
                     
                     <h3 class="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-layer-group text-blue-500"></i> Các Kỹ năng Cần thiết
+                        <i class="fa-solid fa-layer-group text-blue-500"></i> Required Skills
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         ${skillsHtml}
@@ -469,9 +469,9 @@
                     <div class="mt-8 text-center border-t border-slate-200 pt-8">
                         <button onclick="openMilestoneTest()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-purple-200 transition-all hover:-translate-y-1 inline-flex items-center gap-3">
                             <i class="fa-solid fa-shield-check text-xl"></i>
-                            Đánh giá Tổng thể Giai đoạn này
+                            Assess This Stage
                         </button>
-                        <p class="text-xs text-slate-500 mt-3">AI sẽ tổng hợp toàn bộ bài thực hành để cấp chứng nhận hoàn thành.</p>
+                        <p class="text-xs text-slate-500 mt-3">AI will synthesize all practice results to issue a completion certificate.</p>
                     </div>
                     ` : ''}
                 </div>
@@ -499,7 +499,7 @@
         function submitSkillPractice() {
             document.getElementById('apSubmitBtn').classList.add('hidden');
             document.getElementById('apResult').classList.remove('hidden');
-            // Trong thực tế, đây là lúc gọi API gửi prompt cho LLM
+            // In production, this is where the API sends a prompt to the LLM
         }
 
         function openMilestoneTest() {
@@ -512,7 +512,7 @@
 
         // --- OPTIMIZER LOGIC ---
         function openOptimizerModal() {
-            const country = document.getElementById('targetCountry').value || "Việt Nam";
+            const country = document.getElementById('targetCountry').value || "Vietnam";
             document.getElementById('optTargetCountryLabel').innerText = country;
             document.getElementById('optTargetCountryRes').innerText = country;
 
@@ -533,22 +533,22 @@
         }
 
         function applyOptimizerChanges() {
-            const country = document.getElementById('targetCountry').value || "Việt Nam";
+            const country = document.getElementById('targetCountry').value || "Vietnam";
             const m3 = milestoneData.find(m => m.id === 'm3');
             if(m3) {
-                m3.user_notes = "Đã tối ưu cho thị trường " + country;
+                m3.user_notes = "Optimized for the " + country;
                 
-                // Cập nhật skill cũ
+                // Update the existing skill
                 const s5 = m3.skills.find(s => s.id === 's5');
-                if(s5) s5.goal = "Rút ngắn thời gian, tập trung vào API Vercel.";
+                if(s5) s5.goal = "Shorten the schedule and focus on the Vercel API.";
 
-                // Thêm skill mới
+                // Add a new skill
                 if(!m3.skills.find(s => s.id === 's6')) {
                     m3.skills.push({
                         id: 's6', title: 'Generative UI', category: 'AI-Era Competency',
-                        status: 'planned', goal: 'Sinh giao diện React linh hoạt từ JSON của LLM.',
-                        user_notes: 'Cực kỳ quan trọng hiện tại.', 
-                        ai_practice_scenario: 'Làm thế nào để render một <WeatherCard /> khi AI trả về JSON có type="weather"?',
+                        status: 'planned', goal: 'Generate flexible React interfaces from LLM JSON.',
+                        user_notes: 'Currently critical.', 
+                        ai_practice_scenario: 'How do you render a <WeatherCard /> when AI returns JSON with type="weather"?',
                         sub_tasks: [
                             { id: 'st6_1', text: 'Vercel AI SDK Core', is_completed: false, completion_note: '' }
                         ]
@@ -557,13 +557,13 @@
             }
             
             closeOptimizerModal();
-            selectMilestone('m3'); // Tự động chuyển qua xem mốc 3
+            selectMilestone('m3'); // Automatically switch to milestone 3
         }
 
-        // Khởi tạo
+        // Initialize
         window.onload = function() {
             document.getElementById('targetCountry').addEventListener('input', function(e) {
-                document.getElementById('lblCountry').innerText = e.target.value || 'Việt Nam';
+                document.getElementById('lblCountry').innerText = e.target.value || 'Vietnam';
             });
             initRadarChart();
             renderHorizontalMilestones();

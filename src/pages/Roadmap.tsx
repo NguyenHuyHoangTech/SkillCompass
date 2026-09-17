@@ -145,21 +145,21 @@ export default function Roadmap() {
       if (!selectedCourse) {
          setSelectedCourse({
            id: `course-${skill.id}`,
-           title: `Khóa học ${skill.name}`,
+           title: `Course ${skill.name}`,
            provider: 'SkillCompass',
            rating: 5.0,
-           duration: 'Linh hoạt',
-           level: 'Tiếp tục học',
+           duration: 'Flexible',
+           level: 'Continue Learning',
            instructor: 'AI Expert',
-           description: 'Khóa học được phục hồi từ tiến trình học tập của bạn.',
+           description: 'Course restored from your learning progress.',
            thumbnailUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
            enrolledCount: 1,
-           tags: [skill.name, 'Tiếp tục học'],
+           tags: [skill.name, 'Continue Learning'],
            syllabus: [
-             { id: 1, title: 'Bài 1: Ôn tập cơ bản', duration: '12:00', isCompleted: true },
-             { id: 2, title: 'Bài 2: Thực hành kỹ năng', duration: '25:30', isCompleted: false },
-             { id: 3, title: 'Bài 3: Dự án thực tế', duration: '45:00', isCompleted: false },
-             { id: 4, title: 'Bài 4: Tổng kết', duration: '10:00', isCompleted: false }
+             { id: 1, title: 'Lesson 1: Review the Basics', duration: '12:00', isCompleted: true },
+             { id: 2, title: 'Lesson 2: Practice the Skill', duration: '25:30', isCompleted: false },
+             { id: 3, title: 'Lesson 3: Real-World Project', duration: '45:00', isCompleted: false },
+             { id: 4, title: 'Lesson 4: Summary', duration: '10:00', isCompleted: false }
            ]
          });
       }
@@ -182,7 +182,7 @@ export default function Roadmap() {
         setRoadmap(updatedRoadmap);
         setIsDailyChecklistOpen(true);
         
-        // Tự động tắt bảng Task sau 2.5 giây để người dùng vào học
+        // Automatically close the task panel after 2.5 seconds so the user can start learning
         setTimeout(() => {
             setIsDailyChecklistOpen(false);
         }, 2500);
@@ -624,7 +624,7 @@ export default function Roadmap() {
             <button
                 onClick={() => setIsDailyChecklistOpen(true)}
                 className="fixed bottom-6 left-6 md:left-24 z-50 w-16 h-16 bg-blue-600 hover:bg-blue-500 text-white rounded-full shadow-lg shadow-blue-600/30 flex flex-col items-center justify-center transition-transform hover:scale-110 border-2 border-white/20 group"
-                title="Mở Checklist Hàng Ngày"
+                title="Open Daily Checklist"
             >
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white"></div>

@@ -110,7 +110,7 @@ export const AISkillGeneratorModal: React.FC<AISkillGeneratorModalProps> = ({
             </div>
             <div>
               <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>AI Skill Generator</h3>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Phân tích lộ trình hiện tại và tự động đề xuất</p>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Analyze the current roadmap and suggest improvements automatically</p>
             </div>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}>
@@ -168,7 +168,7 @@ export const AISkillGeneratorModal: React.FC<AISkillGeneratorModalProps> = ({
                   type="text" 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Yêu cầu AI thêm/bớt kỹ năng..."
+                  placeholder="Ask AI to add or remove skills..."
                   style={{ flex: 1, padding: '12px 16px', borderRadius: '24px', border: '1px solid var(--border-color)', outline: 'none' }}
                   disabled={loading}
                 />
@@ -192,7 +192,7 @@ export const AISkillGeneratorModal: React.FC<AISkillGeneratorModalProps> = ({
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'white' }}>
             <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-color)', background: '#f8fafc' }}>
               <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle size={18} color="var(--accent-primary)" /> Danh sách đề xuất ({proposedSkills.length})
+                <CheckCircle size={18} color="var(--accent-primary)" /> Suggested List ({proposedSkills.length})
               </h4>
             </div>
             <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -217,7 +217,7 @@ export const AISkillGeneratorModal: React.FC<AISkillGeneratorModalProps> = ({
               {proposedSkills.length === 0 && !loading && (
                 <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-tertiary)' }}>
                   <Sparkles size={32} style={{ opacity: 0.2, marginBottom: '12px' }} />
-                  <p>AI đang phân tích và chuẩn bị đề xuất...</p>
+                  <p>AI is analyzing and preparing suggestions...</p>
                 </div>
               )}
             </div>
@@ -231,7 +231,7 @@ export const AISkillGeneratorModal: React.FC<AISkillGeneratorModalProps> = ({
                   onChange={(e) => setReplaceUnlearned(e.target.checked)}
                   style={{ width: '16px', height: '16px', accentColor: 'var(--accent-primary)' }}
                 />
-                Thay thế các kỹ năng chưa học (0%)
+                Replace unstarted skills (0%)
               </label>
               
               <div style={{ display: 'flex', gap: '12px' }}>
@@ -239,14 +239,14 @@ export const AISkillGeneratorModal: React.FC<AISkillGeneratorModalProps> = ({
                   onClick={onClose}
                   style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'white', color: 'var(--text-secondary)', fontWeight: 600, cursor: 'pointer' }}
                 >
-                  Hủy
+                  Cancel
                 </button>
                 <button 
                   onClick={() => onConfirm(proposedSkills, replaceUnlearned)}
                   disabled={proposedSkills.length === 0 || loading}
                   style={{ flex: 2, padding: '12px', borderRadius: '8px', border: 'none', background: 'var(--accent-primary)', color: 'white', fontWeight: 600, cursor: 'pointer', opacity: (proposedSkills.length === 0 || loading) ? 0.5 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
-                  <CheckCircle size={18} /> Xác nhận & Thêm vào lộ trình
+                  <CheckCircle size={18} /> Confirm & Add to Roadmap
                 </button>
               </div>
             </div>

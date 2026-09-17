@@ -49,11 +49,11 @@ export const AICourseAnalysisModal: React.FC<AICourseAnalysisModalProps> = ({
           
           <h3 className="text-xl font-bold text-white mb-2 flex items-center justify-center gap-2">
             <Sparkles className="text-amber-400 w-5 h-5" />
-            AI đang phân tích
+            AI Is Analyzing
           </h3>
           
           <p className="text-slate-300 text-sm mb-8">
-            Đang tìm kiếm các khóa học tốt nhất cho kỹ năng <br/>
+            Finding the best courses for the skill <br/>
             <strong className="text-blue-400 text-base">{skill.name}</strong>...
           </p>
           
